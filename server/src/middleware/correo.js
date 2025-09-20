@@ -129,6 +129,5 @@ export const enviarEmailBienvenida = async (correo, nombre) => {
     
   } catch (error) {
     console.error('❌ Error enviando email de bienvenida:', error);
-    // No lanzamos error aquí porque es secundario
   }
 };  
