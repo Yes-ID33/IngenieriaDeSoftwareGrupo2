@@ -1,0 +1,23 @@
+# Dependencias
+node_modules
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# Builds
+dist
+build
+
+# Archivos del sistema
+.DS_Store
+*.swp
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+
+# Docker-compose overrides
+docker-compose.override.yml
