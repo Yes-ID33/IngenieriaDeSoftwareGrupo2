@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: ../Dockerfile.server
+    container_name: node_server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  client:
+    build:
+      context: ./client
+      dockerfile: ../Dockerfile.client
+    container_name: react_client
+    ports:
+      - "5173:5173"   # el 3000 local va al 80 del contenedor
