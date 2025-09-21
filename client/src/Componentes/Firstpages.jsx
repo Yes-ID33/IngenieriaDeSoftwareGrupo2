@@ -6,8 +6,8 @@ const Firstpages = () => {
   return (
     <div className="firstpages-main">
         <div className='description-conatiner'>
-            <img src="" alt="Foto Pacual" className="firstpages-img"/>
-            <h1 className="firstpages-title">Gestion de practicas profesionales</h1>
+            <img src="" alt="Foto Pascual" className="firstpages-img"/>
+            <h1 className="firstpages-title">Gestion de practicas profesionales pascualinas</h1>
             <p>Este sitio esta creado para que los estudiiantes puedan 
                ver ofertas de empresas que estan buscando practicantes,
                y a su vez las empresas puedan publicar sus ofertas de practicas
