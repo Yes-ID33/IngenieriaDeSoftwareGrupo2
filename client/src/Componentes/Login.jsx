@@ -1,4 +1,6 @@
 import React from 'react';
+import "../App.css";
+import "../index.css"
 
 const Login = () => {
   return (
@@ -8,7 +10,7 @@ const Login = () => {
           <nav>
             <ul>
               <li><a href="/">Inicio</a></li>
-              <li><a href="/servicios.html">Servicios</a></li>
+              <li><a href="/">Placeholder</a></li>
             </ul>
           </nav>
         </div>

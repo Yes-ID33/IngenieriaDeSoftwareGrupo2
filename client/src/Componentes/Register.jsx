@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import "../App.css";
+import "../index.css"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -52,7 +54,7 @@ const Register = () => {
           <nav>
             <ul>
               <li><a href="/">Inicio</a></li>
-              <li><a href="/servicios.html">Servicios</a></li>
+              <li><a href="/">Placeholder</a></li>
             </ul>
           </nav>
         </div>

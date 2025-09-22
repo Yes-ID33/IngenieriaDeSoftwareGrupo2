@@ -1,0 +1,110 @@
+:root {
+  --Aqua: #0299D8;
+
+  --Azul-Oscuro: #001A34;
+  --Amarillo: #FFC501;
+  --Purpura: #4E3D98;
+  --Naranja: #F29A01;
+  --Rojo: #D8473A;
+  --Verde: #00B876;
+  --Gris: #4E4E4E;
+
+
+  --Gris-Claro: #F2F6F9;
+  --Azul-Navy: #0F3854;
+
+  --transition: all 0.3s ease;
+}
+
+/* Estilos del Header */
+header {
+  background-color: var(--Azul-Navy);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 5%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+header .nav-left ul,
+header .nav-right ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+header .nav-left ul li,
+header .nav-right ul li {
+  margin: 0 1.1rem;
+  position: relative;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+  transition: var(--transition);
+  position: relative;
+}
+
+header nav ul li a:hover {
+  color: var(--secondary-color);
+}
+
+header nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--secondary-color);
+  transition: var(--transition);
+}
+
+header nav ul li a:hover::after {
+  width: 100%;
+}
+
+.nav-right {
+  margin-right: 2rem;
+}
+
+/* Estilos responsivos para el header */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  header .nav-left,
+  header .nav-right {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  header .nav-left ul,
+  header .nav-right ul {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header .nav-left ul li,
+  header .nav-right ul li {
+    margin: 0 0.6rem;
+  }
+
+  header nav ul li a {
+    font-size: 0.9rem;
+  }
+}

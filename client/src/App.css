@@ -1,3 +1,20 @@
+:root {
+  --Aqua: #0299D8;
+
+  --Azul-Oscuro: #001A34;
+  --Amarillo: #FFC501;
+  --Purpura: #4E3D98;
+  --Naranja: #F29A01;
+  --Rojo: #D8473A;
+  --Verde: #00B876;
+  --Gris: #4E4E4E;
+
+
+  --Gris-Claro: #F2F6F9;
+  --Azul-Navy: #0F3854;
+}
+
+
 .firstpages-img {
   display: block;
   margin: 0 auto 16px auto;
@@ -11,7 +28,7 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  background: #fff;
+  background: var(--Gris-Claro);
 }
 
 .firstpages-main {
@@ -34,7 +51,7 @@
 }
 
 .firstpages-title {
-  color: #2d0bd4;
+  color: var(--Amarillo);
   text-align: center;
   margin-bottom: 16px;
   font-size: 2rem;
