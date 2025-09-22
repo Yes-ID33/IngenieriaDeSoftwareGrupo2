@@ -4,6 +4,7 @@ import Login from './Componentes/Login';
 import Register from './Componentes/Register';
 import './App.css';
 import "./index.css";
+import "./auth.css";
 
 function App() {
 

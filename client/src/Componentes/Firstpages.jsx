@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-const Firstpages = () => {
+const FirstPages = () => {
   return (
     <div className="firstpages-main">
       <header>
@@ -16,29 +16,32 @@ const Firstpages = () => {
         <div className="nav-right">
           <nav>
             <ul>
-            <Link to="/register" className="firstpages-btn primary">Registrarse</Link>
-            <Link to="/login" className="firstpages-btn outline">Iniciar sesión</Link> 
+              <li>
+                <Link to="/register" className="firstpages-btn primary">Registrarse</Link>
+              </li>
+              <li>
+                <Link to="/login" className="firstpages-btn outline">Iniciar sesión</Link>
+              </li>
             </ul>
           </nav>
         </div>
       </header>
 
-      <div className="description-conatiner">
-  <img
-    src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
-    alt="Escudo Universidad Pascual Bravo"
-    className="logo-universidad"
-  />
-  <h1 className="firstpages-title">
-    Gestión de prácticas profesionales pascualinas
-  </h1>
-  <p>
-    Este sitio está creado para que los estudiantes puedan ver ofertas de
-    empresas que buscan practicantes, y a su vez las empresas puedan publicar
-    sus ofertas de prácticas profesionales para que los estudiantes se postulen.
-  </p>
-</div>
-
+      <div className="description-container">
+        <img
+          src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
+          alt="Escudo Universidad Pascual Bravo"
+          className="logo-universidad"
+        />
+        <h1 className="firstpages-title">
+          Gestión de prácticas profesionales pascualinas
+        </h1>
+        <p>
+          Este sitio está creado para que los estudiantes puedan ver ofertas de
+          empresas que buscan practicantes, y a su vez las empresas puedan publicar
+          sus ofertas de prácticas profesionales para que los estudiantes se postulen.
+        </p>
+      </div>
 
       <div className="options-container">
         <div className="firstpages-buttons">
@@ -59,7 +62,7 @@ const Firstpages = () => {
         </p>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Firstpages
+export default FirstPages;

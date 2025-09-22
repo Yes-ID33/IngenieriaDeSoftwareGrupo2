@@ -1,31 +1,32 @@
-/* ===========================
-   Variables institucionales
-   =========================== */
-   :root {
-    --color-primary: #0299D8;        /* Azul Pascual Bravo */
-    --color-primary-dark: #0F3854;   /* Azul Navy */
-    --color-secondary: #FFC501;      /* Amarillo institucional */
-    --color-accent: #4E3D98;         /* Púrpura */
-    color-scheme: light;  /* le dice al navegador que tu sitio es claro */
-    --color-support-orange: #F29A01;
-    --color-support-red: #D8473A;
-    --color-support-green: #00B876;
-  
-    --color-bg: #F2F6F9;
-    --color-text: #001A34;
-    --color-muted: #4E4E4E;
-  
-    --radius: 10px;
-    --shadow: 0 4px 12px rgba(0,0,0,0.08);
-    --transition: all 0.3s ease;
-  }
+:root {
+  --color-primary: #0299D8;        /* Azul Pascual Bravo */
+  --color-primary-dark: #0F3854;   /* Azul Navy */
+  --color-secondary: #FFC501;      /* Amarillo institucional */
+  --color-accent: #4E3D98;         /* Púrpura */
+
+  --color-support-orange: #F29A01;
+  --color-support-red: #D8473A;
+  --color-support-green: #00B876;
+
+  --color-bg: #F2F6F9;             /* Fondo claro */
+  --color-text: #001A34;           /* Texto principal */
+  --color-muted: #4E4E4E;          /* Texto secundario */
+
+  --radius: 10px; /*diseño y efectos*/
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+
+  /* 🌓 Preferencia de esquema de color */
+  color-scheme: light;
+}
+
   
   html, body {
     background: #fff !important;  /* fuerza el blanco */
     color: var(--color-text);
     height: 100%;
    margin: 0;
-   overflow: hidden; /* elimina el scroll */
+   /*overflow: hidden; /* elimina el scroll */
   }
   /* ===========================
      Reset básico
@@ -46,97 +47,111 @@
     
   }
   
-  
-  /* ===========================
-     Header y Navbar
-     =========================== */
+/* Header institucional fijo */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 110px;
+  background-color: var(--color-primary-dark);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 5%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+header .nav-left ul,
+header .nav-right ul {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: var(--transition);
+}
+
+header nav ul li a:hover {
+  color: var(--color-secondary);
+}
+
+header nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-secondary);
+  transition: var(--transition);
+}
+
+header nav ul li a:hover::after {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   header {
-    background-color: var(--color-primary-dark);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 5%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
+    flex-direction: column;
+    padding: 1rem;
   }
-  
+
+  header .nav-left,
+  header .nav-right {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
   header .nav-left ul,
   header .nav-right ul {
-    list-style: none;
-    display: flex;
-    gap: 1.2rem;
+    justify-content: center;
   }
-  
+}
+
+@media (max-width: 480px) {
   header nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.05rem;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: var(--transition);
+    font-size: 0.9rem;
   }
+}
+
+
   
-  header nav ul li a:hover {
-    color: var(--color-secondary);
+  /* Sección descriptiva */
+  .description-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+    text-align: center;    
+    max-width: 900px;
+    margin: 2rem auto;     
+    padding: 1rem;
   }
-  
-  header nav ul li a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--color-secondary);
-    transition: var(--transition);
-  }
-  
-  header nav ul li a:hover::after {
-    width: 100%;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      padding: 1rem;
-    }
-    header .nav-left,
-    header .nav-right {
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-    header .nav-left ul,
-    header .nav-right ul {
-      justify-content: center;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    header nav ul li a {
-      font-size: 0.9rem;
-    }
-  }
-  
-  /* ===========================
-     Sección descriptiva
-     =========================== */
-     .description-conatiner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;   
-      text-align: center;    
-      max-width: 900px;
-      margin: 2rem auto;     
-      padding: 1rem;
-    }
     
-  
+  /* Aplica a cualquier contenedor principal */
+  .main-content,
+  .firstpages-main,
+  .auth-container {
+    padding-top: 120px;   /* espacio para el header */
+    padding-bottom: 100px; /* espacio para el footer */
+    box-sizing: border-box;
+  }
+
+
   .firstpages-title {
     font-size: 2.2rem;
   font-weight: 700;
@@ -144,46 +159,49 @@
   margin: 1.5rem 0;
   }
 
-  .firstpages-main {
-    height: 100vh;              /*  ocupa toda la pantalla */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;    /*  centra vertical y horizontal */
-    text-align: center;
-    padding: 2rem;
-    padding-bottom: 9rem;
-  }
-  .description-conatiner p {
-    font-size: 1.1rem;
-  color: var(--color-muted);
-  max-width: 700px;
-  margin: 0 auto;
-  }
-  
-  .firstpages-img {
-    max-width: 200px;
-    margin-bottom: 0.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-  }
+.firstpages-main {
+  height: 100vh;              /*  ocupa toda la pantalla */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;    /*  centra vertical y horizontal */
+  text-align: center;
+  padding: 2rem;
+  padding-bottom: 9rem;
+}
+
+.description-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.firstpages-img {
+  max-width: 200px;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
   
   /* ===========================
      Opciones (cards de botones)
      =========================== */
-  .options-container {
-    display: flex;
-   gap: 2rem;
-   justify-content: center;
-   margin: 2rem 0 1rem 0; /* menos espacio abajo */
-   flex-wrap: wrap;
-   padding-bottom: 4rem; /* antes 6rem */
-   margin-bottom: 0;
-
-  }
+.options-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0 1rem 0; /* menos espacio abajo */
+  flex-wrap: wrap;
+  padding-bottom: 4rem; /* antes 6rem */
+  margin-bottom: 0;
+}
   
-  .firstpages-buttons {
-    background: #fff;
+.firstpages-buttons {
+  background: #fff;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
   border-radius: var(--radius);
   padding: 2rem;
@@ -192,21 +210,21 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   text-align: center;
   cursor: pointer;
-  }
+}
   
-  .firstpages-buttons:hover {
-    transform: translateY(-6px); /* ✅ efecto flotante */
+.firstpages-buttons:hover {
+  transform: translateY(-6px); /* ✅ efecto flotante */
   box-shadow: 0 10px 24px rgba(0,0,0,0.15);
-  }
+}
   
-  .firstpages-buttons h2 {
-    margin-bottom: 1rem;
-    color: var(--color-primary-dark);
-  }
+.firstpages-buttons h2 {
+  margin-bottom: 1rem;
+  color: var(--color-primary-dark);
+}
   
   /* Botones */
-  .firstpages-btn {
-    display: inline-block;
+.firstpages-btn {
+  display: inline-block;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   padding: 0.8rem 1.8rem;
@@ -215,11 +233,12 @@
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
+}
   
-  .firstpages-btn:hover {
-    background: color-mix(in srgb, var(--color-primary) 90%, black 10%);
-  }
+.firstpages-btn:hover {
+  background: color-mix(in srgb, var(--color-primary) 90%, black 10%);
+}
+
   /* Botón principal ( Registrarse) */
 .firstpages-btn.primary {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
@@ -239,42 +258,53 @@
   background: var(--color-primary);
   color: #fff;
 }
-  /* ===========================
-     Footer
-     =========================== */
-     footer {
-      background: var(--color-primary-dark);
-      color: white;
-      text-align: center;
-      padding: 2rem 1rem;
-      margin-top: 3rem;
-      width: 100%; 
-      position: fixed;   
-       bottom: 0;           
-      left: 0;
-      right: 0;
-    }
-    
-  
+
+/* Footer institucional fijo */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  width: 100%;
+  height: 90px;
+  background-color: var(--color-primary-dark);
+  color: white;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+footer a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  margin: 0 0.5rem;
+  transition: var(--transition);
+}
+
+footer a:hover {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  footer {
+    padding: 1.5rem 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
   footer a {
-    color: var(--color-secondary);
-    text-decoration: none;
-    margin: 0 0.5rem;
-    transition: var(--transition);
+    font-size: 0.85rem;
   }
-  
-  footer a:hover {
-    color: white;
-  }
-  
+}
+
   /*LOGO UNIVERSIDAD*/
-  .logo-universidad {
-    max-width: 650px;
-    width: 100%;
-    margin-top: 5rem; 
-    height: auto;
-    margin-bottom: 1rem;
-  }
-  
-  
-  
+.logo-universidad {
+  max-width: 650px;
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  height: auto;
+}
+
