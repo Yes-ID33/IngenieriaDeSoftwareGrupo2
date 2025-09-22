@@ -1,6 +1,6 @@
 import React from 'react';
-import "../App.css";
-import "../index.css"
+import "../index.css";   // estilos globales
+import "../auth.css";    // estilos de login y registro
 
 const Login = () => {
   return (
@@ -24,19 +24,24 @@ const Login = () => {
         </div>
       </header>
 
-      <div className="container">
-        <h1>Iniciar sesión / Registro</h1>
-        <form action="http://localhost:5000/api/usuarios/login" method="POST">
-          <label htmlFor="email">Correo electrónico</label>
-          <input type="email" id="email" name="correo" required />
+      <div className="auth-container">
+  <div className="auth-card">
+    <h1>Iniciar Sesión</h1>
+    <form action="http://localhost:5000/api/usuarios/login" method="POST">
+      <label htmlFor="email">Correo electrónico</label>
+      <input type="email" id="email" name="correo" required />
 
-          <label htmlFor="password">Contraseña</label>
-          <input type="password" id="password" name="contrasena" required />
+      <label htmlFor="password">Contraseña</label>
+      <input type="password" id="password" name="contrasena" required />
 
-          <button type="submit">Iniciar sesión</button>
-        </form>
-        <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
-      </div>
+      <button type="submit" className="auth-btn">Entrar</button>
+    </form>
+    <p>
+      ¿No tienes cuenta?{" "}
+      <a href="/register" className="auth-link">Regístrate aquí</a>
+    </p>
+  </div>
+</div>
     </>
   );
 };

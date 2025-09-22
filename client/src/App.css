@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  background: var(--Gris-Claro);
+  background: #fff; /* fuerza blanco */
 }
 
 .firstpages-main {
@@ -42,9 +42,9 @@
 
 .description-container {
   text-align: center;
-  color: #fff;
+  color: var(--Azul-Oscuro); /* texto oscuro */
   margin-bottom: 32px;
-  background: rgba(21, 101, 192, 0.7);
+  background: transparent; /* sin fondo azul */
   padding: 24px;
   border-radius: 12px;
   max-width: 600px;

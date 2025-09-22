@@ -1,6 +1,4 @@
-
-import { Link } from 'react-router-dom';
-
+import { Link } from 'react-router-dom'
 
 const Firstpages = () => {
   return (
@@ -10,41 +8,56 @@ const Firstpages = () => {
           <nav>
             <ul>
               <li><a href="/">Inicio</a></li>
-              <li><a href="/">Placeholder</a></li>
+              <li><a href="/">Convocatorias</a></li>
+              <li><a href="/">Empresas</a></li>
             </ul>
           </nav>
         </div>
         <div className="nav-right">
           <nav>
             <ul>
-              <li><a href="/login">Iniciar Sesión</a></li>
-              <li><a href="/register">Registrarse</a></li>
+            <Link to="/register" className="firstpages-btn primary">Registrarse</Link>
+            <Link to="/login" className="firstpages-btn outline">Iniciar sesión</Link> 
             </ul>
           </nav>
         </div>
       </header>
 
-      <div className='description-conatiner'>
-          <img src="" alt="Foto Pascual" className="firstpages-img"/>
-          <h1 className="firstpages-title">Gestion de practicas profesionales pascualinas</h1>
-          <p>Este sitio esta creado para que los estudiiantes puedan 
-              ver ofertas de empresas que estan buscando practicantes,
-              y a su vez las empresas puedan publicar sus ofertas de practicas
-              profesionales para que los estudiantes puedan postularse.
-          </p>
+      <div className="description-conatiner">
+  <img
+    src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
+    alt="Escudo Universidad Pascual Bravo"
+    className="logo-universidad"
+  />
+  <h1 className="firstpages-title">
+    Gestión de prácticas profesionales pascualinas
+  </h1>
+  <p>
+    Este sitio está creado para que los estudiantes puedan ver ofertas de
+    empresas que buscan practicantes, y a su vez las empresas puedan publicar
+    sus ofertas de prácticas profesionales para que los estudiantes se postulen.
+  </p>
+</div>
+
+
+      <div className="options-container">
+        <div className="firstpages-buttons">
+          <h2>Ir a registrarse</h2>
+          <Link to="/register" className="firstpages-btn">Entra aquí</Link>
+        </div>
+
+        <div className="firstpages-buttons">
+          <h2>Iniciar sesión</h2>
+          <Link to="/login" className="firstpages-btn">Entra aquí</Link>
+        </div>
       </div>
-        
-      <div className='options-container'>
-          <div className="firstpages-buttons">
-              <h2>Ir a registrarse</h2>
-              <Link to="/register" className="firstpages-btn">Entra aqui</Link>
-          </div>
-           
-          <div className="firstpages-buttons">
-                <h2>Iniciar sesion</h2>
-                <Link to="/login" className="firstpages-btn">Entra aqui</Link>
-          </div>
-      </div>
+
+      <footer>
+        <p>© 2025 Institución Universitaria Pascual Bravo</p>
+        <p>
+          <a href="#">Reglamento</a> | <a href="#">Soporte</a> | <a href="#">Contacto</a>
+        </p>
+      </footer>
     </div>
   )
 }
