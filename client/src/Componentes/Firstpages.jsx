@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import styles from '../firstpages.module.css'; // asegúrate que el nombre del archivo sea singular y correcto
 
 const FirstPages = () => {
   return (
-    <div className="firstpages-main">
+  <div className='layoutContent'>
+    <div className={styles.firstpagesMain}>
       <header>
-        <div className="nav-left">
+        <div className="navLeft">
           <nav>
             <ul>
               <li><a href="/">Inicio</a></li>
@@ -13,27 +15,27 @@ const FirstPages = () => {
             </ul>
           </nav>
         </div>
-        <div className="nav-right">
+        <div className="navRight">
           <nav>
             <ul>
               <li>
-                <Link to="/register" className="firstpages-btn primary">Registrarse</Link>
+                <Link to="/register" className={`${styles.firstpagesBtn} ${styles.primary}`}>Registrarse</Link>
               </li>
               <li>
-                <Link to="/login" className="firstpages-btn outline">Iniciar sesión</Link>
+                <Link to="/login" className={`${styles.firstpagesBtn} ${styles.outline}`}>Iniciar sesión</Link>
               </li>
             </ul>
           </nav>
         </div>
       </header>
 
-      <div className="description-container">
+      <div className={styles.descriptionContainer}>
         <img
           src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
           alt="Escudo Universidad Pascual Bravo"
-          className="logo-universidad"
+          className={styles.firstpagesImg}
         />
-        <h1 className="firstpages-title">
+        <h1 className={styles.firstpagesTitle}>
           Gestión de prácticas profesionales pascualinas
         </h1>
         <p>
@@ -43,15 +45,15 @@ const FirstPages = () => {
         </p>
       </div>
 
-      <div className="options-container">
-        <div className="firstpages-buttons">
+      <div className={styles.optionsContainer}>
+        <div className={styles.firstpagesButtons}>
           <h2>Ir a registrarse</h2>
-          <Link to="/register" className="firstpages-btn">Entra aquí</Link>
+          <Link to="/register" className={styles.firstpagesBtn}>Entra aquí</Link>
         </div>
 
-        <div className="firstpages-buttons">
+        <div className={styles.firstpagesButtons}>
           <h2>Iniciar sesión</h2>
-          <Link to="/login" className="firstpages-btn">Entra aquí</Link>
+          <Link to="/login" className={styles.firstpagesBtn}>Entra aquí</Link>
         </div>
       </div>
 
@@ -62,6 +64,7 @@ const FirstPages = () => {
         </p>
       </footer>
     </div>
+  </div>
   );
 };
 

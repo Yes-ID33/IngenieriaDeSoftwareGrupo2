@@ -1,54 +1,24 @@
 :root {
-  --color-primary: #0299D8;        /* Azul Pascual Bravo */
-  --color-primary-dark: #0F3854;   /* Azul Navy */
-  --color-secondary: #FFC501;      /* Amarillo institucional */
-  --color-accent: #4E3D98;         /* Púrpura */
+  --color-primary: #0299D8;
+  --color-primary-dark: #0F3854;
+  --color-secondary: #FFC501;
+  --color-accent: #4E3D98;
 
   --color-support-orange: #F29A01;
   --color-support-red: #D8473A;
   --color-support-green: #00B876;
 
-  --color-bg: #F2F6F9;             /* Fondo claro */
-  --color-text: #001A34;           /* Texto principal */
-  --color-muted: #4E4E4E;          /* Texto secundario */
+  --color-bg: #F2F6F9;
+  --color-text: #001A34;
+  --color-muted: #4E4E4E;
 
-  --radius: 10px; /*diseño y efectos*/
+  --radius: 10px;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
 
-  /* 🌓 Preferencia de esquema de color */
   color-scheme: light;
 }
 
-  
-  html, body {
-    background: rgb(255, 0, 0) !important;  /* fuerza el blanco */
-    color: var(--color-text);
-    height: 100%;
-   margin: 0;
-   overflow-x: hidden;   /* oculta scroll horizontal */
-  overflow-y: auto;     /* permite scroll vertical */
-  overflow-y: scroll;
-  }
-  /* ===========================
-     Reset básico
-     =========================== */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: "Segoe UI", Roboto, sans-serif;
-    background: #fff;   
-    color: var(--color-text);
-    line-height: 1.5;
-    
-  }
-  
 /* Header institucional fijo */
 header {
   background-color: var(--color-primary-dark);
@@ -57,18 +27,19 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 0.3rem 2%;
-  height: 55px;   /* altura fija */
+  height: 70px;   /* altura fija */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  overflow: hidden;
   position: fixed;
   top: 0;
   z-index: 1000;
-  width: 100%;
+  inset: 0;
+  width: 100vw;
 }
 
-
-
-header .nav-left ul,
-header .nav-right ul {
+header .navLeft ul,
+header .navRight ul {
   list-style: none;
   display: flex;
   gap: 1.2rem;
@@ -112,14 +83,14 @@ header nav ul li a:hover::after {
     padding: 1rem;
   }
 
-  header .nav-left,
-  header .nav-right {
+  header .navLeft,
+  header .navRight {
     width: 100%;
     margin: 0.5rem 0;
   }
 
-  header .nav-left ul,
-  header .nav-right ul {
+  header .navLeft ul,
+  header .navRight ul {
     justify-content: center;
   }
 }
@@ -130,48 +101,51 @@ header nav ul li a:hover::after {
   }
 }
 
-
-  
-  /* Sección descriptiva */
-  .description-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   
-    text-align: center;    
-    max-width: 900px;
-    margin: 2rem auto;     
-    padding: 1rem;
-  }
-    
-  /* Aplica a cualquier contenedor principal */
-  .main-content,
-  .firstpages-main,
-  .auth-container {
-    padding-top: 70px;   /* suficiente para un header de ~50px */
-  padding-bottom: 90px; /* espacio para el footer */
-  box-sizing: border-box;
-  }
-
-
-  .firstpages-title {
-    font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-  margin: 1.5rem 0;
-  }
-
-.firstpages-main {
-  height: 100vh;              /*  ocupa toda la pantalla */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;    /*  centra vertical y horizontal */
-  text-align: center;
-  padding: 2rem;
-  padding-bottom: 9rem;
+/* ===========================
+   Reset y base
+   =========================== */
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.description-container {
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+/* ===========================
+   Layout general
+   =========================== */
+.mainContent,
+.firstpagesMain,
+.authContainer {
+  padding-top: 75px;
+  padding-bottom: 95px;
+  min-height: calc(100vh - 170px);
+  box-sizing: border-box;
+}
+
+.layoutContent {
+  padding-top: 70px;
+  padding-bottom: calc(90px + 35px);
+  box-sizing: border-box;
+}
+
+/* ===========================
+   Sección descriptiva
+   =========================== */
+.descriptionContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -181,27 +155,33 @@ header nav ul li a:hover::after {
   padding: 1rem;
 }
 
-.firstpages-img {
+.firstpagesTitle {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 1.5rem 0;
+}
+
+.firstpagesImg {
   max-width: 200px;
   margin-bottom: 0.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
-  
-  /* ===========================
-     Opciones (cards de botones)
-     =========================== */
-.options-container {
+
+/* ===========================
+   Tarjetas de acción
+   =========================== */
+.optionsContainer {
   display: flex;
   gap: 2rem;
   justify-content: center;
-  margin: 2rem 0 1rem 0; /* menos espacio abajo */
   flex-wrap: wrap;
-  padding-bottom: 4rem; /* antes 6rem */
-  margin-bottom: 0;
+  margin: 2rem 0 1rem 0;
+  padding-bottom: 4rem;
 }
-  
-.firstpages-buttons {
+
+.firstpagesButtons {
   background: #fff;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
   border-radius: var(--radius);
@@ -212,50 +192,49 @@ header nav ul li a:hover::after {
   text-align: center;
   cursor: pointer;
 }
-  
-.firstpages-buttons:hover {
-  transform: translateY(-6px); /* ✅ efecto flotante */
-  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+
+.firstpagesButtons:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
-  
-.firstpages-buttons h2 {
+
+.firstpagesButtons h2 {
   margin-bottom: 1rem;
   color: var(--color-primary-dark);
 }
-  
-  /* Botones */
-.firstpages-btn {
+
+/* ===========================
+   Botones
+   =========================== */
+.firstpagesBtn {
   display: inline-block;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   padding: 0.8rem 1.8rem;
-  border-radius: 50px; /* ✅ pill redondeado */
+  border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-  
-.firstpages-btn:hover {
+
+.firstpagesBtn:hover {
   background: color-mix(in srgb, var(--color-primary) 90%, black 10%);
 }
 
-  /* Botón principal ( Registrarse) */
-.firstpages-btn.primary {
+.firstpagesBtn.primary {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-  color: #fff;
   border: none;
 }
 
-/* Botón secundario ( Iniciar sesión) */
-.firstpages-btn.outline {
+.firstpagesBtn.outline {
   background: transparent;
   border: 2px solid var(--color-primary);
   color: var(--color-primary);
-  box-shadow: none; /* más limpio */
+  box-shadow: none;
 }
 
-.firstpages-btn.outline:hover {
+.firstpagesBtn.outline:hover {
   background: var(--color-primary);
   color: #fff;
 }
@@ -300,12 +279,11 @@ footer a:hover {
   }
 }
 
-  /*LOGO UNIVERSIDAD*/
-.logo-universidad {
+/* Logo institucional */
+.logoUniversidad {
   max-width: 650px;
   width: 100%;
   margin-top: 2rem;
   margin-bottom: 1rem;
   height: auto;
 }
-

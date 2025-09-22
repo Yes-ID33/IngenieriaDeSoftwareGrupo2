@@ -1,20 +1,20 @@
 import React from 'react';
-import "../index.css";   // estilos globales
-import "../auth.css";    // estilos de login y registro
+import "../index.css";
+import "../auth.css";
 
 const Login = () => {
   return (
-    <>
+    <div className='layoutContent'>
       <header>
-        <div className="nav-left">
+        <div className="navLeft">
           <nav>
             <ul>
               <li><a href="/">Inicio</a></li>
-              <li><a href="/">Placeholder</a></li>
+              <li><a href="/">Convocatorias</a></li>
             </ul>
           </nav>
         </div>
-        <div className="nav-right">
+        <div className="navRight">
           <nav>
             <ul>
               <li><a href="/login">Iniciar Sesión</a></li>
@@ -24,25 +24,25 @@ const Login = () => {
         </div>
       </header>
 
-      <div className="auth-container">
-  <div className="auth-card">
-    <h1>Iniciar Sesión</h1>
-    <form action="http://localhost:5000/api/usuarios/login" method="POST">
-      <label htmlFor="email">Correo electrónico</label>
-      <input type="email" id="email" name="correo" required />
+      <div className="authContainer">
+        <div className="authCard">
+          <h1>Iniciar Sesión</h1>
+          <form action="http://localhost:5000/api/usuarios/login" method="POST">
+            <label htmlFor="email">Correo electrónico</label>
+            <input type="email" id="email" name="correo" required />
 
-      <label htmlFor="password">Contraseña</label>
-      <input type="password" id="password" name="contrasena" required />
+            <label htmlFor="password">Contraseña</label>
+            <input type="password" id="password" name="contrasena" required />
 
-      <button type="submit" className="auth-btn">Entrar</button>
-    </form>
-    <p>
-      ¿No tienes cuenta?{" "}
-      <a href="/register" className="auth-link">Regístrate aquí</a>
-    </p>
-  </div>
-</div>
-    </>
+            <button type="submit" className="authBtn">Entrar</button>
+          </form>
+          <p>
+            ¿No tienes cuenta?{" "}
+            <a href="/register" className="authLink">Regístrate aquí</a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

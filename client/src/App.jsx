@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Firstpages from './Componentes/Firstpages';
 import Login from './Componentes/Login';
 import Register from './Componentes/Register';
-import './App.css';
 import "./index.css";
 import "./auth.css";
 
