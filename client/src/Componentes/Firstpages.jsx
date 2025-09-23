@@ -1,33 +1,71 @@
-
 import { Link } from 'react-router-dom';
+import styles from '../firstpages.module.css'; // asegúrate que el nombre del archivo sea singular y correcto
 
-
-const Firstpages = () => {
+const FirstPages = () => {
   return (
-    <div className="firstpages-main">
-        <div className='description-conatiner'>
-            <img src="" alt="Foto Pacual" className="firstpages-img"/>
-            <h1 className="firstpages-title">Gestion de practicas profesionales</h1>
-            <p>Este sitio esta creado para que los estudiiantes puedan 
-               ver ofertas de empresas que estan buscando practicantes,
-               y a su vez las empresas puedan publicar sus ofertas de practicas
-               profesionales para que los estudiantes puedan postularse.
-            </p>
+  <div className='layoutContent'>
+    <div className={styles.firstpagesMain}>
+      <header>
+        <div className="navLeft">
+          <nav>
+            <ul>
+              <li><a href="/">Inicio</a></li>
+              <li><a href="/">Convocatorias</a></li>
+              <li><a href="/">Empresas</a></li>
+            </ul>
+          </nav>
         </div>
-        
-        <div className='options-container'>
-            <div className="firstpages-buttons">
-                 <h2>Ir a registrarse</h2>
-                <Link to="/register" className="firstpages-btn">Entra aqui</Link>
-            </div>
-           
-            <div className="firstpages-buttons">
-                 <h2>Iniciar sesion</h2>
-                 <Link to="/login" className="firstpages-btn">Entra aqui</Link>
-            </div>
+        <div className="navRight">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/register" className={`${styles.firstpagesBtn} ${styles.primary}`}>Registrarse</Link>
+              </li>
+              <li>
+                <Link to="/login" className={`${styles.firstpagesBtn} ${styles.outline}`}>Iniciar sesión</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
-    </div>
-  )
-}
+      </header>
 
-export default Firstpages
+      <div className={styles.descriptionContainer}>
+        <img
+          src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
+          alt="Escudo Universidad Pascual Bravo"
+          className={styles.firstpagesImg}
+        />
+        <h1 className={styles.firstpagesTitle}>
+          Gestión de prácticas profesionales pascualinas
+        </h1>
+        <p>
+          Este sitio está creado para que los estudiantes puedan ver ofertas de
+          empresas que buscan practicantes, y a su vez las empresas puedan publicar
+          sus ofertas de prácticas profesionales para que los estudiantes se postulen.
+        </p>
+      </div>
+
+      <div className={styles.optionsContainer}>
+        <div className={styles.firstpagesButtons}>
+          <h2>Ir a registrarse</h2>
+          <Link to="/register" className={styles.firstpagesBtn}>Entra aquí</Link>
+        </div>
+
+        <div className={styles.firstpagesButtons}>
+          <h2>Iniciar sesión</h2>
+          <Link to="/login" className={styles.firstpagesBtn}>Entra aquí</Link>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2025 Institución Universitaria Pascual Bravo</p>
+        <p>
+          <a href="#">Reglamento</a> | <a href="#">Soporte</a> | <a href="#">Contacto</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+  );
+};
+
+export default FirstPages;

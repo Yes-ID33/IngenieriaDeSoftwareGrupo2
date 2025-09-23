@@ -6,7 +6,7 @@ import {
   iniciarSesion, 
   obtenerPerfil 
 } from '../controllers/usuarios.controllers.js';
-import { verificarToken } from '../middleware/autentificaion.js';
+import { verificarToken } from '../middleware/autentificacion.js';
 
 const router = Router();
 

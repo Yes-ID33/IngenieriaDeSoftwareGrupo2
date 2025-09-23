@@ -8,6 +8,10 @@ services:
     container_name: node_server
     ports:
       - "5000:5000"
+    develop: #para actualizar el contenedor cada vez que se guarde un cambio en el IDE
+      watch:
+        - path: .
+          action: rebuild
     volumes:
       - ./server:/app
       - /app/node_modules
@@ -21,3 +25,8 @@ services:
     container_name: react_client
     ports:
       - "5173:5173"   # el 3000 local va al 80 del contenedor
+    develop: #para actualizar el contenedor cada vez que se guarde un cambio en el IDE
+      watch:
+        - path: .
+          action: rebuild
+    
