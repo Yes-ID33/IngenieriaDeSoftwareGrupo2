@@ -94,3 +94,98 @@
   font-weight: 600;
   margin: 0.8rem 0;
 }
+
+/* Estilos adicionales para la página de verificación */
+
+.verifyDescription {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.verifyInput {
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+}
+
+.timeRemaining {
+  text-align: center;
+  color: #ff6b35;
+  font-weight: 500;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.resendSection {
+  text-align: center;
+  margin: 2rem 0 1rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.resendSection p {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.resendBtn {
+  background: none;
+  border: 1px solid #007bff;
+  color: #007bff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.resendBtn:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+}
+
+.resendBtn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.resendInfo {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Mejorar el botón de envío cuando está cargando */
+.authBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 480px) {
+  .verifyInput {
+    letter-spacing: 0.3rem;
+    font-size: 1.1rem;
+  }
+  
+  .verifyDescription {
+    font-size: 0.9rem;
+  }
+}
