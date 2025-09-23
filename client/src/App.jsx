@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Firstpages from './Componentes/Firstpages';
-import Login from './Componentes/Login';
-import Register from './Componentes/Register';
-import "./index.css";
-import "./auth.css";
+import PaginaInicial from './pages/PaginaInicial';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ActivarCuenta from './pages/activarCuenta';
+import "./styles/index.css";
+import "./styles/auth.css";
 
 function App() {
 
@@ -12,9 +13,10 @@ function App() {
     <div>
        <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Firstpages />} />
+            <Route path="/" element={<PaginaInicial />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/activar-cuenta" element={<ActivarCuenta />} />
         </Routes>
     </BrowserRouter>
     </div>

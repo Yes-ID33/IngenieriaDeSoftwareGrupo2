@@ -68,6 +68,17 @@ export const enviarEmailVerificacion = async (correo, nombre, token) => {
             Ingresa este código en el sistema para activar tu cuenta y poder iniciar sesión.
           </p>
           
+          <!-- AGREGADO: Botón/link directo -->
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/activar-cuenta?correo=${encodeURIComponent(correo)}" 
+               style="background-color: #2E8B57; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+              🔗 Verificar Cuenta Directamente
+            </a>
+            <p style="color: #666; font-size: 12px; margin-top: 10px;">
+              Haz clic aquí para abrir la página de verificación con tu correo pre-llenado
+            </p>
+          </div>
+          
           <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
           
           <div style="color: #888; font-size: 12px; text-align: center;">

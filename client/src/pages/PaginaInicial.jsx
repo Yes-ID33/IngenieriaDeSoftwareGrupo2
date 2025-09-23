@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import styles from '../firstpages.module.css'; // asegúrate que el nombre del archivo sea singular y correcto
+import styles from '../styles/paginainicial.module.css'; // asegúrate que el nombre del archivo sea singular y correcto
 
-const FirstPages = () => {
+const PaginaInicial = () => {
   return (
   <div className='layoutContent'>
     <div className={styles.firstpagesMain}>
@@ -68,4 +68,4 @@ const FirstPages = () => {
   );
 };
 
-export default FirstPages;
+export default PaginaInicial;

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import "../index.css";
-import "../auth.css";
+import { useNavigate } from 'react-router-dom'; 
+import "../styles/index.css";
+import "../styles/auth.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
   });
 
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -39,7 +41,12 @@ const Register = () => {
         contrasena: formData.contrasena
       });
 
-      alert(response.data.message);
+      navigate('/activar-cuenta', { 
+        state: { 
+          correo: formData.correo
+        } 
+      });
+
       setError('');
     } catch (err) {
       console.error(err);

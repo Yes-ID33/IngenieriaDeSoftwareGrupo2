@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom'; // AGREGADO
 import axios from 'axios';
-import "../index.css";
-import "../auth.css";
+import "../styles/index.css";
+import "../styles/auth.css";
 
 const ActivarCuenta = () => {
   const [correo, setCorreo] = useState('');
   const [token, setToken] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
+  
+  // AGREGADO: Para obtener datos de navegación y URL
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // AGREGADO: Pre-llenar correo desde navegación o URL
+  useEffect(() => {
+    // Obtener correo desde la navegación (cuando viene desde registro)
+    if (location.state?.correo) {
+      setCorreo(location.state.correo);
+    }
+    
+    // Obtener correo desde URL params (cuando viene desde email)
+    const urlParams = new URLSearchParams(location.search);
+    const correoFromUrl = urlParams.get('correo');
+    if (correoFromUrl) {
+      setCorreo(correoFromUrl);
+    }
+  }, [location]);
 
   // Función para verificar la cuenta con el token
   const handleVerificar = async (e) => {
@@ -22,6 +42,17 @@ const ActivarCuenta = () => {
       });
 
       setMensaje(response.data.message);
+      
+      // AGREGADO: Redirigir al login después de verificar
+      setTimeout(() => {
+        navigate('/login', { 
+          state: { 
+            message: 'Cuenta verificada exitosamente. Ya puedes iniciar sesión.',
+            correo: correo 
+          } 
+        });
+      }, 2000);
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Error al verificar la cuenta');
     }

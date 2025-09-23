@@ -1,6 +1,6 @@
 import React from 'react';
-import "../index.css";
-import "../auth.css";
+import "../styles/index.css";
+import "../styles/auth.css";
 
 const Login = () => {
   return (
