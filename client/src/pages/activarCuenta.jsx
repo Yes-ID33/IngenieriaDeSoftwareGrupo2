@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; // AGREGADO
 import axios from 'axios';
+import Header from '../components/header.jsx';
 import "../styles/index.css";
 import "../styles/auth.css";
 
@@ -76,24 +77,7 @@ const ActivarCuenta = () => {
 
   return (
     <div className="layoutContent">
-      <header>
-        <div className="navLeft">
-          <nav>
-            <ul>
-              <li><a href="/">Inicio</a></li>
-              <li><a href="/">Convocatorias</a></li>
-            </ul>
-          </nav>
-        </div>
-        <div className="navRight">
-          <nav>
-            <ul>
-              <li><a href="/login">Iniciar Sesión</a></li>
-              <li><a href="/register">Registrarse</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <div className="authContainer">
         <div className="authCard">

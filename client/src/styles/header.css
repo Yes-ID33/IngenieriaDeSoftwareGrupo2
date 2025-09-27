@@ -1,0 +1,164 @@
+/* Header institucional fijo */
+header {
+  background-color: var(--color-primary-dark);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 2%;
+  height: 70px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  inset: 0;
+  width: 100vw;
+  transition: height 0.3s ease;
+}
+
+header .navLeft ul,
+header .navRight ul {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.3rem 0;
+  position: relative;
+  transition: var(--transition);
+}
+
+header nav ul li a:hover {
+  color: var(--color-secondary);
+}
+
+header nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-secondary);
+  transition: var(--transition);
+}
+
+header nav ul li a:hover::after {
+  width: 100%;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdownToggle {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: var(--transition);
+}
+
+.dropdownToggle:hover {
+  color: var(--color-secondary);
+}
+
+.dropdownToggle::after {
+  content: ' ▾';
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  color: var(--color-text);
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border: 1px solid var(--color-primary);
+  min-width: 160px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none;
+  z-index: 1000;
+}
+
+.dropdownMenu li {
+  padding: 0.5rem 1rem;
+}
+
+.dropdownMenu li a,
+.dropdownMenu li button {
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.dropdownMenu li:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary-dark);
+}
+
+.dropdown:hover .dropdownMenu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    height: auto;
+    flex-wrap: wrap;
+    align-content: center;
+    padding: 1rem;
+  }
+
+  header .navLeft,
+  header .navRight {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  header .navLeft ul,
+  header .navRight ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .dropdownMenu {
+    left: 0;
+    right: auto;
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header nav ul li a {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+}

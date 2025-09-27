@@ -1,33 +1,12 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/paginainicial.module.css'; // asegúrate que el nombre del archivo sea singular y correcto
+import Header from '../components/header.jsx';
 
 const PaginaInicial = () => {
   return (
   <div className='layoutContent'>
     <div className={styles.firstpagesMain}>
-      <header>
-        <div className="navLeft">
-          <nav>
-            <ul>
-              <li><a href="/">Inicio</a></li>
-              <li><a href="/">Convocatorias</a></li>
-              <li><a href="/">Empresas</a></li>
-            </ul>
-          </nav>
-        </div>
-        <div className="navRight">
-          <nav>
-            <ul>
-              <li>
-                <Link to="/register" className={`${styles.firstpagesBtn} ${styles.primary}`}>Registrarse</Link>
-              </li>
-              <li>
-                <Link to="/login" className={`${styles.firstpagesBtn} ${styles.outline}`}>Iniciar sesión</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <div className={styles.descriptionContainer}>
         <img
