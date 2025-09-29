@@ -1,16 +1,24 @@
-import React, { createContext, useState, useContext } from 'react';
-//Esto es para manejar la sesión global y hacer "dinámico" el header
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('usuario');
+    if (storedUser) {
+      setUsuario(JSON.parse(storedUser));
+    }
+  }, []);
+
   const iniciarSesion = (datosUsuario) => {
     setUsuario(datosUsuario);
   };
 
   const cerrarSesion = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
     setUsuario(null);
   };
 

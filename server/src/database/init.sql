@@ -1,4 +1,4 @@
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
@@ -11,6 +11,3 @@ CREATE TABLE usuarios (
     token_expira TIMESTAMP,
     ultimo_acceso TIMESTAMP
 );
-
-INSERT INTO usuarios (nombre, apellido, celular, correo, contrasena)
-VALUES ('Angelo', 'Arango', '3014238770', 'angelo@example.com', '1234');
