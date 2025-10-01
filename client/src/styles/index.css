@@ -23,7 +23,7 @@
    Reset y base
    =========================== */
 html, body {
-  background: var(--color-bg);
+  background: transparent;
   color: var(--color-text);
   height: 100%;
   margin: 0;
@@ -92,13 +92,20 @@ body {
    =========================== */
 .optionsContainer {
   display: flex;
-  gap: 2rem;
+  flex-direction: row;   /* fuerza horizontal */
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 2rem;
+  flex-wrap: nowrap;     /* evita que uno se baje */
   margin: 2rem 0 1rem 0;
   padding-bottom: 4rem;
 }
-
+@media (max-width: 768px) {
+  .optionsContainer {
+    flex-direction: column; /* en móviles se apilan */
+    align-items: center;
+  }
+}
 .firstpagesButtons {
   background: #fff;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
@@ -187,9 +194,9 @@ footer a:hover {
 
 @media (max-width: 768px) {
   footer {
+    position: relative;
     height: auto;
-    padding: 1.6rem 1rem;
-    font-size: 0.95rem;
+    padding: 1rem;
   }
 }
 
@@ -208,4 +215,40 @@ footer a:hover {
   margin-top: 2rem;
   margin-bottom: 1rem;
   height: auto;
+}
+/* fondo de pagina */
+.fondoParqueTech {
+  background-image: url('/Parque-Tech.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* no lo centres verticalmente, deja que fluya */
+  padding: 75px 1rem 95px; /* espacio arriba/abajo y margen lateral en móviles */
+  box-sizing: border-box;
+}
+.contenidoTransparente {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius);
+  padding: 1.2rem 2rem;   /* menos padding arriba/abajo, más a los lados */
+  max-width: 650px;       /* más ancha en escritorio */
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+@media (max-width: 768px) {
+  .contenidoTransparente {
+    max-width: 90%;   /* no tan ancho */
+    padding: 1rem;    /* menos padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .contenidoTransparente {
+    padding: 1rem;
+    border-radius: 6px;
+  }
 }

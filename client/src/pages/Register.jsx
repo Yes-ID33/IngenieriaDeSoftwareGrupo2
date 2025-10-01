@@ -56,6 +56,7 @@ const Register = () => {
   };
 
   return (
+    <div className="fondoParqueTech">
     <div className='layoutContent'>
       <Header />
 
@@ -91,6 +92,7 @@ const Register = () => {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 };

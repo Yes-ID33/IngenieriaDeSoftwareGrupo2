@@ -38,6 +38,8 @@ const Login = () => { //para redirigir a la página inicial en el 5173 y no al j
   };
 
   return (
+    <div className="fondoParqueTech">
+    
     <div className='layoutContent'>
       <Header />
       <div className="authContainer">
@@ -59,6 +61,8 @@ const Login = () => { //para redirigir a la página inicial en el 5173 y no al j
         </div>
       </div>
     </div>
+    </div>
+   
   );
 };
 

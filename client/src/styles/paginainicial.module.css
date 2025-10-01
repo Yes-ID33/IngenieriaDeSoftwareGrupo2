@@ -93,3 +93,12 @@
 .firstpagesBtn:hover {
   background: color-mix(in srgb, var(--color-primary) 90%, black 10%);
 }
+
+.fondoParqueTech {
+  background-image: url('/Parque-Tech.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
