@@ -33,7 +33,7 @@ const Header = () => {
               </>
             ) : (
               <li className="dropdown">
-                <button className="dropdownToggle">Perfil ▾</button>
+                <button className="dropdownToggle">Perfil </button>
                 <ul className="dropdownMenu">
                   <li><Link to="/perfil">Mi perfil</Link></li>
                   <li><Link to="/solicitudes">Mis solicitudes</Link></li>

@@ -9,7 +9,7 @@ header {
   height: 70px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   position: fixed;
   top: 0;
   z-index: 1000;
@@ -83,7 +83,7 @@ header nav ul li a:hover::after {
 
 .dropdownMenu {
   position: absolute;
-  top: 100%;
+  top: 30px;
   right: 0;
   background-color: white;
   color: var(--color-text);
@@ -98,7 +98,7 @@ header nav ul li a:hover::after {
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   display: none;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .dropdownMenu li {
@@ -112,15 +112,22 @@ header nav ul li a:hover::after {
   background: none;
   border: none;
   width: 100%;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   font-size: 0.95rem;
 }
 
-.dropdownMenu li:hover {
+.dropdown li button{
+  font-weight: 600;
+  padding: 0.3rem 0;
+}
+
+.dropdownMenu li:hover, 
+.dropdownMenu li button:hover {
   background-color: var(--color-bg);
   color: var(--color-primary-dark);
 }
+
 
 .dropdown:hover .dropdownMenu {
   display: block;

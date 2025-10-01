@@ -10,7 +10,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Ym251106
       POSTGRES_DB: practicasPascualinas
-      
+    volumes:
+      - backUpPracticasPascualinas:/var/lib/postgresql/data
+      - ./server/src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./server/src/database/restore.sql:/docker-entrypoint-initdb.d/restore.sql
+      - ./server/src/database/backups:/docker-entrypoint-initdb.d/backups
+          
   server:
     build:
       context: ./server
@@ -42,3 +47,5 @@ services:
         - path: .
           action: rebuild
     
+volumes:
+  backUpPracticasPascualinas:
