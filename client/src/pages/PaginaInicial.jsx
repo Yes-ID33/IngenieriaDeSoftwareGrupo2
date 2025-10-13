@@ -16,7 +16,7 @@ const PaginaInicial = () => {
         className={styles.firstpagesImg}
       />
       <h1 className={styles.firstpagesTitle}>
-        Gestión de prácticas profesionales pascualinas
+        Gestión de prácticas profesionales 
       </h1>
       <p>
         Este sitio está creado para que los estudiantes puedan ver ofertas de
