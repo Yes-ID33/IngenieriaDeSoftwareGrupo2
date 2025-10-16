@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import RegisterBase from './RegisterBase.jsx';
+import "../styles/index.css";
+import "../styles/auth.css";
 
 const RegisterEmpresa = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    celular: '',
     correo: '',
     contrasena: '',
     confirmarContrasena: '',
@@ -20,9 +21,10 @@ const RegisterEmpresa = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
@@ -32,51 +34,54 @@ const RegisterEmpresa = () => {
       setError('Las contraseñas no coinciden');
       return;
     }
+
     try {
-      await axios.post('http://localhost:5000/api/usuarios/registro', {
-        nombre: formData.nombre,
-        celular: formData.celular,
-        correo: formData.correo,
-        contrasena: formData.contrasena,
-        rol: 'empresa',
-        nit_id: formData.nit_id,
-        razon_social: formData.razon_social,
-        nombre_reclutador: formData.nombre_reclutador,
-        contacto_correo: formData.contacto_correo,
-        contacto_telefono: formData.contacto_telefono
+      const res = await fetch('http://localhost:5000/api/usuarios/registro-empresa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
-      navigate('/activar-cuenta', { state: { correo: formData.correo } });
-      setError('');
+
+      const data = await res.json();
+      if (data.success) {
+        navigate('/activar-cuenta', { state: { correo: formData.correo } });
+        setError('');
+      } else {
+        setError(data.message || 'Error al registrar empresa');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al registrar usuario');
+      console.error(err);
+      setError('Error de conexión');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Nombre</label>
-      <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-      <label>Celular</label>
-      <input type="text" name="celular" value={formData.celular} onChange={handleChange} required />
-      <label>Correo electrónico</label>
-      <input type="email" name="correo" value={formData.correo} onChange={handleChange} required />
-      <label>Contraseña</label>
-      <input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
-      <label>Confirmar contraseña</label>
-      <input type="password" name="confirmarContrasena" value={formData.confirmarContrasena} onChange={handleChange} required />
-      <label>NIT</label>
-      <input type="text" name="nit_id" value={formData.nit_id} onChange={handleChange} required />
-      <label>Razón social</label>
-      <input type="text" name="razon_social" value={formData.razon_social} onChange={handleChange} required />
-      <label>Nombre del reclutador</label>
-      <input type="text" name="nombre_reclutador" value={formData.nombre_reclutador} onChange={handleChange} required />
-      <label>Correo de contacto</label>
-      <input type="email" name="contacto_correo" value={formData.contacto_correo} onChange={handleChange} required />
-      <label>Teléfono de contacto</label>
-      <input type="text" name="contacto_telefono" value={formData.contacto_telefono} onChange={handleChange} required />
-      {error && <p className="errorMessage">{error}</p>}
-      <button type="submit" className="authBtn">Crear cuenta empresa</button>
-    </form>
+    <div className="authContainer">
+      <div className="authCard">
+        <h2>Registro de Empresa</h2>
+        <form onSubmit={handleSubmit}>
+          <RegisterBase formData={formData} handleChange={handleChange} />
+
+          <label htmlFor="nit_id">NIT</label>
+          <input type="text" id="nit_id" name="nit_id" value={formData.nit_id} onChange={handleChange} required />
+
+          <label htmlFor="razon_social">Razón social</label>
+          <input type="text" id="razon_social" name="razon_social" value={formData.razon_social} onChange={handleChange} required />
+
+          <label htmlFor="nombre_reclutador">Nombre del reclutador</label>
+          <input type="text" id="nombre_reclutador" name="nombre_reclutador" value={formData.nombre_reclutador} onChange={handleChange} required />
+
+          <label htmlFor="contacto_correo">Correo de contacto</label>
+          <input type="email" id="contacto_correo" name="contacto_correo" value={formData.contacto_correo} onChange={handleChange} required />
+
+          <label htmlFor="contacto_telefono">Teléfono de contacto</label>
+          <input type="text" id="contacto_telefono" name="contacto_telefono" value={formData.contacto_telefono} onChange={handleChange} required />
+
+          {error && <p className="errorMessage">{error}</p>}
+          <button type="submit" className="authBtn">Registrar empresa</button>
+        </form>
+      </div>
+    </div>
   );
 };
 

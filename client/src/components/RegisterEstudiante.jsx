@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import RegisterBase from './RegisterBase.jsx';
+import "../styles/index.css";
+import "../styles/auth.css";
 
 const RegisterEstudiante = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    apellido: '',
-    celular: '',
     correo: '',
     contrasena: '',
     confirmarContrasena: '',
@@ -14,6 +14,7 @@ const RegisterEstudiante = () => {
     creditos_aprobados: '',
     modulo_empleabilidad: false
   });
+
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -31,43 +32,50 @@ const RegisterEstudiante = () => {
       setError('Las contraseñas no coinciden');
       return;
     }
+
     try {
-      await axios.post('http://localhost:5000/api/usuarios/registro', {
-        ...formData,
-        rol: 'estudiante'
+      const res = await fetch('http://localhost:5000/api/usuarios/registro-estudiante', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
-      navigate('/activar-cuenta', { state: { correo: formData.correo } });
-      setError('');
+
+      const data = await res.json();
+      if (data.success) {
+        navigate('/activar-cuenta', { state: { correo: formData.correo } });
+        setError('');
+      } else {
+        setError(data.message || 'Error al registrar estudiante');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al registrar usuario');
+      console.error(err);
+      setError('Error de conexión');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Nombre</label>
-      <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-      <label>Apellido</label>
-      <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} required />
-      <label>Celular</label>
-      <input type="text" name="celular" value={formData.celular} onChange={handleChange} required />
-      <label>Correo electrónico</label>
-      <input type="email" name="correo" value={formData.correo} onChange={handleChange} required />
-      <label>Contraseña</label>
-      <input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
-      <label>Confirmar contraseña</label>
-      <input type="password" name="confirmarContrasena" value={formData.confirmarContrasena} onChange={handleChange} required />
-      <label>Cédula</label>
-      <input type="text" name="cedula_id" value={formData.cedula_id} onChange={handleChange} required />
-      <label>Créditos aprobados</label>
-      <input type="number" name="creditos_aprobados" value={formData.creditos_aprobados} onChange={handleChange} required />
-      <label>
-        <input type="checkbox" name="modulo_empleabilidad" checked={formData.modulo_empleabilidad} onChange={handleChange} />
-        ¿Ha cursado el módulo de empleabilidad?
-      </label>
-      {error && <p className="errorMessage">{error}</p>}
-      <button type="submit" className="authBtn">Crear cuenta estudiante</button>
-    </form>
+    <div className="authContainer">
+      <div className="authCard">
+        <h2>Registro de Estudiante</h2>
+        <form onSubmit={handleSubmit}>
+          <RegisterBase formData={formData} handleChange={handleChange} />
+
+          <label htmlFor="cedula_id">Cédula</label>
+          <input type="text" id="cedula_id" name="cedula_id" value={formData.cedula_id} onChange={handleChange} required />
+
+          <label htmlFor="creditos_aprobados">Créditos aprobados</label>
+          <input type="number" id="creditos_aprobados" name="creditos_aprobados" value={formData.creditos_aprobados} onChange={handleChange} required />
+
+          <label>
+            <input type="checkbox" name="modulo_empleabilidad" checked={formData.modulo_empleabilidad} onChange={handleChange} />
+            ¿Ha completado el módulo de empleabilidad?
+          </label>
+
+          {error && <p className="errorMessage">{error}</p>}
+          <button type="submit" className="authBtn">Registrar estudiante</button>
+        </form>
+      </div>
+    </div>
   );
 };
 
