@@ -1,0 +1,118 @@
+/* ===========================
+   Estilos para vista de perfil
+   =========================== */
+
+.statsPerfil {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+.perfilInfo {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-bg);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius);
+}
+
+.perfilInfo p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.perfilInfo strong {
+  color: var(--color-primary-dark);
+}
+
+/* ===========================
+   Tabla de solicitudes
+   =========================== */
+
+.tablaSolicitudes {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tablaSolicitudes th,
+.tablaSolicitudes td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.95rem;
+}
+
+.tablaSolicitudes th {
+  background-color: var(--color-primary-dark);
+  color: white;
+  font-weight: 600;
+}
+
+.tablaSolicitudes tr:hover {
+  background-color: var(--color-bg);
+}
+
+.tablaSolicitudes td:nth-child(2) {
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.tablaSolicitudes td:nth-child(3) {
+  text-transform: capitalize;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+/* ===========================
+   Botón "Ver todas"
+   =========================== */
+
+.verTodasBtn {
+  margin-top: 1.5rem;
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  border: none;
+  cursor: pointer;
+}
+
+.verTodasBtn:hover {
+  background: color-mix(in srgb, var(--color-primary) 90%, black 10%);
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+
+@media (max-width: 768px) {
+  .statsPerfil {
+    padding: 1rem;
+  }
+
+  .tablaSolicitudes th,
+  .tablaSolicitudes td {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .verTodasBtn {
+    width: 100%;
+    text-align: center;
+  }
+}
