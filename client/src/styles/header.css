@@ -12,9 +12,10 @@ header {
   overflow: visible;
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 1000;
-  inset: 0;
-  width: 100vw;
   transition: height 0.3s ease;
 }
 
@@ -135,13 +136,14 @@ header nav ul li a:hover::after {
   transform: translateY(0);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   header {
     height: auto;
     flex-wrap: wrap;
     align-content: center;
     padding: 1rem;
+    max-height: 140px;
+    overflow-y: auto;
   }
 
   header .navLeft,

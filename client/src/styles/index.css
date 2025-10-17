@@ -100,12 +100,7 @@ body {
   margin: 2rem 0 1rem 0;
   padding-bottom: 4rem;
 }
-@media (max-width: 768px) {
-  .optionsContainer {
-    flex-direction: column; /* en móviles se apilan */
-    align-items: center;
-  }
-}
+
 .firstpagesButtons {
   background: #fff;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
@@ -192,22 +187,6 @@ footer a:hover {
   color: white;
 }
 
-@media (max-width: 768px) {
-  footer {
-    position: relative;
-    height: auto;
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  footer a {
-    font-size: 0.85rem;
-    display: inline-block;
-    margin: 0.3rem;
-  }
-}
-
 /* Logo institucional */
 .logoUniversidad {
   max-width: 650px;
@@ -239,10 +218,26 @@ footer a:hover {
   margin: 0 auto;
   box-sizing: border-box;
 }
+
 @media (max-width: 768px) {
+  .optionsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .layoutContent {
+    padding-top: 120px; /* compensa header más alto */
+  }
+
   .contenidoTransparente {
-    max-width: 90%;   /* no tan ancho */
-    padding: 1rem;    /* menos padding */
+    max-width: 90%;
+    padding: 1rem;
+  }
+
+  footer {
+    position: relative;
+    height: auto;
+    padding: 1rem;
   }
 }
 
@@ -250,5 +245,11 @@ footer a:hover {
   .contenidoTransparente {
     padding: 1rem;
     border-radius: 6px;
+  }
+
+  footer a {
+    font-size: 0.85rem;
+    display: inline-block;
+    margin: 0.3rem;
   }
 }
