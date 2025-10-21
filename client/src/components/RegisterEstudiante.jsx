@@ -7,7 +7,7 @@ import "../styles/auth.css";
 const RegisterEstudiante = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    apellido: '', // ✅ AGREGADO
+    apellido: '', // ✅ AGREGADO (Opcional)
     celular: '', // ✅ AGREGADO
     correo: '',
     contrasena: '',
@@ -33,6 +33,13 @@ const RegisterEstudiante = () => {
     e.preventDefault();
     setError('');
     
+    // ✅ VALIDAR DOMINIO INSTITUCIONAL
+    const dominioInstitucional = '@pascualbravo.edu.co';
+    if (!formData.correo.toLowerCase().endsWith(dominioInstitucional)) {
+      setError(`❌ El correo debe ser institucional (${dominioInstitucional})`);
+      return;
+    }
+
     // Validar contraseñas
     if (formData.contrasena !== formData.confirmarContrasena) {
       setError('Las contraseñas no coinciden');
@@ -92,6 +99,19 @@ const RegisterEstudiante = () => {
         <form onSubmit={handleSubmit}>
           <RegisterBase formData={formData} handleChange={handleChange} />
           
+          {/* ⚠️ MENSAJE IMPORTANTE SOBRE EL CORREO */}
+          <div style={{
+            backgroundColor: '#fff3cd',
+            border: '1px solid #ffeeba',
+            padding: '10px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            fontSize: '14px',
+            color: '#856404'
+          }}>
+            ⚠️ <strong>Importante:</strong> Debes usar tu correo institucional (@pascualbravo.edu.co)
+          </div>
+
           {/* ✅ CAMPOS ADICIONALES */}
           <label htmlFor="apellido">Apellido</label>
           <input 

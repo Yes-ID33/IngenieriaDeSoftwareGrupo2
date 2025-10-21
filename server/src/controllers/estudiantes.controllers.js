@@ -37,6 +37,15 @@ export const registrarEstudiante = async (req, res) => {
       });
     }
 
+      // VALIDAR DOMINIO INSTITUCIONAL
+    const dominioInstitucional = '@pascualbravo.edu.co';
+    if (!correo.toLowerCase().endsWith(dominioInstitucional)) {
+      return res.status(400).json({
+        success: false,
+        message: `El correo debe ser institucional (${dominioInstitucional})`
+      });
+    }
+
     // Validar contraseña
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(contrasena)) {

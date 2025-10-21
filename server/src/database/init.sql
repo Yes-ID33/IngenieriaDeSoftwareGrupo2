@@ -1,3 +1,6 @@
+-- ======================================
+-- TABLA: usuarios (CON ROL Y VERIFICACIÓN)
+-- ======================================
 CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -18,6 +21,9 @@ CREATE INDEX idx_usuarios_rol ON usuarios(rol);
 CREATE INDEX idx_usuarios_verificado ON usuarios(verificado);
 
 
+-- ======================================
+-- TABLA: administradores
+-- ======================================
 CREATE TABLE IF NOT EXISTS administradores (
     admin_id SERIAL PRIMARY KEY,
     usuario_id INTEGER UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -26,6 +32,10 @@ CREATE TABLE IF NOT EXISTS administradores (
     activo BOOLEAN DEFAULT TRUE
 );
 
+
+-- ======================================
+-- TABLA: empresas
+-- ======================================
 CREATE TABLE IF NOT EXISTS empresas (
     nit_id INT PRIMARY KEY,
     usuario_id INTEGER UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -36,6 +46,21 @@ CREATE TABLE IF NOT EXISTS empresas (
     creada_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- ======================================
+-- TABLA: estudiantes
+-- ======================================
+CREATE TABLE IF NOT EXISTS estudiantes (
+    cedula_id INT PRIMARY KEY,
+    usuario_id INTEGER UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
+    creditos_aprobados INT CHECK (creditos_aprobados >= 0),
+    modulo_empleabilidad BOOLEAN DEFAULT FALSE
+);
+
+
+-- ======================================
+-- TABLA: hojas de vida
+-- ======================================
 CREATE TABLE IF NOT EXISTS hojas_vida (
     id SERIAL PRIMARY KEY,
     estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE,
@@ -44,6 +69,10 @@ CREATE TABLE IF NOT EXISTS hojas_vida (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- ======================================
+-- TABLA: vacantes
+-- ======================================
 CREATE TABLE IF NOT EXISTS vacantes (
     vacante_id SERIAL PRIMARY KEY,
     empresa_id INT REFERENCES empresas(nit_id) ON DELETE CASCADE,
@@ -55,6 +84,12 @@ CREATE TABLE IF NOT EXISTS vacantes (
     creada_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX idx_vacantes_aprobada ON vacantes(aprobada);
+
+
+-- ======================================
+-- TABLA: solicitudes (postulaciones)
+-- ======================================
 CREATE TABLE IF NOT EXISTS solicitudes (
     aplicacion_id SERIAL PRIMARY KEY,
     estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE,
@@ -63,8 +98,13 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     estado VARCHAR(20) CHECK (estado IN ('pendiente', 'aceptado', 'rechazado')) DEFAULT 'pendiente',
     fecha_aplicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 CREATE INDEX idx_solicitudes_estado ON solicitudes(estado);
 
+
+-- ======================================
+-- TABLA: notificaciones
+-- ======================================
 CREATE TABLE IF NOT EXISTS notificaciones (
     id SERIAL PRIMARY KEY,
     usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -85,7 +125,7 @@ VALUES (
     'Administrador',
     'Sistema',
     'practicasprofecionalespascuali@gmail.com',
-    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMeshmdh6e9.ViEqXd0B4Z8qO2',  -- Admin2025!
+    '$2b$12$s4R26SSr7hh4gWEKOMGeBex5Qpmc/aiJ2iBRCX3OKTiaEI8QFGvIy',  -- Admin2025!
     'administrador',
     TRUE,
     '3001234567'

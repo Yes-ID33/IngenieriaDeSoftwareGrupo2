@@ -8,6 +8,7 @@ import "../styles/auth.css";
 const Login = () => {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [mostrarContrasena, setMostrarContrasena] = useState(false); // 👈 Nuevo estado
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +20,6 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // ✅ NUEVA URL CORRECTA
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -29,30 +29,23 @@ const Login = () => {
       const data = await res.json();
 
       if (data.success) {
-        // Guardar token y usuario
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('usuario', JSON.stringify(data.data.usuario));
-        
-        // Actualizar contexto
         iniciarSesion(data.data.usuario);
 
-        // ✅ Redirigir según el rol
         const rol = data.data.usuario.rol;
-        
         if (rol === 'administrador') {
-          navigate('/panel/admin');
+          navigate('/perfil');
         } else if (rol === 'estudiante') {
-          navigate('/panel/estudiante');
+          navigate('/perfil');
         } else if (rol === 'empresa') {
-          navigate('/panel/empresa');
+          navigate('/perfil');
         } else {
           navigate('/');
         }
       } else {
-        // ✅ Manejo de errores específicos
         if (data.codigo === 'CUENTA_NO_VERIFICADA') {
           setError('⚠️ Debes verificar tu cuenta. Revisa tu correo electrónico.');
-          // Opcional: redirigir a verificación
           setTimeout(() => {
             navigate('/activar-cuenta', { state: { correo } });
           }, 2000);
@@ -90,15 +83,37 @@ const Login = () => {
               />
 
               <label htmlFor="password">Contraseña</label>
-              <input 
-                type="password" 
-                id="password" 
-                name="contrasena" 
-                value={contrasena} 
-                onChange={e => setContrasena(e.target.value)} 
-                required 
-                disabled={loading}
-              />
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type={mostrarContrasena ? "text" : "password"}  // 👈 Aquí cambia el tipo
+                  id="password" 
+                  name="contrasena" 
+                  value={contrasena} 
+                  onChange={e => setContrasena(e.target.value)} 
+                  required 
+                  disabled={loading}
+                  style={{ paddingRight: '40px' }} // espacio para el botón
+                />
+             
+                <button
+                  type="button"
+                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    color: '#555'
+                  }}
+                  tabIndex={-1} 
+                >
+                  {mostrarContrasena ? '🔒' : '🔐'}
+                </button>
+              </div>
 
               {error && <p className="errorMessage">{error}</p>}
 
