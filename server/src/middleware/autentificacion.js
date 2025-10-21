@@ -24,12 +24,11 @@ export const verificarToken = (req, res, next) => {
 
     // Verificar y decodificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Agregar información del usuario al objeto req
     req.usuario = decoded;
     
     next();
-
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
@@ -37,7 +36,7 @@ export const verificarToken = (req, res, next) => {
         message: 'Token inválido'
       });
     }
-    
+
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
