@@ -4,9 +4,9 @@ import Header from '../components/header.jsx';
 
 const PaginaInicial = () => {
   return (
-    <div className="fondoParqueTech">
+  <div className="fondoParqueTech">
   <div className="contenidoTransparente">
-    <div className={styles.firstpagesMain}>
+  <div className={styles.firstpagesMain}>
     <Header />
 
     <div className={styles.descriptionContainer}>
