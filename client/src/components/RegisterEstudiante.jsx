@@ -7,15 +7,18 @@ import "../styles/auth.css";
 const RegisterEstudiante = () => {
   const [formData, setFormData] = useState({
     nombre: '',
+    apellido: '', // ✅ AGREGADO
+    celular: '', // ✅ AGREGADO
     correo: '',
     contrasena: '',
     confirmarContrasena: '',
-    cedula_id: '',
+    cedula: '', // ✅ CAMBIADO de cedula_id a cedula
     creditos_aprobados: '',
     modulo_empleabilidad: false
   });
-
+  
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,28 +31,57 @@ const RegisterEstudiante = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
+    // Validar contraseñas
     if (formData.contrasena !== formData.confirmarContrasena) {
       setError('Las contraseñas no coinciden');
       return;
     }
 
+    // Validar longitud de contraseña
+    if (formData.contrasena.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const res = await fetch('http://localhost:5000/api/usuarios/registro-estudiante', {
+      // ✅ NUEVA URL CORRECTA
+      const res = await fetch('http://localhost:5000/api/estudiantes/registro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          celular: formData.celular,
+          correo: formData.correo,
+          contrasena: formData.contrasena,
+          cedula: parseInt(formData.cedula), // Convertir a número
+          creditos_aprobados: parseInt(formData.creditos_aprobados) || 0,
+          modulo_empleabilidad: formData.modulo_empleabilidad
+        })
       });
 
       const data = await res.json();
+
       if (data.success) {
-        navigate('/activar-cuenta', { state: { correo: formData.correo } });
-        setError('');
+        // ✅ Redirigir a activación de cuenta
+        navigate('/activar-cuenta', { 
+          state: { 
+            correo: formData.correo,
+            mensaje: data.message 
+          } 
+        });
       } else {
         setError(data.message || 'Error al registrar estudiante');
       }
     } catch (err) {
-      console.error(err);
-      setError('Error de conexión');
+      console.error('Error en registro:', err);
+      setError('Error de conexión con el servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,21 +91,76 @@ const RegisterEstudiante = () => {
         <h2>Registro de Estudiante</h2>
         <form onSubmit={handleSubmit}>
           <RegisterBase formData={formData} handleChange={handleChange} />
+          
+          {/* ✅ CAMPOS ADICIONALES */}
+          <label htmlFor="apellido">Apellido</label>
+          <input 
+            type="text" 
+            id="apellido" 
+            name="apellido" 
+            value={formData.apellido} 
+            onChange={handleChange} 
+            required 
+          />
 
-          <label htmlFor="cedula_id">Cédula</label>
-          <input type="text" id="cedula_id" name="cedula_id" value={formData.cedula_id} onChange={handleChange} required />
+          <label htmlFor="celular">Celular (10 dígitos)</label>
+          <input 
+            type="text" 
+            id="celular" 
+            name="celular" 
+            value={formData.celular} 
+            onChange={handleChange}
+            pattern="\d{10}"
+            title="Debe ser un número de 10 dígitos"
+            required 
+          />
+
+          <label htmlFor="cedula">Cédula</label>
+          <input 
+            type="text" 
+            id="cedula" 
+            name="cedula" 
+            value={formData.cedula} 
+            onChange={handleChange} 
+            required 
+          />
 
           <label htmlFor="creditos_aprobados">Créditos aprobados</label>
-          <input type="number" id="creditos_aprobados" name="creditos_aprobados" value={formData.creditos_aprobados} onChange={handleChange} required />
+          <input 
+            type="number" 
+            id="creditos_aprobados" 
+            name="creditos_aprobados" 
+            value={formData.creditos_aprobados} 
+            onChange={handleChange}
+            min="0"
+            required 
+          />
 
-          <label>
-            <input type="checkbox" name="modulo_empleabilidad" checked={formData.modulo_empleabilidad} onChange={handleChange} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <input 
+              type="checkbox" 
+              name="modulo_empleabilidad" 
+              checked={formData.modulo_empleabilidad} 
+              onChange={handleChange} 
+            />
             ¿Ha completado el módulo de empleabilidad?
           </label>
 
           {error && <p className="errorMessage">{error}</p>}
-          <button type="submit" className="authBtn">Registrar estudiante</button>
+          
+          <button 
+            type="submit" 
+            className="authBtn" 
+            disabled={loading}
+          >
+            {loading ? 'Registrando...' : 'Registrar estudiante'}
+          </button>
         </form>
+        
+        <p>
+          ¿Ya tienes cuenta?{" "}
+          <a href="/login" className="authLink">Inicia sesión aquí</a>
+        </p>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
-import { enviarEmailVerificacion, enviarEmailBienvenida, generarTokenVerificacion } from '../middleware/correo.js';
+import { enviarEmailVerificacion, enviarEmailBienvenida, generarTokenVerificacion } from '../utils/correo.js';
 
 // Registrar estudiante
 export const registrarEstudiante = async (req, res) => {

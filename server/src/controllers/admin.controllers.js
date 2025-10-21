@@ -1,5 +1,5 @@
 import pool from '../db.js';
-import { enviarEmailAprobacionEmpresa } from '../middleware/correo.js';
+import { enviarEmailAprobacionEmpresa } from '../utils/correo.js';
 
 // Listar empresas pendientes de aprobación
 export const listarEmpresasPendientes = async (req, res) => {

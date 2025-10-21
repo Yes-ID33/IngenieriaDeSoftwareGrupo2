@@ -1,6 +1,6 @@
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
-import { enviarEmailRegistroEmpresa } from '../middleware/correo.js';
+import { enviarEmailRegistroEmpresa } from '../utils/correo.js';
 
 // Registrar empresa
 export const registrarEmpresa = async (req, res) => {

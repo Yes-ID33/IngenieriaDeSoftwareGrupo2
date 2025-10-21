@@ -24,6 +24,30 @@ app.use('/api/empresas', empresasRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 
+// ===== RUTA TEMPORAL PARA GENERAR HASH (Eliminar) =====
+import bcrypt from 'bcrypt';
+
+app.get('/api/generar-hash/:password', async (req, res) => {
+  try {
+    const { password } = req.params;
+    const saltRounds = 12;
+    const hash = await bcrypt.hash(password, saltRounds);
+    
+    res.status(200).json({
+      success: true,
+      password: password,
+      hash: hash,
+      sql: `UPDATE usuarios SET contrasena = '${hash}' WHERE correo = 'practicasprofecionalespascuali@gmail.com';`
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+// ============================================================
+
 // Ruta de prueba para verificar conexión a la base de datos
 app.get('/api/conexionbd', async (req, res) => {
   try {
