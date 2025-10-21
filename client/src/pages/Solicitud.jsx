@@ -6,33 +6,40 @@ import "../styles/index.css";
 import "../styles/auth.css";
 
 const Solicitud = () => { //para redirigir a la página inicial en el 5173 y no al json feo del 5000
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
   const navigate = useNavigate();
-  const { iniciarSesion } = useAuth();
-
+  const { usuario } = useAuth();
+  const [hojaDeVida, setHojaDeVida] = useState('');
+  const estudianteID = usuario?.cedula_id;
+  const vacanteID = useAuth();
+  
   const handleSolicitud = async (e) => {
     e.preventDefault();
+
+    if (!hojaDeVida || !estudianteID || !vacanteID) {
+      alert('Faltan datos para enviar la solicitud');
+      return;
+    }
+
     try {
-      const res = await fetch('http://localhost:5000/api/usuarios/solicitud', {
+      const formData = new FormData();
+      formData.append('hojaDeVida', hojaDeVida);
+      formData.append('estudiante_id', estudianteID);
+      formData.append('vacante_id', vacanteID);
+
+      const res = await fetch('http://localhost:5000/api/solicitudes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena })
+        body: formData
       });
 
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('usuario', JSON.stringify(data.data.usuario));
-        //cambiar el contexto
-        iniciarSesion(data.data.usuario);
-        //página inicial
-        navigate('/'); // Ruta de la página inicial
+        alert('Solicitud enviada correctamente');
+        navigate('/perfil'); // o donde quieras redirigir
       } else {
-        alert('Credenciales incorrectas');
+        alert(data.message || 'No se pudo enviar la solicitud');
       }
     } catch (err) {
-      console.error('Error en login:', err);
+      console.error('Error al enviar solicitud:', err);
       alert('Error de conexión');
     }
   };
@@ -46,17 +53,19 @@ const Solicitud = () => { //para redirigir a la página inicial en el 5173 y no 
         <div className="authCard">
           <h1>Iniciar Sesión</h1>
           <form onSubmit={handleSolicitud}>
-            <label htmlFor="email">Correo electrónico</label>
-            <input type="email" id="email" name="correo" value={correo} onChange={e => setCorreo(e.target.value)} required />
+            <label htmlFor="hojaDeVida">Cargue su hoja de vida en formato PDF</label>
+            <input 
+              type="file" id="hojaDeVida" 
+              name="hojaDeVida" accept="application/pdf" 
+              onChange={e => setHojaDeVida(e.target.files[0])} 
+              required 
+            />
 
-            <label htmlFor="password">Contraseña</label>
-            <input type="password" id="password" name="contrasena" value={contrasena} onChange={e => setContrasena(e.target.value)} required />
-
-            <button type="submit" className="authBtn">Entrar</button>
+            <button type="submit" className="authBtn">Enviar solicitud</button>
           </form>
           <p>
-            ¿No tienes cuenta?{" "}
-            <a href="/register" className="authLink">Regístrate aquí</a>
+            ¿Ver más vacantes?{" "}
+            <a href="/vacantes" className="authLink">Ir a vacantes</a>
           </p>
         </div>
       </div>
