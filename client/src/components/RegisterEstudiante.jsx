@@ -13,6 +13,7 @@ const RegisterEstudiante = () => {
     contrasena: '',
     confirmarContrasena: '',
     cedula: '', // ✅ CAMBIADO de cedula_id a cedula
+    programa: '',
     creditos_aprobados: '',
     modulo_empleabilidad: false
   });
@@ -66,6 +67,7 @@ const RegisterEstudiante = () => {
           correo: formData.correo,
           contrasena: formData.contrasena,
           cedula: parseInt(formData.cedula), // Convertir a número
+          programa: formData.programa,
           creditos_aprobados: parseInt(formData.creditos_aprobados) || 0,
           modulo_empleabilidad: formData.modulo_empleabilidad
         })
@@ -141,6 +143,16 @@ const RegisterEstudiante = () => {
             id="cedula" 
             name="cedula" 
             value={formData.cedula} 
+            onChange={handleChange} 
+            required 
+          />
+
+          <label htmlFor="programa">Programa</label>
+          <input 
+            type="text" 
+            id="programa" 
+            name="programa" 
+            value={formData.programa} 
             onChange={handleChange} 
             required 
           />

@@ -16,12 +16,13 @@ export const registrarEstudiante = async (req, res) => {
       correo, 
       contrasena,
       cedula,
+      programa,
       creditos_aprobados,
       modulo_empleabilidad
     } = req.body;
    
     // Validaciones básicas
-    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula) {
+    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula || !programa) {
       return res.status(400).json({
         success: false,
         message: 'Todos los campos obligatorios deben ser completados'
@@ -129,9 +130,9 @@ export const registrarEstudiante = async (req, res) => {
 
     // Insertar en tabla estudiantes
     await client.query(
-      `INSERT INTO estudiantes (cedula_id, usuario_id, creditos_aprobados, modulo_empleabilidad)
-       VALUES ($1, $2, $3, $4)`,
-      [cedula, usuarioId, creditos_aprobados || 0, modulo_empleabilidad || false]
+      `INSERT INTO estudiantes (cedula_id, usuario_id, programa, creditos_aprobados, modulo_empleabilidad)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [cedula, usuarioId, programa, creditos_aprobados || 0, modulo_empleabilidad || false]
     );
 
     // Enviar email de verificación

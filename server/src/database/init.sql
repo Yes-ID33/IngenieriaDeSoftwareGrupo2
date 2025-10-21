@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS empresas (
 CREATE TABLE IF NOT EXISTS estudiantes (
     cedula_id INT PRIMARY KEY,
     usuario_id INTEGER UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
+    programa VARCHAR(100) NOT NULL,
     creditos_aprobados INT CHECK (creditos_aprobados >= 0),
     modulo_empleabilidad BOOLEAN DEFAULT FALSE
 );
