@@ -35,7 +35,7 @@ const Login = () => {
 
         const rol = data.data.usuario.rol;
         if (rol === 'administrador') {
-          navigate('/perfil');
+          navigate('/panel/admin');
         } else if (rol === 'estudiante') {
           navigate('/perfil');
         } else if (rol === 'empresa') {

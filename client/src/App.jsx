@@ -1,38 +1,41 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+
+// Rutas generales
 import PaginaInicial from './pages/PaginaInicial';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import ActivarCuenta from './pages/ActivarCuenta.jsx';
-import Perfil from './pages/Perfil'
-import Solicitud from './pages/Solicitud';
+import ActivarCuenta from './pages/activarCuenta';
+import Perfil from './pages/Perfil';
 
-//Rutas Admin
-import EmpresasPendientes from './pages/admin/EmpresasPendientes.jsx';
+// Rutas admin
+import PanelAdmin from './pages/admin/PanelAdmin';
+import GestionEmpresas from './pages/admin/GestionEmpresas';
+import GestionUsuarios from './pages/admin/GestionUsuarios';
+
 import "./styles/index.css";
 import "./styles/auth.css";
 
 function App() {
-
   return (
-    
-    <div>
-       <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-            <Route path="/" element={<PaginaInicial />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/activar-cuenta" element={<ActivarCuenta />} />
-            <Route path="/perfil" element={<Perfil />} />
-            {/*<Route path="/vacantes" element={<Vacantes />} />
-            <Route path="/empresas" element={<Empresas />} />*/}
-            <Route path="/solicitud" element={<Solicitud />} />
-            <Route path="/panel/admin/empresas-pendientes" element={<EmpresasPendientes />} />
+          {/* 🌍 Rutas generales */}
+          <Route path="/" element={<PaginaInicial />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/activar-cuenta" element={<ActivarCuenta />} />
+          <Route path="/perfil" element={<Perfil />} />
+          
+          {/* 🛡️ Rutas admin */}
+          <Route path="/panel/admin" element={<PanelAdmin />} />
+          <Route path="/panel/admin/empresas-pendientes" element={<GestionEmpresas />} />
+          <Route path="/panel/admin/usuarios" element={<GestionUsuarios />} />
         </Routes>
-    </BrowserRouter>
-    </div>
-      
-   
-  )
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
