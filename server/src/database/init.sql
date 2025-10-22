@@ -126,7 +126,7 @@ VALUES (
     'Administrador',
     'Sistema',
     'practicasprofecionalespascuali@gmail.com',
-    '$2b$12$s4R26SSr7hh4gWEKOMGeBex5Qpmc/aiJ2iBRCX3OKTiaEI8QFGvIy',  -- Admin2025!
+    '$2b$12$ZSU/tvAasitn3Z4I.HCV1uGMEc39aZCCHGsShkUOs9c1siu1trzru',  -- Admin2025!
     'administrador',
     TRUE,
     '3001234567'

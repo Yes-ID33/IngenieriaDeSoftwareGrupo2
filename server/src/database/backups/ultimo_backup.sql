@@ -27,7 +27,7 @@ SET row_security = off;
 -- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.usuarios (id, nombre, apellido, celular, correo, contrasena, fecha_creacion, verificado, token_verificacion, token_expira, ultimo_acceso) FROM stdin;
+/*COPY public.usuarios (id, nombre, apellido, celular, correo, contrasena, fecha_creacion, verificado, token_verificacion, token_expira, ultimo_acceso) FROM stdin;
 1	Yesid	Maldonado	3203639836	yesidcarvajal2006@gmail.com	$2b$12$x74b/R9Fw20ymLrkSTNR7u29PyfTdEwbx3CHjdAJ4GZHOoOuGkqqS	2025-09-23 21:08:01.431404	t	\N	\N	2025-09-23 21:09:03.809663
 \.
 --
@@ -44,7 +44,7 @@ COPY public.usuarios (id, nombre, apellido, celular, correo, contrasena, rol, ve
 
 COPY public.estudiantes (cedula_id, usuario_id, programa, creditos_aprobados, modulo_empleabilidad) FROM stdin;
 1234567890  1   Ingeniería de Software  90  t
-\.
+\.*/
 
 
 --
