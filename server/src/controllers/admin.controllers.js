@@ -197,7 +197,94 @@ export const rechazarEmpresa = async (req, res) => {
   }
 };
 
-// Listar todas las empresas (aprobadas y pendientes)
+// Listar todos los usuarios
+export const listarTodosUsuarios = async (req, res) => {
+  const client = await pool.connect();
+  
+  try {
+    const todosUsuarios = await client.query(
+      `SELECT 
+        id,
+        nombre,
+        apellido,
+        correo,
+        celular,
+        telefono,
+        rol,
+        verificado,
+        fecha_creacion,
+        ultimo_acceso
+      FROM usuarios
+      ORDER BY fecha_creacion DESC`
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        total: todosUsuarios.rows.length,
+        usuarios: todosUsuarios.rows
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al listar usuarios:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  } finally {
+    client.release();
+  }
+};
+
+// Eliminar usuario
+export const eliminarUsuario = async (req, res) => {
+  const client = await pool.connect();
+  
+  try {
+    const { id } = req.params;
+
+    // Verificar que el usuario existe
+    const usuario = await client.query(
+      'SELECT id, nombre, apellido, rol FROM usuarios WHERE id = $1',
+      [id]
+    );
+
+    if (usuario.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    const usuarioData = usuario.rows[0];
+
+    // No permitir eliminar administradores
+    if (usuarioData.rol === 'administrador') {
+      return res.status(403).json({
+        success: false,
+        message: 'No se pueden eliminar administradores'
+      });
+    }
+
+    // Eliminar usuario (CASCADE eliminará registros relacionados)
+    await client.query('DELETE FROM usuarios WHERE id = $1', [id]);
+
+    res.status(200).json({
+      success: true,
+      message: `Usuario "${usuarioData.nombre} ${usuarioData.apellido || ''}" eliminado exitosamente`
+    });
+
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  } finally {
+    client.release();
+  }
+};
 export const listarTodasEmpresas = async (req, res) => {
   const client = await pool.connect();
   

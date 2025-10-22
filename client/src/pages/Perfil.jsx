@@ -186,11 +186,8 @@ const Perfil = () => {
           <>
             <h2>Panel de administración</h2>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-              <Link to="/panel/admin/empresas-pendientes">
-                <button className="authBtn">Empresas Pendientes</button>
-              </Link>
-              <Link to="/panel/admin/metricas">
-                <button className="authBtn">Ver Métricas</button>
+              <Link to="/panel/admin/">
+                <button className="authBtn">Panel de administracion</button>
               </Link>
             </div>
           </>
