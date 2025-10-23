@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import Header from '../components/header.jsx';
 import "../styles/index.css";
@@ -7,10 +7,11 @@ import "../styles/auth.css";
 
 const Solicitud = () => { //para redirigir a la página inicial en el 5173 y no al json feo del 5000
   const navigate = useNavigate();
-  const { usuario } = useAuth();
+  const { usuario } = useAuth(); //estos dos son para guardar automáticamente campos como el ID que no se 
+  const { state } = useLocation(); // deben de mostrar en ninguna parte de la página, pero necesarios para la DB
   const [hojaDeVida, setHojaDeVida] = useState('');
   const estudianteID = usuario?.cedula_id;
-  const vacanteID = useAuth();
+  const vacanteID = state?.vacante?.vacante_id;
   
   const handleSolicitud = async (e) => {
     e.preventDefault();

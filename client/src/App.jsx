@@ -5,7 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import PaginaInicial from './pages/PaginaInicial';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import ActivarCuenta from './pages/activarCuenta';
+import ActivarCuenta from './pages/ActivarCuenta';
 import Perfil from './pages/Perfil';
 
 // Rutas admin
