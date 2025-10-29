@@ -32,7 +32,7 @@ const PanelAdmin = () => {
       const token = localStorage.getItem('token');
       
       // Obtener empresas
-      const resEmpresas = await fetch('http://localhost:5000/api/admin/empresas-pendientes', {
+      const resEmpresas = await fetch('http://localhost:5000/api/admin/empresas', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

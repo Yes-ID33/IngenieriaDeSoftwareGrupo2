@@ -11,6 +11,8 @@ import adminRoutes from './routes/admin.routes.js';
 import vacantesRoutes from './routes/vacantes.routes.js';
 import hojasVidaRoutes from './routes/hojasVida.routes.js';
 import postulacionesRoutes from './routes/postulaciones.routes.js';
+import catalogosRoutes from './routes/catalogos.routes.js';
+
 
 dotenv.config();
 
@@ -29,21 +31,20 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/vacantes', vacantesRoutes); // Rutas para empresas Y públicas
 app.use('/api/estudiantes/hojas-vida', hojasVidaRoutes);
 app.use('/api/estudiantes/postulaciones', postulacionesRoutes);
+app.use('/api/catalogos', catalogosRoutes);
+
 
 // ===== RUTA TEMPORAL PARA GENERAR HASH (Eliminar) =====
 import bcrypt from 'bcrypt';
 
-app.get('/api/generar-hash/:password', async (req, res) => {
+app.get('/api/generar-hash/:texto', async (req, res) => {
   try {
-    const { password } = req.params;
+    const { texto } = req.params;
     const saltRounds = 12;
-    const hash = await bcrypt.hash(password, saltRounds);
+    const hash = await bcrypt.hash(texto, saltRounds);
     
     res.status(200).json({
-      success: true,
-      password: password,
-      hash: hash,
-      sql: `UPDATE usuarios SET contrasena = '${hash}' WHERE correo = 'practicasprofecionalespascuali@gmail.com';`
+      hash: hash
     });
   } catch (error) {
     res.status(500).json({

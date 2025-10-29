@@ -14,7 +14,7 @@ export const crearVacante = async (req, res) => {
     const {
       titulo,
       descripcion,
-      sector,
+      sector_id,
       programa_objetivo,
       modalidad,
       salario,
@@ -26,7 +26,7 @@ export const crearVacante = async (req, res) => {
     } = req.body;
 
     // Validaciones
-    if (!titulo || !sector || !modalidad || !salario) {
+    if (!titulo || !sector_id || !modalidad || !salario) {
       return res.status(400).json({
         success: false,
         message: 'Los campos título, sector, modalidad y salario son obligatorios'
@@ -69,13 +69,13 @@ export const crearVacante = async (req, res) => {
     // Insertar vacante (aprobada = false, requiere aprobación de admin)
     const nuevaVacante = await client.query(
       `INSERT INTO vacantes (
-        empresa_id, titulo, descripcion, sector, programa_objetivo,
+        empresa_id, titulo, descripcion, sector_id, programa_objetivo,
         modalidad, salario, requisitos, fecha_inicio, duracion_meses,
         horario, beneficios, aprobada
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING *`,
       [
-        empresaId, titulo, descripcion, sector, programa_objetivo,
+        empresaId, titulo, descripcion, sector_id, programa_objetivo,
         modalidad, salario, requisitos, fecha_inicio, duracion_meses,
         horario, beneficios, false
       ]
@@ -198,7 +198,7 @@ export const actualizarVacante = async (req, res) => {
       `UPDATE vacantes SET
         titulo = COALESCE($1, titulo),
         descripcion = COALESCE($2, descripcion),
-        sector = COALESCE($3, sector),
+        sector_id = COALESCE($3, sector_id),
         programa_objetivo = COALESCE($4, programa_objetivo),
         modalidad = COALESCE($5, modalidad),
         salario = COALESCE($6, salario),
@@ -210,7 +210,7 @@ export const actualizarVacante = async (req, res) => {
       WHERE vacante_id = $12
       RETURNING *`,
       [
-        titulo, descripcion, sector, programa_objetivo, modalidad,
+        titulo, descripcion, sector_id, programa_objetivo, modalidad,
         salario, requisitos, fecha_inicio, duracion_meses, horario,
         beneficios, id
       ]

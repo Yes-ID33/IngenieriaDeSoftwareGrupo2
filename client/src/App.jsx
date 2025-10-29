@@ -16,6 +16,8 @@ import GestionVacantes from './pages/admin/GestionVacantes';
 
 // Rutas empresa
 import PanelEmpresa from './pages/empresa/PanelEmpresa';
+import MisVacantes from './pages/empresa/MisVacantes';
+import CrearVacante from './pages/empresa/CrearVacante';
 
 import "./styles/index.css";
 import "./styles/auth.css";
@@ -40,6 +42,8 @@ function App() {
 
           {/* 🏢 Rutas empresa */}
           <Route path="/panel/empresa" element={<PanelEmpresa />} />
+          <Route path="/panel/empresa/mis-vacantes" element={<MisVacantes />} />
+          <Route path="/panel/empresa/crear-vacante" element={<CrearVacante />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

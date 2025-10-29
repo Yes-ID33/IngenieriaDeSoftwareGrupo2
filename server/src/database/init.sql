@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS estudiantes (
     cedula_id INT PRIMARY KEY,
     usuario_id INTEGER UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
     programa VARCHAR(100) NOT NULL,
+    programa_id INTEGER, -- NUEVO: Relación con tabla programas
     creditos_aprobados INT CHECK (creditos_aprobados >= 0),
     modulo_empleabilidad BOOLEAN DEFAULT FALSE
 );
@@ -88,6 +89,18 @@ WHERE es_principal = TRUE;
 
 
 -- ======================================
+-- TABLA: sectores (NUEVA TABLA)
+-- ======================================
+CREATE TABLE IF NOT EXISTS sectores (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
+    descripcion TEXT,
+    icono VARCHAR(50), -- Para mostrar emoji/icono en frontend
+    activo BOOLEAN DEFAULT TRUE
+);
+
+
+-- ======================================
 -- TABLA: vacantes
 -- ======================================
 CREATE TABLE IF NOT EXISTS vacantes (
@@ -96,6 +109,7 @@ CREATE TABLE IF NOT EXISTS vacantes (
     titulo VARCHAR(200) NOT NULL,
     descripcion TEXT,
     sector VARCHAR(100) NOT NULL,
+    sector_id INTEGER REFERENCES sectores(id), -- NUEVO: Relación con sectores
     programa_objetivo VARCHAR(100),  -- Programa académico al que está dirigida
     modalidad VARCHAR(20) CHECK (modalidad IN ('presencial', 'remoto', 'hibrido')) NOT NULL,
     salario NUMERIC(10,2) CHECK (salario >= 1300000),
@@ -110,6 +124,7 @@ CREATE TABLE IF NOT EXISTS vacantes (
 
 CREATE INDEX idx_vacantes_aprobada ON vacantes(aprobada);
 CREATE INDEX idx_vacantes_programa ON vacantes(programa_objetivo);
+CREATE INDEX idx_vacantes_sector ON vacantes(sector_id); -- NUEVO ÍNDICE
 
 
 -- ======================================
@@ -154,21 +169,90 @@ CREATE TABLE IF NOT EXISTS programas (
     nombre VARCHAR(100) NOT NULL UNIQUE,
     facultad VARCHAR(100),
     nivel VARCHAR(50), -- 'tecnico', 'tecnologico', 'profesional'
+    sector_id INTEGER REFERENCES sectores(id), -- NUEVO: Relación con sectores
     activo BOOLEAN DEFAULT TRUE
 );
 
+-- NUEVOS ÍNDICES
+CREATE INDEX IF NOT EXISTS idx_programas_sector ON programas(sector_id);
+CREATE INDEX IF NOT EXISTS idx_programas_facultad ON programas(facultad);
+
 
 -- ======================================
--- VISTAS
+-- INSERTAR SECTORES REALES
+-- ======================================
+INSERT INTO sectores (nombre, descripcion, icono) VALUES
+('Tecnología y Software', 'Desarrollo de software, sistemas, electrónica', '💻'),
+('Ingeniería Industrial y Mecánica', 'Producción, mantenimiento, mecánica', '⚙️'),
+('Diseño y Creatividad', 'Diseño gráfico, vestuario, animación', '🎨'),
+('Logística y Gestión', 'Logística, gestión industrial, administración', '📦'),
+('Energía y Electricidad', 'Sistemas eléctricos, energía, electromecánica', '⚡'),
+('Producción Industrial', 'Fabricación, producción, materiales', '🏭')
+ON CONFLICT (nombre) DO NOTHING;
+
+
+-- ======================================
+-- INSERTAR PROGRAMAS REALES
 -- ======================================
 
--- Vista de vacantes con información completa de empresa
+-- FACULTAD: INGENIERÍA
+INSERT INTO programas (nombre, facultad, nivel, sector_id, activo) VALUES
+-- Profesionales
+('Ingeniería de Materiales', 'Ingeniería', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Producción Industrial'), TRUE),
+('Ingeniería de Software', 'Ingeniería', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Tecnología y Software'), TRUE),
+('Ingeniería Eléctrica', 'Ingeniería', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Energía y Electricidad'), TRUE),
+('Ingeniería Mecánica', 'Ingeniería', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Ingeniería Industrial y Mecánica'), TRUE),
+
+-- Técnico
+('Técnica Profesional en Fabricación Digital e Impresión 3D', 'Ingeniería', 'tecnico', (SELECT id FROM sectores WHERE nombre = 'Producción Industrial'), TRUE),
+
+-- Tecnológicos
+('Tecnología Eléctrica', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Energía y Electricidad'), TRUE),
+('Tecnología en Desarrollo de Software', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Tecnología y Software'), TRUE),
+('Tecnología en Electrónica Industrial', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Tecnología y Software'), TRUE),
+('Tecnología en Gestión del Mantenimiento Aeronáutico', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Ingeniería Industrial y Mecánica'), TRUE),
+('Tecnología en Mecánica Automotriz', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Ingeniería Industrial y Mecánica'), TRUE),
+('Tecnología en Mecánica Industrial', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Ingeniería Industrial y Mecánica'), TRUE),
+('Tecnología en Sistemas Electromecánicos', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Energía y Electricidad'), TRUE),
+('Tecnología en Sistemas Mecatrónicos', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Tecnología y Software'), TRUE),
+('Tecnología en Supervisión de Sistemas de Generación y Distribución de Energía Eléctrica', 'Ingeniería', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Energía y Electricidad'), TRUE)
+
+ON CONFLICT (nombre) DO NOTHING;
+
+-- FACULTAD: PRODUCCIÓN Y DISEÑO
+INSERT INTO programas (nombre, facultad, nivel, sector_id, activo) VALUES
+-- Profesionales
+('Ingeniería Administrativa', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Logística y Gestión'), TRUE),
+('Ingeniería en Logística', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Logística y Gestión'), TRUE),
+('Ingeniería Industrial', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Ingeniería Industrial y Mecánica'), TRUE),
+('Profesional en Diseño de Vestuario', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+('Profesional en Diseño Gráfico', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+('Profesional en Gestión del Diseño', 'Producción y Diseño', 'profesional', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+
+-- Tecnológicos
+('Tecnología en Animación Digital', 'Producción y Diseño', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+('Tecnología en Diseño y Producción de Vestuario', 'Producción y Diseño', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+('Tecnología en Diseño y Producción Gráfica', 'Producción y Diseño', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Diseño y Creatividad'), TRUE),
+('Tecnología en Gestión Logística', 'Producción y Diseño', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Logística y Gestión'), TRUE),
+('Tecnología en Producción Industrial', 'Producción y Diseño', 'tecnologico', (SELECT id FROM sectores WHERE nombre = 'Producción Industrial'), TRUE)
+
+ON CONFLICT (nombre) DO NOTHING;
+
+
+-- ======================================
+-- VISTAS ACTUALIZADAS
+-- ======================================
+
+-- Vista de vacantes con sector e información completa
 CREATE OR REPLACE VIEW vista_vacantes_completas AS
 SELECT 
     v.vacante_id,
     v.titulo,
     v.descripcion,
-    v.sector,
+    v.sector as sector_texto_legacy, -- Por compatibilidad
+    v.sector_id,
+    s.nombre as sector_nombre,
+    s.icono as sector_icono,
     v.programa_objetivo,
     v.modalidad,
     v.salario,
@@ -185,16 +269,17 @@ SELECT
     e.contacto_correo,
     e.contacto_telefono,
     u.verificado as empresa_verificada,
-    -- Contar solicitudes
-    COUNT(s.aplicacion_id) as total_postulaciones
+    COUNT(sol.aplicacion_id) as total_postulaciones
 FROM vacantes v
 INNER JOIN empresas e ON v.empresa_id = e.nit_id
 INNER JOIN usuarios u ON e.usuario_id = u.id
-LEFT JOIN solicitudes s ON v.vacante_id = s.vacante_id
+LEFT JOIN sectores s ON v.sector_id = s.id
+LEFT JOIN solicitudes sol ON v.vacante_id = sol.vacante_id
 GROUP BY v.vacante_id, e.nit_id, e.razon_social, e.nombre_reclutador, 
-         e.contacto_correo, e.contacto_telefono, u.verificado;
+         e.contacto_correo, e.contacto_telefono, u.verificado, 
+         s.nombre, s.icono;
 
--- Vista de postulaciones con información completa
+-- Vista de postulaciones actualizada
 CREATE OR REPLACE VIEW vista_postulaciones_completas AS
 SELECT 
     s.aplicacion_id,
@@ -209,7 +294,11 @@ SELECT
     u.apellido as estudiante_apellido,
     u.correo as estudiante_correo,
     u.celular as estudiante_celular,
-    est.programa,
+    est.programa as programa_texto_legacy,
+    p.nombre as programa_nombre,
+    p.facultad as programa_facultad,
+    p.nivel as programa_nivel,
+    sec_est.nombre as estudiante_sector,
     est.creditos_aprobados,
     est.modulo_empleabilidad,
     -- Datos de la hoja de vida
@@ -220,7 +309,8 @@ SELECT
     -- Datos de la vacante
     v.vacante_id,
     v.titulo as vacante_titulo,
-    v.sector,
+    v.sector as sector_legacy,
+    sec_vac.nombre as vacante_sector,
     v.modalidad,
     v.salario,
     -- Datos de la empresa
@@ -230,28 +320,62 @@ SELECT
 FROM solicitudes s
 INNER JOIN estudiantes est ON s.estudiante_id = est.cedula_id
 INNER JOIN usuarios u ON est.usuario_id = u.id
+LEFT JOIN programas p ON est.programa_id = p.id
+LEFT JOIN sectores sec_est ON p.sector_id = sec_est.id
 LEFT JOIN hojas_vida hv ON s.hoja_vida_id = hv.id
 INNER JOIN vacantes v ON s.vacante_id = v.vacante_id
+LEFT JOIN sectores sec_vac ON v.sector_id = sec_vac.id
 INNER JOIN empresas e ON v.empresa_id = e.nit_id;
 
 
 -- ======================================
--- DATOS INICIALES
+-- FUNCIÓN AUXILIAR: Obtener vacantes compatibles con estudiante
 -- ======================================
-
--- Insertar programas de ejemplo
-INSERT INTO programas (nombre, facultad, nivel) VALUES
-('Ingeniería de Software', 'Ingeniería', 'profesional'),
-('Tecnología en Desarrollo de Software', 'Ingeniería', 'tecnologico'),
-('Ingeniería Industrial', 'Ingeniería', 'profesional'),
-('Tecnología en Gestión Industrial', 'Ingeniería', 'tecnologico'),
-('Diseño Gráfico', 'Diseño', 'profesional'),
-('Tecnología en Diseño Visual', 'Diseño', 'tecnologico'),
-('Administración de Empresas', 'Administración', 'profesional'),
-('Contaduría Pública', 'Administración', 'profesional'),
-('Tecnología en Gestión Comercial', 'Administración', 'tecnologico'),
-('Ingeniería Electrónica', 'Ingeniería', 'profesional')
-ON CONFLICT (nombre) DO NOTHING;
+CREATE OR REPLACE FUNCTION obtener_vacantes_compatibles(estudiante_cedula INT)
+RETURNS TABLE (
+    vacante_id INT,
+    titulo VARCHAR,
+    sector_nombre VARCHAR,
+    compatibilidad VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        v.vacante_id,
+        v.titulo,
+        s.nombre as sector_nombre,
+        CASE 
+            WHEN v.programa_objetivo IS NULL THEN 'General'
+            WHEN v.programa_objetivo = est.programa THEN 'Alta'
+            WHEN sec_vac.id = sec_est.id THEN 'Media'
+            ELSE 'Baja'
+        END as compatibilidad
+    FROM vacantes v
+    LEFT JOIN sectores sec_vac ON v.sector_id = sec_vac.id
+    CROSS JOIN (
+        SELECT e.programa, p.sector_id, s.id as sector_est_id
+        FROM estudiantes e
+        LEFT JOIN programas p ON e.programa_id = p.id
+        LEFT JOIN sectores s ON p.sector_id = s.id
+        WHERE e.cedula_id = estudiante_cedula
+    ) est
+    LEFT JOIN sectores sec_est ON est.sector_id = sec_est.id
+    WHERE v.aprobada = TRUE
+    AND (
+        v.programa_objetivo IS NULL -- Vacante general
+        OR v.programa_objetivo = est.programa -- Programa exacto
+        OR sec_vac.id = est.sector_est_id -- Mismo sector
+    )
+    ORDER BY 
+        CASE compatibilidad
+            WHEN 'Alta' THEN 1
+            WHEN 'Media' THEN 2
+            WHEN 'General' THEN 3
+            ELSE 4
+        END,
+        v.creada_en DESC;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -- ======================================
@@ -284,6 +408,40 @@ ON CONFLICT (usuario_id) DO NOTHING;
 
 
 -- ======================================
+-- INSERTAR EMPRESA POR DEFECTO
+-- ======================================
+-- Email: empresa.ejemplo@empresa.com
+-- Contraseña: Hola1234
+
+WITH nuevo_usuario AS (
+    INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular, telefono)
+    VALUES (
+        'Empresa Ejemplo S.A.S.',
+        'Sector Tecnológico',
+        'empresa.ejemplo@empresa.com',
+        '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi',
+        'empresa',
+        TRUE,
+        '3001234567',
+        '6012345678'
+    )
+    RETURNING id
+)
+INSERT INTO empresas (nit_id, usuario_id, razon_social, nombre_reclutador, contacto_correo, contacto_telefono)
+VALUES (
+    900123456,
+    (SELECT id FROM nuevo_usuario),
+    'Empresa Ejemplo S.A.S.',
+    'Ana María Rodríguez',
+    'rrhh@empresaejemplo.com',
+    '3012345678'
+);
+
+
+
+
+
+-- ======================================
 -- COMENTARIOS SOBRE EL MODELO
 -- ======================================
 COMMENT ON TABLE usuarios IS 'Tabla principal de usuarios del sistema';
@@ -301,6 +459,11 @@ COMMENT ON TABLE solicitudes IS 'Postulaciones de estudiantes a vacantes';
 
 COMMENT ON TABLE programas IS 'Catálogo de programas académicos de la institución';
 
+COMMENT ON TABLE sectores IS 'Sectores/áreas de conocimiento para agrupar programas y vacantes';
+COMMENT ON COLUMN programas.sector_id IS 'Sector al que pertenece el programa académico';
+COMMENT ON COLUMN vacantes.sector_id IS 'Sector objetivo de la vacante';
+COMMENT ON FUNCTION obtener_vacantes_compatibles IS 'Retorna vacantes compatibles con el sector del estudiante';
+
 COMMENT ON VIEW vista_vacantes_completas IS 'Vista completa de vacantes con información de empresa y estadísticas';
 COMMENT ON VIEW vista_postulaciones_completas IS 'Vista completa de postulaciones con toda la información relacionada';
 
@@ -315,8 +478,14 @@ COMMENT ON VIEW vista_postulaciones_completas IS 'Vista completa de postulacione
 -- INNER JOIN administradores a ON u.id = a.usuario_id 
 -- WHERE u.rol = 'administrador';
 
--- Verificar programas:
--- SELECT * FROM programas ORDER BY facultad, nombre;
+-- Verificar sectores:
+-- SELECT * FROM sectores ORDER BY nombre;
+
+-- Verificar programas con sectores:
+-- SELECT p.nombre, p.facultad, p.nivel, s.nombre as sector, s.icono
+-- FROM programas p
+-- LEFT JOIN sectores s ON p.sector_id = s.id
+-- ORDER BY p.facultad, p.nivel, p.nombre;
 
 -- Verificar vistas:
 -- SELECT * FROM vista_vacantes_completas LIMIT 5;
