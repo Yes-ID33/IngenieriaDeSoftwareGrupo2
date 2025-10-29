@@ -9,6 +9,8 @@ import empresasRoutes from './routes/empresas.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import vacantesRoutes from './routes/vacantes.routes.js';
+import hojasVidaRoutes from './routes/hojasVida.routes.js';
+import postulacionesRoutes from './routes/postulaciones.routes.js';
 
 dotenv.config();
 
@@ -24,7 +26,9 @@ app.use('/api/estudiantes', estudiantesRoutes);
 app.use('/api/empresas', empresasRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/vacantes', vacantesRoutes); // RUTAS DE FUNCIONALIDADES AJENAS AL ROL
+app.use('/api/vacantes', vacantesRoutes); // Rutas para empresas Y públicas
+app.use('/api/estudiantes/hojas-vida', hojasVidaRoutes);
+app.use('/api/estudiantes/postulaciones', postulacionesRoutes);
 
 // ===== RUTA TEMPORAL PARA GENERAR HASH (Eliminar) =====
 import bcrypt from 'bcrypt';
