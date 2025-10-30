@@ -11,6 +11,7 @@ const CrearVacante = () => {
   const [loading, setLoading] = useState(false);
   const [sectores, setSectores] = useState([]);
   const [programas, setProgramas] = useState([]);
+  const [programasFiltrados, setProgramasFiltrados] = useState([]);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
@@ -25,12 +26,24 @@ const CrearVacante = () => {
     beneficios: ''
   });
 
-  // Obtener sectores y programas al cargar
+  // Cargar catálogos al montar el componente
   useEffect(() => {
-    obtenerSectoresYProgramas();
+    obtenerCatalogos();
   }, []);
 
-  const obtenerSectoresYProgramas = async () => {
+  // Filtrar programas cuando cambia el sector
+  useEffect(() => {
+    if (formData.sector_id) {
+      const filtrados = programas.filter(
+        p => p.sector_id === parseInt(formData.sector_id)
+      );
+      setProgramasFiltrados(filtrados);
+    } else {
+      setProgramasFiltrados([]);
+    }
+  }, [formData.sector_id, programas]);
+
+  const obtenerCatalogos = async () => {
     try {
       const token = localStorage.getItem('token');
       
@@ -59,21 +72,26 @@ const CrearVacante = () => {
       }
     } catch (error) {
       console.error('Error al obtener catálogos:', error);
-      // Si falla, usar datos por defecto temporales
-      setSectores([
-        { id: 1, nombre: 'Tecnología y Software', icono: '💻' },
-        { id: 2, nombre: 'Ingeniería Industrial y Mecánica', icono: '⚙️' },
-        { id: 3, nombre: 'Diseño y Creatividad', icono: '🎨' }
-      ]);
+      alert('⚠️ Error al cargar los catálogos. Por favor recarga la página.');
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Si cambia el sector, limpiar programa objetivo
+    if (name === 'sector_id') {
+      setFormData(prev => ({
+        ...prev,
+        sector_id: value,
+        programa_objetivo: '' // Limpiar programa al cambiar sector
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -234,37 +252,37 @@ const CrearVacante = () => {
                     value={formData.programa_objetivo}
                     onChange={handleInputChange}
                     className="authInput"
+                    disabled={!formData.sector_id}
                   >
-                    <option value="">Todos los programas del sector</option>
-                    {programas.length > 0 ? (
+                    <option value="">
+                      {!formData.sector_id 
+                        ? 'Primero selecciona un sector' 
+                        : 'Todos los programas del sector'}
+                    </option>
+                    {programasFiltrados.length > 0 && (
                       <>
-                        <optgroup label="Ingeniería">
-                          {programas
-                            .filter(p => p.facultad === 'Ingeniería')
-                            .map(programa => (
-                              <option key={programa.id} value={programa.nombre}>
-                                {programa.nombre} ({programa.nivel})
-                              </option>
-                            ))
-                          }
-                        </optgroup>
-                        <optgroup label="Producción y Diseño">
-                          {programas
-                            .filter(p => p.facultad === 'Producción y Diseño')
-                            .map(programa => (
-                              <option key={programa.id} value={programa.nombre}>
-                                {programa.nombre} ({programa.nivel})
-                              </option>
-                            ))
-                          }
-                        </optgroup>
+                        {/* Agrupar por facultad */}
+                        {[...new Set(programasFiltrados.map(p => p.facultad))].map(facultad => (
+                          <optgroup key={facultad} label={facultad}>
+                            {programasFiltrados
+                              .filter(p => p.facultad === facultad)
+                              .map(programa => (
+                                <option key={programa.id} value={programa.nombre}>
+                                  {programa.nombre} ({programa.nivel})
+                                </option>
+                              ))
+                            }
+                          </optgroup>
+                        ))}
                       </>
-                    ) : (
-                      <option disabled>Cargando programas...</option>
                     )}
                   </select>
-                  <small style={{ color: '#888' }}>
-                    Opcional: Restringe a un programa específico
+                  <small style={{ color: formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888' }}>
+                    {!formData.sector_id 
+                      ? 'Selecciona un sector para ver los programas disponibles'
+                      : programasFiltrados.length === 0 
+                        ? '⚠️ No hay programas disponibles en este sector'
+                        : `${programasFiltrados.length} programa(s) disponible(s) en este sector`}
                   </small>
                 </div>
                 

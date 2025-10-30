@@ -216,7 +216,7 @@ const GestionVacantes = () => {
                       <td>
                         <strong>{vacante.titulo}</strong>
                         <br />
-                        <small>{vacante.sector}</small>
+                        <small>{vacante.sector_icono} {vacante.sector_nombre || 'Sin sector'}</small>
                       </td>
                       <td>{vacante.razon_social}</td>
                       <td>
@@ -292,7 +292,7 @@ const GestionVacantes = () => {
                 <h3>Información General</h3>
                 <p><strong>Título:</strong> {vacanteSeleccionada.titulo}</p>
                 <p><strong>Empresa:</strong> {vacanteSeleccionada.razon_social}</p>
-                <p><strong>Sector:</strong> {vacanteSeleccionada.sector}</p>
+                <p><strong>Sector:</strong> {vacanteSeleccionada.sector_icono} {vacanteSeleccionada.sector_nombre || 'No especificado'}</p>
                 <p><strong>Programa Objetivo:</strong> {vacanteSeleccionada.programa_objetivo || 'Todos los programas'}</p>
               </div>
 

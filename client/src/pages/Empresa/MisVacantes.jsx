@@ -9,12 +9,15 @@ const MisVacantes = () => {
   const { usuario } = useAuth();
   const navigate = useNavigate();
   const [vacantes, setVacantes] = useState([]);
-  const [filtro, setFiltro] = useState('todas'); // 'todas', 'aprobadas', 'pendientes'
+  const [filtro, setFiltro] = useState('todas');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
+  const [sectores, setSectores] = useState([]);
+  const [programas, setProgramas] = useState([]);
+  const [programasFiltrados, setProgramasFiltrados] = useState([]);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -23,7 +26,52 @@ const MisVacantes = () => {
       return;
     }
     obtenerVacantes();
+    obtenerCatalogos();
   }, [usuario, navigate]);
+
+  // Filtrar programas cuando cambia el sector en modo edición
+  useEffect(() => {
+    if (modoEdicion && formData.sector_id) {
+      const filtrados = programas.filter(
+        p => p.sector_id === parseInt(formData.sector_id)
+      );
+      setProgramasFiltrados(filtrados);
+    } else {
+      setProgramasFiltrados([]);
+    }
+  }, [formData.sector_id, programas, modoEdicion]);
+
+  const obtenerCatalogos = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Obtener sectores
+      const resSectores = await fetch('http://localhost:5000/api/catalogos/sectores', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const dataSectores = await resSectores.json();
+      if (dataSectores.success) {
+        setSectores(dataSectores.data.sectores || []);
+      }
+
+      // Obtener programas
+      const resProgramas = await fetch('http://localhost:5000/api/catalogos/programas', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const dataProgramas = await resProgramas.json();
+      if (dataProgramas.success) {
+        setProgramas(dataProgramas.data.programas || []);
+      }
+    } catch (error) {
+      console.error('Error al obtener catálogos:', error);
+    }
+  };
 
   const obtenerVacantes = async () => {
     try {
@@ -73,7 +121,7 @@ const MisVacantes = () => {
 
       if (data.success) {
         alert(`✅ ${data.message}`);
-        obtenerVacantes(); // Recargar lista
+        obtenerVacantes();
       } else {
         alert(`❌ Error: ${data.message}`);
       }
@@ -88,7 +136,7 @@ const MisVacantes = () => {
     setFormData({
       titulo: vacante.titulo || '',
       descripcion: vacante.descripcion || '',
-      sector: vacante.sector || '',
+      sector_id: vacante.sector_id || '',
       programa_objetivo: vacante.programa_objetivo || '',
       modalidad: vacante.modalidad || 'presencial',
       salario: vacante.salario || '',
@@ -98,6 +146,7 @@ const MisVacantes = () => {
       horario: vacante.horario || '',
       beneficios: vacante.beneficios || ''
     });
+    
     setModoEdicion(true);
     setMostrarModal(true);
   };
@@ -111,8 +160,7 @@ const MisVacantes = () => {
   const handleActualizar = async (e) => {
     e.preventDefault();
 
-    // Validaciones
-    if (!formData.titulo || !formData.sector || !formData.modalidad || !formData.salario) {
+    if (!formData.titulo || !formData.sector_id || !formData.modalidad || !formData.salario) {
       alert('⚠️ Por favor completa todos los campos obligatorios');
       return;
     }
@@ -139,7 +187,7 @@ const MisVacantes = () => {
       if (data.success) {
         alert(`✅ ${data.message}`);
         setMostrarModal(false);
-        obtenerVacantes(); // Recargar lista
+        obtenerVacantes();
       } else {
         alert(`❌ Error: ${data.message}`);
       }
@@ -151,10 +199,20 @@ const MisVacantes = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Si cambia el sector, limpiar programa
+    if (name === 'sector_id') {
+      setFormData(prev => ({
+        ...prev,
+        sector_id: value,
+        programa_objetivo: ''
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const formatearSalario = (salario) => {
@@ -165,11 +223,10 @@ const MisVacantes = () => {
     }).format(salario);
   };
 
-  // Filtrar vacantes
   const vacantesFiltradas = vacantes.filter(v => {
     if (filtro === 'aprobadas') return v.aprobada;
     if (filtro === 'pendientes') return !v.aprobada;
-    return true; // todas
+    return true;
   });
 
   return (
@@ -188,7 +245,6 @@ const MisVacantes = () => {
           </div>
         </div>
 
-        {/* Filtros */}
         <div className="filterTabs">
           <button 
             className={filtro === 'todas' ? 'active' : ''}
@@ -251,7 +307,7 @@ const MisVacantes = () => {
                       <td>
                         <strong>{vacante.titulo}</strong>
                         <br />
-                        <small>{vacante.sector}</small>
+                        <small>{vacante.sector_nombre || 'Sin sector'}</small>
                       </td>
                       <td>
                         {vacante.programa_objetivo || (
@@ -265,14 +321,12 @@ const MisVacantes = () => {
                       </td>
                       <td>{formatearSalario(vacante.salario)}</td>
                       <td>
-                        <Link to={`/panel/empresa/vacantes/${vacante.vacante_id}/postulaciones`}>
-                          <span className="badge" style={{cursor: 'pointer'}}>
-                            {vacante.total_postulaciones || 0}
-                            {parseInt(vacante.postulaciones_pendientes) > 0 && (
-                              <span style={{color: '#f39c12'}}> ({vacante.postulaciones_pendientes} nuevas)</span>
-                            )}
-                          </span>
-                        </Link>
+                        <span className="badge" style={{cursor: 'pointer'}}>
+                          {vacante.total_postulaciones || 0}
+                          {parseInt(vacante.postulaciones_pendientes) > 0 && (
+                            <span style={{color: '#f39c12'}}> ({vacante.postulaciones_pendientes} nuevas)</span>
+                          )}
+                        </span>
                       </td>
                       <td>
                         {vacante.aprobada ? (
@@ -315,7 +369,7 @@ const MisVacantes = () => {
         )}
       </div>
 
-      {/* Modal de Detalles/Edición */}
+      {/* Modal */}
       {mostrarModal && vacanteSeleccionada && (
         <div className="modal" onClick={() => setMostrarModal(false)}>
           <div className="modalContent" onClick={(e) => e.stopPropagation()} style={{maxWidth: '900px'}}>
@@ -341,14 +395,20 @@ const MisVacantes = () => {
                     </div>
                     <div>
                       <label><strong>Sector *</strong></label>
-                      <input
-                        type="text"
-                        name="sector"
-                        value={formData.sector}
+                      <select
+                        name="sector_id"
+                        value={formData.sector_id}
                         onChange={handleInputChange}
                         className="authInput"
                         required
-                      />
+                      >
+                        <option value="">Seleccionar...</option>
+                        {sectores.map(sector => (
+                          <option key={sector.id} value={sector.id}>
+                            {sector.icono} {sector.nombre}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -366,14 +426,24 @@ const MisVacantes = () => {
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '15px'}}>
                     <div>
                       <label><strong>Programa Objetivo</strong></label>
-                      <input
-                        type="text"
+                      <select
                         name="programa_objetivo"
                         value={formData.programa_objetivo}
                         onChange={handleInputChange}
                         className="authInput"
-                        placeholder="Ingeniería de Software (opcional)"
-                      />
+                        disabled={!formData.sector_id}
+                      >
+                        <option value="">
+                          {!formData.sector_id 
+                            ? 'Selecciona un sector primero' 
+                            : 'Todos los programas del sector'}
+                        </option>
+                        {programasFiltrados.map(programa => (
+                          <option key={programa.id} value={programa.nombre}>
+                            {programa.nombre} ({programa.nivel})
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label><strong>Modalidad *</strong></label>
@@ -435,7 +505,6 @@ const MisVacantes = () => {
                       value={formData.horario}
                       onChange={handleInputChange}
                       className="authInput"
-                      placeholder="Ej: Lunes a viernes 8am - 5pm"
                     />
                   </div>
 
@@ -481,8 +550,8 @@ const MisVacantes = () => {
                   <div className="detailGroup">
                     <h3>Información General</h3>
                     <p><strong>Título:</strong> {vacanteSeleccionada.titulo}</p>
-                    <p><strong>Sector:</strong> {vacanteSeleccionada.sector}</p>
-                    <p><strong>Programa Objetivo:</strong> {vacanteSeleccionada.programa_objetivo || 'Todos los programas'}</p>
+                    <p><strong>Sector:</strong> {vacanteSeleccionada.sector_icono} {vacanteSeleccionada.sector_nombre || 'No especificado'}</p>
+                    <p><strong>Programa Objetivo:</strong> {vacanteSeleccionada.programa_objetivo || 'Todos los programas del sector'}</p>
                   </div>
 
                   {vacanteSeleccionada.descripcion && (
@@ -534,22 +603,7 @@ const MisVacantes = () => {
                 <div className="modalFooter">
                   <button 
                     className="btnPrimary"
-                    onClick={() => {
-                      setModoEdicion(true);
-                      setFormData({
-                        titulo: vacanteSeleccionada.titulo || '',
-                        descripcion: vacanteSeleccionada.descripcion || '',
-                        sector: vacanteSeleccionada.sector || '',
-                        programa_objetivo: vacanteSeleccionada.programa_objetivo || '',
-                        modalidad: vacanteSeleccionada.modalidad || 'presencial',
-                        salario: vacanteSeleccionada.salario || '',
-                        requisitos: vacanteSeleccionada.requisitos || '',
-                        fecha_inicio: vacanteSeleccionada.fecha_inicio ? vacanteSeleccionada.fecha_inicio.split('T')[0] : '',
-                        duracion_meses: vacanteSeleccionada.duracion_meses || '',
-                        horario: vacanteSeleccionada.horario || '',
-                        beneficios: vacanteSeleccionada.beneficios || ''
-                      });
-                    }}
+                    onClick={() => abrirEdicion(vacanteSeleccionada)}
                   >
                     ✏️ Editar Vacante
                   </button>

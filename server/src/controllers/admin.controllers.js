@@ -340,15 +340,34 @@ export const listarTodasVacantes = async (req, res) => {
   try {
     const { aprobada } = req.query;
 
-    let query = 'SELECT * FROM vista_vacantes_completas';
+    // Construir query con información del sector
+    let query = `
+      SELECT 
+        v.*,
+        s.nombre as sector_nombre,
+        s.icono as sector_icono,
+        e.razon_social,
+        e.nombre_reclutador,
+        e.contacto_correo,
+        e.contacto_telefono,
+        u.verificado as empresa_verificada,
+        COUNT(sol.aplicacion_id) as total_postulaciones
+      FROM vacantes v
+      INNER JOIN empresas e ON v.empresa_id = e.nit_id
+      INNER JOIN usuarios u ON e.usuario_id = u.id
+      LEFT JOIN sectores s ON v.sector_id = s.id
+      LEFT JOIN solicitudes sol ON v.vacante_id = sol.vacante_id
+    `;
+    
     const params = [];
 
     if (aprobada !== undefined) {
-      query += ' WHERE aprobada = $1';
+      query += ' WHERE v.aprobada = $1';
       params.push(aprobada === 'true');
     }
 
-    query += ' ORDER BY creada_en DESC';
+    query += ' GROUP BY v.vacante_id, e.razon_social, e.nombre_reclutador, e.contacto_correo, e.contacto_telefono, u.verificado, s.nombre, s.icono';
+    query += ' ORDER BY v.creada_en DESC';
 
     const vacantes = await client.query(query, params);
 

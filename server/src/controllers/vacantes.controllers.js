@@ -98,6 +98,7 @@ export const crearVacante = async (req, res) => {
   }
 };
 
+
 // Listar vacantes de mi empresa
 export const listarMisVacantes = async (req, res) => {
   const client = await pool.connect();
@@ -120,18 +121,21 @@ export const listarMisVacantes = async (req, res) => {
 
     const empresaId = empresa.rows[0].nit_id;
 
-    // Obtener vacantes con conteo de postulaciones
+    // Obtener vacantes con información del sector
     const vacantes = await client.query(
       `SELECT 
         v.*,
-        COUNT(s.aplicacion_id) as total_postulaciones,
-        COUNT(CASE WHEN s.estado = 'pendiente' THEN 1 END) as postulaciones_pendientes,
-        COUNT(CASE WHEN s.estado = 'aceptado' THEN 1 END) as postulaciones_aceptadas,
-        COUNT(CASE WHEN s.estado = 'rechazado' THEN 1 END) as postulaciones_rechazadas
+        s.nombre as sector_nombre,
+        s.icono as sector_icono,
+        COUNT(sol.aplicacion_id) as total_postulaciones,
+        COUNT(CASE WHEN sol.estado = 'pendiente' THEN 1 END) as postulaciones_pendientes,
+        COUNT(CASE WHEN sol.estado = 'aceptado' THEN 1 END) as postulaciones_aceptadas,
+        COUNT(CASE WHEN sol.estado = 'rechazado' THEN 1 END) as postulaciones_rechazadas
       FROM vacantes v
-      LEFT JOIN solicitudes s ON v.vacante_id = s.vacante_id
+      LEFT JOIN sectores s ON v.sector_id = s.id
+      LEFT JOIN solicitudes sol ON v.vacante_id = sol.vacante_id
       WHERE v.empresa_id = $1
-      GROUP BY v.vacante_id
+      GROUP BY v.vacante_id, s.nombre, s.icono
       ORDER BY v.creada_en DESC`,
       [empresaId]
     );
