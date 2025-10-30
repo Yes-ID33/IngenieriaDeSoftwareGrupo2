@@ -5,7 +5,10 @@ import {
   rechazarEmpresa,
   listarTodasEmpresas,
   listarTodosUsuarios,
-  eliminarUsuario
+  eliminarUsuario,
+    listarTodasVacantes,
+  aprobarVacante,
+  rechazarVacante
 } from '../controllers/admin.controllers.js';
 import { verificarToken } from '../middleware/autentificacion.js';
 import { verificarRol } from '../middleware/verificarRol.js';
@@ -35,5 +38,10 @@ router.get('/usuarios', listarTodosUsuarios);
 
 // Eliminar usuario
 router.delete('/usuarios/:id', eliminarUsuario);
+
+// ========== GESTIÓN DE VACANTES ==========
+router.get('/vacantes', listarTodasVacantes);
+router.patch('/vacantes/aprobar/:id', aprobarVacante);
+router.delete('/vacantes/rechazar/:id', rechazarVacante);
 
 export default router;

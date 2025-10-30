@@ -285,6 +285,7 @@ export const eliminarUsuario = async (req, res) => {
     client.release();
   }
 };
+
 export const listarTodasEmpresas = async (req, res) => {
   const client = await pool.connect();
   
@@ -321,6 +322,154 @@ export const listarTodasEmpresas = async (req, res) => {
 
   } catch (error) {
     console.error('Error al listar empresas:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  } finally {
+    client.release();
+  }
+};
+
+// GESTIÓN DE VACANTES 
+
+
+export const listarTodasVacantes = async (req, res) => {
+  const client = await pool.connect();
+  
+  try {
+    const { aprobada } = req.query;
+
+    // Construir query con información del sector
+    let query = `
+      SELECT 
+        v.*,
+        s.nombre as sector_nombre,
+        s.icono as sector_icono,
+        e.razon_social,
+        e.nombre_reclutador,
+        e.contacto_correo,
+        e.contacto_telefono,
+        u.verificado as empresa_verificada,
+        COUNT(sol.aplicacion_id) as total_postulaciones
+      FROM vacantes v
+      INNER JOIN empresas e ON v.empresa_id = e.nit_id
+      INNER JOIN usuarios u ON e.usuario_id = u.id
+      LEFT JOIN sectores s ON v.sector_id = s.id
+      LEFT JOIN solicitudes sol ON v.vacante_id = sol.vacante_id
+    `;
+    
+    const params = [];
+
+    if (aprobada !== undefined) {
+      query += ' WHERE v.aprobada = $1';
+      params.push(aprobada === 'true');
+    }
+
+    query += ' GROUP BY v.vacante_id, e.razon_social, e.nombre_reclutador, e.contacto_correo, e.contacto_telefono, u.verificado, s.nombre, s.icono';
+    query += ' ORDER BY v.creada_en DESC';
+
+    const vacantes = await client.query(query, params);
+
+    const pendientes = vacantes.rows.filter(v => !v.aprobada).length;
+    const aprobadas = vacantes.rows.filter(v => v.aprobada).length;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        total: vacantes.rows.length,
+        pendientes,
+        aprobadas,
+        vacantes: vacantes.rows
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al listar vacantes:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  } finally {
+    client.release();
+  }
+};
+
+export const aprobarVacante = async (req, res) => {
+  const client = await pool.connect();
+  
+  try {
+    const { id } = req.params;
+
+    const vacante = await client.query(
+      'SELECT vacante_id, titulo, aprobada FROM vacantes WHERE vacante_id = $1',
+      [id]
+    );
+
+    if (vacante.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Vacante no encontrada'
+      });
+    }
+
+    if (vacante.rows[0].aprobada) {
+      return res.status(400).json({
+        success: false,
+        message: 'Esta vacante ya está aprobada'
+      });
+    }
+
+    await client.query(
+      'UPDATE vacantes SET aprobada = TRUE WHERE vacante_id = $1',
+      [id]
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `Vacante "${vacante.rows[0].titulo}" aprobada exitosamente`
+    });
+
+  } catch (error) {
+    console.error('Error al aprobar vacante:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  } finally {
+    client.release();
+  }
+};
+
+export const rechazarVacante = async (req, res) => {
+  const client = await pool.connect();
+  
+  try {
+    const { id } = req.params;
+    const { motivo } = req.body;
+
+    const vacante = await client.query(
+      'SELECT vacante_id, titulo FROM vacantes WHERE vacante_id = $1',
+      [id]
+    );
+
+    if (vacante.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Vacante no encontrada'
+      });
+    }
+
+    await client.query('DELETE FROM vacantes WHERE vacante_id = $1', [id]);
+
+    res.status(200).json({
+      success: true,
+      message: `Vacante "${vacante.rows[0].titulo}" rechazada y eliminada`,
+      motivo: motivo || 'No especificado'
+    });
+
+  } catch (error) {
+    console.error('Error al rechazar vacante:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor'

@@ -477,6 +477,305 @@
   margin: 0;
 }
 
+/* ========================================
+   ESTILOS ADICIONALES PARA ADMIN
+   Agregar al final de admin.css
+   ======================================== */
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.closeModal {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.closeModal:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.modalBody {
+  padding: 30px;
+}
+
+.detailGroup {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.detailGroup h3 {
+  margin: 0 0 15px 0;
+  color: #667eea;
+  font-size: 1.1rem;
+}
+
+.detailGroup p {
+  margin: 10px 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+.detailGroup strong {
+  color: #555;
+  display: inline-block;
+  min-width: 150px;
+}
+
+.modalFooter {
+  padding: 20px 30px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Resumen Rápido */
+.quickSummary {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-top: 30px;
+}
+
+.quickSummary h2 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.summaryLabel {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.summaryValue {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.summaryValue.highlight {
+  color: #f39c12;
+}
+
+/* Alert Box */
+.alertBox {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-top: 30px;
+  border-left: 5px solid #e17055;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alertBox h3 {
+  margin: 0 0 15px 0;
+  color: #d63031;
+  font-size: 1.2rem;
+}
+
+.alertBox p {
+  margin: 8px 0;
+  color: #2d3436;
+  font-size: 1rem;
+}
+
+/* Mejoras en badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #e0e0e0;
+  color: #555;
+}
+
+.badge-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.badge-warning {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.badge-danger {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Mejoras en tabla */
+.adminTable tbody tr:hover {
+  background: #f8f9fa;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+/* Botones de acción mejorados */
+.btnSmall {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.btnSuccess {
+  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btnSuccess:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+}
+
+.btnDanger {
+  background: linear-gradient(135deg, #d63031 0%, #e17055 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btnDanger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(214, 48, 49, 0.3);
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: 15px;
+  }
+  
+  .modalFooter {
+    flex-direction: column;
+  }
+  
+  .modalFooter button {
+    width: 100%;
+  }
+  
+  .detailGroup strong {
+    min-width: auto;
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -521,3 +820,4 @@
     width: 100%;
   }
 }
+

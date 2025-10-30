@@ -12,6 +12,8 @@ const PanelAdmin = () => {
     empresasPendientes: 0,
     empresasAprobadas: 0,
     totalEstudiantes: 0,
+    vacantesPendientes: 0,
+    vacantesAprobadas: 0,
     totalVacantes: 0
   });
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ const PanelAdmin = () => {
     try {
       const token = localStorage.getItem('token');
       
-      // Obtener empresas pendientes
+      // Obtener empresas
       const resEmpresas = await fetch('http://localhost:5000/api/admin/empresas', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -38,13 +40,37 @@ const PanelAdmin = () => {
       });
       
       const dataEmpresas = await resEmpresas.json();
+
+      // Obtener vacantes
+      const resVacantes = await fetch('http://localhost:5000/api/admin/vacantes', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const dataVacantes = await resVacantes.json();
+
+      // Obtener usuarios (para contar estudiantes)
+      const resUsuarios = await fetch('http://localhost:5000/api/admin/usuarios', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const dataUsuarios = await resUsuarios.json();
       
-      if (dataEmpresas.success) {
+      if (dataEmpresas.success && dataVacantes.success && dataUsuarios.success) {
+        const estudiantes = dataUsuarios.data.usuarios.filter(u => u.rol === 'estudiante').length;
+
         setEstadisticas({
-          empresasPendientes: dataEmpresas.data.pendientes,
-          empresasAprobadas: dataEmpresas.data.aprobadas,
-          totalEstudiantes: 0, // Por ahora mock, después conectar con backend
-          totalVacantes: 0 // Por ahora mock, después conectar con backend
+          empresasPendientes: dataEmpresas.data.pendientes || 0,
+          empresasAprobadas: dataEmpresas.data.aprobadas || 0,
+          totalEstudiantes: estudiantes,
+          vacantesPendientes: dataVacantes.data.pendientes || 0,
+          vacantesAprobadas: dataVacantes.data.aprobadas || 0,
+          totalVacantes: dataVacantes.data.total || 0
         });
       }
     } catch (error) {
@@ -104,7 +130,8 @@ const PanelAdmin = () => {
             <div className="statIcon">💼</div>
             <div className="statInfo">
               <h3>{estadisticas.totalVacantes}</h3>
-              <p>Vacantes Publicadas</p>
+              <p>Vacantes Totales</p>
+              <small>{estadisticas.vacantesPendientes} pendientes</small>
             </div>
           </div>
         </div>
@@ -113,25 +140,28 @@ const PanelAdmin = () => {
         <div className="quickActions">
           <h2>Acciones Rápidas</h2>
           <div className="actionsGrid">
-            <Link to="/panel/admin/empresas-pendientes" className="actionCard">
+            <Link to="/panel/admin/empresas" className="actionCard">
               <div className="actionIcon">🏢</div>
               <h3>Gestionar Empresas</h3>
               <p>Aprobar o rechazar empresas pendientes</p>
               {estadisticas.empresasPendientes > 0 && (
-                <span className="badge">{estadisticas.empresasPendientes} pendientes</span>
+                <span className="badge badge-warning">{estadisticas.empresasPendientes} pendientes</span>
+              )}
+            </Link>
+
+            <Link to="/panel/admin/vacantes" className="actionCard">
+              <div className="actionIcon">💼</div>
+              <h3>Gestionar Vacantes</h3>
+              <p>Revisar y aprobar vacantes publicadas</p>
+              {estadisticas.vacantesPendientes > 0 && (
+                <span className="badge badge-warning">{estadisticas.vacantesPendientes} pendientes</span>
               )}
             </Link>
 
             <Link to="/panel/admin/usuarios" className="actionCard">
               <div className="actionIcon">👥</div>
               <h3>Gestionar Usuarios</h3>
-              <p>Ver, editar y eliminar usuarios</p>
-            </Link>
-
-            <Link to="/panel/admin/vacantes" className="actionCard">
-              <div className="actionIcon">📋</div>
-              <h3>Gestionar Vacantes</h3>
-              <p>Revisar y aprobar vacantes</p>
+              <p>Ver, editar y administrar usuarios</p>
             </Link>
 
             <Link to="/panel/admin/metricas" className="actionCard">
@@ -142,33 +172,43 @@ const PanelAdmin = () => {
           </div>
         </div>
 
-        {/* Actividad reciente (opcional) */}
-        <div className="recentActivity">
-          <h2>Actividad Reciente</h2>
-          <div className="activityList">
-            <div className="activityItem">
-              <span className="activityIcon">🆕</span>
-              <div className="activityInfo">
-                <p><strong>Nueva empresa registrada</strong></p>
-                <p className="activityTime">Hace 2 horas</p>
-              </div>
+        {/* Resumen Rápido */}
+        <div className="quickSummary">
+          <h2>Resumen del Sistema</h2>
+          <div className="summaryGrid">
+            <div className="summaryItem">
+              <span className="summaryLabel">Total Empresas:</span>
+              <span className="summaryValue">{estadisticas.empresasAprobadas + estadisticas.empresasPendientes}</span>
             </div>
-            <div className="activityItem">
-              <span className="activityIcon">👨‍🎓</span>
-              <div className="activityInfo">
-                <p><strong>Nuevo estudiante verificado</strong></p>
-                <p className="activityTime">Hace 5 horas</p>
-              </div>
+            <div className="summaryItem">
+              <span className="summaryLabel">Vacantes Activas:</span>
+              <span className="summaryValue">{estadisticas.vacantesAprobadas}</span>
             </div>
-            <div className="activityItem">
-              <span className="activityIcon">💼</span>
-              <div className="activityInfo">
-                <p><strong>Vacante publicada</strong></p>
-                <p className="activityTime">Hace 1 día</p>
-              </div>
+            <div className="summaryItem">
+              <span className="summaryLabel">Estudiantes:</span>
+              <span className="summaryValue">{estadisticas.totalEstudiantes}</span>
+            </div>
+            <div className="summaryItem">
+              <span className="summaryLabel">Tareas Pendientes:</span>
+              <span className="summaryValue highlight">
+                {estadisticas.empresasPendientes + estadisticas.vacantesPendientes}
+              </span>
             </div>
           </div>
         </div>
+
+        {/* Alertas si hay pendientes */}
+        {(estadisticas.empresasPendientes > 0 || estadisticas.vacantesPendientes > 0) && (
+          <div className="alertBox">
+            <h3>⚠️ Atención Requerida</h3>
+            {estadisticas.empresasPendientes > 0 && (
+              <p>• Hay <strong>{estadisticas.empresasPendientes}</strong> empresa(s) esperando aprobación</p>
+            )}
+            {estadisticas.vacantesPendientes > 0 && (
+              <p>• Hay <strong>{estadisticas.vacantesPendientes}</strong> vacante(s) esperando revisión</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

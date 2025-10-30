@@ -168,19 +168,16 @@ const Perfil = () => {
           </>
         )}
 
-        {perfilCompleto && perfilCompleto.rol === 'empresa' && (
-          <>
-            <h2>Acciones rápidas</h2>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-              <Link to="/panel/empresa/vacantes">
-                <button className="authBtn">Mis Vacantes</button>
-              </Link>
-              <Link to="/panel/empresa/crear-vacante">
-                <button className="authBtn">Publicar Vacante</button>
-              </Link>
-            </div>
-          </>
-        )}
+{perfilCompleto && perfilCompleto.rol === 'empresa' && (
+  <>
+    <h2>Panel de Gestión</h2>
+    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+      <Link to="/panel/empresa">
+        <button className="authBtn">🏢 Panel de Empresa</button>
+      </Link>
+    </div>
+  </>
+)}
 
         {perfilCompleto && perfilCompleto.rol === 'administrador' && (
           <>

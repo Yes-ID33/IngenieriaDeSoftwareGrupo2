@@ -12,6 +12,12 @@ import Perfil from './pages/Perfil';
 import PanelAdmin from './pages/admin/PanelAdmin';
 import GestionEmpresas from './pages/admin/GestionEmpresas';
 import GestionUsuarios from './pages/admin/GestionUsuarios';
+import GestionVacantes from './pages/admin/GestionVacantes';
+
+// Rutas empresa
+import PanelEmpresa from './pages/empresa/PanelEmpresa';
+import MisVacantes from './pages/empresa/MisVacantes';
+import CrearVacante from './pages/empresa/CrearVacante';
 
 import "./styles/index.css";
 import "./styles/auth.css";
@@ -30,8 +36,14 @@ function App() {
           
           {/* 🛡️ Rutas admin */}
           <Route path="/panel/admin" element={<PanelAdmin />} />
-          <Route path="/panel/admin/empresas-pendientes" element={<GestionEmpresas />} />
+          <Route path="/panel/admin/empresas" element={<GestionEmpresas />} />
           <Route path="/panel/admin/usuarios" element={<GestionUsuarios />} />
+          <Route path="/panel/admin/vacantes" element={<GestionVacantes />} />
+
+          {/* 🏢 Rutas empresa */}
+          <Route path="/panel/empresa" element={<PanelEmpresa />} />
+          <Route path="/panel/empresa/mis-vacantes" element={<MisVacantes />} />
+          <Route path="/panel/empresa/crear-vacante" element={<CrearVacante />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
