@@ -5,7 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import PaginaInicial from './pages/PaginaInicial';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import ActivarCuenta from './pages/ActivarCuenta';
+import ActivarCuenta from './pages/activarCuenta';
 import Perfil from './pages/Perfil';
 
 // Rutas admin
@@ -15,9 +15,9 @@ import GestionUsuarios from './pages/admin/GestionUsuarios';
 import GestionVacantes from './pages/admin/GestionVacantes';
 
 // Rutas empresa
-import PanelEmpresa from './pages/empresa/PanelEmpresa';
-import MisVacantes from './pages/empresa/MisVacantes';
-import CrearVacante from './pages/empresa/CrearVacante';
+import PanelEmpresa from './pages/Empresa/PanelEmpresa';
+import MisVacantes from './pages/Empresa/MisVacantes';
+import CrearVacante from './pages/Empresa/CrearVacante';
 
 import "./styles/index.css";
 import "./styles/auth.css";
