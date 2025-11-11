@@ -43,7 +43,7 @@ const ActivarCuenta = () => {
     setLoading(true);
 
     try {
-      // ✅ NUEVA RUTA CORRECTA
+      //  NUEVA RUTA CORRECTA
       const response = await axios.post('http://localhost:5000/api/estudiantes/verificar-cuenta', {
         correo: correo.trim(),
         token: token.trim()

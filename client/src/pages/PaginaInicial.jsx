@@ -27,7 +27,7 @@ const PaginaInicial = () => {
 
     <div className={styles.optionsContainer}>
       <div className={styles.firstpagesButtons}>
-        <h2>Ir a registrarse</h2>
+        <h2>Registrarse</h2>
         <Link to="/register" className={styles.firstpagesBtn}>Entra aquí</Link>
       </div>
 
