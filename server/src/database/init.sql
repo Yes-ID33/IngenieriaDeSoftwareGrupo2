@@ -438,6 +438,12 @@ VALUES (
 );
 
 
+-- Sincronizar secuencia de usuarios, para que los ID no tengan conflictos
+SELECT setval('usuarios_id_seq', (SELECT MAX(id) FROM usuarios));
+
+-- verificar que sean iguales para evitar errores de ID duplicados
+SELECT last_value FROM usuarios_id_seq;
+SELECT MAX(id) FROM usuarios;
 
 
 
