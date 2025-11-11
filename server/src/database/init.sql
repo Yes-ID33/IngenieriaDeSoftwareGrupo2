@@ -377,75 +377,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- ======================================
+-- INSERTAR LOS USUARIOS MANUALMENTE
+-- ======================================
+INSERT INTO usuarios (id, nombre, apellido, correo, contrasena, rol, verificado, celular)
+VALUES 
+(   1, 'Administrador', 'Sistema', 'practicasprofecionalespascuali@gmail.com', 
+    '$2b$12$ZSU/tvAasitn3Z4I.HCV1uGMEc39aZCCHGsShkUOs9c1siu1trzru', 'administrador',
+    TRUE, '3001234567'
+),
+(2, 'Empresa Ejemplo S.A.S.', 'Sector Tecnológico', 'empresa.ejemplo@empresa.com', 
+    '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi', 'empresa',
+    TRUE, '3001234567'
+);
 
 -- ======================================
 -- INSERTAR ADMINISTRADOR POR DEFECTO
 -- ======================================
 -- Email: practicasprofecionalespascuali@gmail.com
 -- Contraseña: Admin2025!
-
-INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular)
-VALUES (
-    'Administrador',
-    'Sistema',
-    'practicasprofecionalespascuali@gmail.com',
-    '$2b$12$ZSU/tvAasitn3Z4I.HCV1uGMEc39aZCCHGsShkUOs9c1siu1trzru',  -- Admin2025!
-    'administrador',
-    TRUE,
-    '3001234567'
-) ON CONFLICT (correo) DO NOTHING;
-
--- Crear registro en tabla administradores
 INSERT INTO administradores (usuario_id, cargo, departamento, activo)
-SELECT 
-    u.id,
-    'Administrador del Sistema',
-    'Tecnología e Innovación',
-    TRUE
-FROM usuarios u
-WHERE u.correo = 'practicasprofecionalespascuali@gmail.com'
-ON CONFLICT (usuario_id) DO NOTHING;
-
+VALUES (1, 'Administrador del Sistema', 'Tecnología e Innovación', TRUE);
 
 -- ======================================
 -- INSERTAR EMPRESA POR DEFECTO
 -- ======================================
 -- Email: empresa.ejemplo@empresa.com
 -- Contraseña: Hola1234
-
-WITH nuevo_usuario AS (
-    INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular, telefono)
-    VALUES (
-        'Empresa Ejemplo S.A.S.',
-        'Sector Tecnológico',
-        'empresa.ejemplo@empresa.com',
-        '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi',
-        'empresa',
-        TRUE,
-        '3001234567',
-        '6012345678'
-    )
-    RETURNING id
-)
 INSERT INTO empresas (nit_id, usuario_id, razon_social, nombre_reclutador, contacto_correo, contacto_telefono)
-VALUES (
-    900123456,
-    (SELECT id FROM nuevo_usuario),
-    'Empresa Ejemplo S.A.S.',
-    'Ana María Rodríguez',
-    'rrhh@empresaejemplo.com',
-    '3012345678'
-);
-
-
--- Sincronizar secuencia de usuarios, para que los ID no tengan conflictos
-SELECT setval('usuarios_id_seq', (SELECT MAX(id) FROM usuarios));
-
--- verificar que sean iguales para evitar errores de ID duplicados
-SELECT last_value FROM usuarios_id_seq;
-SELECT MAX(id) FROM usuarios;
-
-
+VALUES (900123456, 2, 'Empresa Ejemplo S.A.S.', 'Ana María Rodríguez', 'rrhh@empresaejemplo.com', '3012345678');
 
 -- ======================================
 -- COMENTARIOS SOBRE EL MODELO

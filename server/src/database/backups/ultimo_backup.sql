@@ -53,7 +53,8 @@ COPY public.estudiantes (cedula_id, usuario_id, programa, creditos_aprobados, mo
 -- Name: usuarios_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.usuarios_id_seq', 1, true);
+-- IMPORTANTE para sincronizar secuencia de usuarios, para que los ID no tengan conflictos!
+SELECT pg_catalog.setval('public.usuarios_id_seq', 2, true);
 
 
 -- Completed on 2025-09-29 17:08:43
