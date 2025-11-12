@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
 // Rutas generales
@@ -22,29 +22,72 @@ import CrearVacante from './pages/Empresa/CrearVacante';
 import "./styles/index.css";
 import "./styles/auth.css";
 
+import Footer from './components/footer'; // componente Footer
+
+// Wrapper que decide mostrar footer según la ruta actual
+function AppRoutes() {
+  const location = useLocation();
+  const path = location.pathname;
+
+  // Rutas exactas donde quieres mostrar el footer
+  const exactRoutes = new Set([
+    '/',                // PaginaInicial
+    '/login',           // Login
+    '/register',        // Register
+    '/register/empresa',// si usas esta ruta para RegisterEmpresa
+    '/register/estudiante' // si usas esta ruta para RegisterEstudiante
+  ]);
+
+  // Prefijos: útil cuando hay subrutas (por ejemplo /register/empresa/editar)
+  const prefixRoutes = [
+    '/register/empresa',
+    '/register/estudiante'
+  ];
+
+  const showFooter =
+    exactRoutes.has(path) ||
+    prefixRoutes.some(prefix => path.startsWith(prefix));
+
+  return (
+    <>
+      <Routes>
+        {/* 🌍 Rutas generales */}
+        <Route path="/" element={<PaginaInicial />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/activar-cuenta" element={<ActivarCuenta />} />
+        <Route path="/perfil" element={<Perfil />} />
+        
+        {/* 🛡️ Rutas admin */}
+        <Route path="/panel/admin" element={<PanelAdmin />} />
+        <Route path="/panel/admin/empresas" element={<GestionEmpresas />} />
+        <Route path="/panel/admin/usuarios" element={<GestionUsuarios />} />
+        <Route path="/panel/admin/vacantes" element={<GestionVacantes />} />
+
+        {/* 🏢 Rutas empresa */}
+        <Route path="/panel/Empresa" element={<PanelEmpresa />} />
+        <Route path="/panel/Empresa/mis-vacantes" element={<MisVacantes />} />
+        <Route path="/panel/Empresa/crear-vacante" element={<CrearVacante />} />
+
+        {/* Ejemplo: si RegisterEmpresa/RegisterEstudiante son páginas bajo /register/... */}
+        <Route path="/register/empresa" element={/* tu componente */ null} />
+        <Route path="/register/estudiante" element={/* tu componente */ null} />
+      </Routes>
+
+      {showFooter && <Footer />}
+    </>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          {/* 🌍 Rutas generales */}
-          <Route path="/" element={<PaginaInicial />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/activar-cuenta" element={<ActivarCuenta />} />
-          <Route path="/perfil" element={<Perfil />} />
-          
-          {/* 🛡️ Rutas admin */}
-          <Route path="/panel/admin" element={<PanelAdmin />} />
-          <Route path="/panel/admin/empresas" element={<GestionEmpresas />} />
-          <Route path="/panel/admin/usuarios" element={<GestionUsuarios />} />
-          <Route path="/panel/admin/vacantes" element={<GestionVacantes />} />
-
-          {/* 🏢 Rutas empresa */}
-          <Route path="/panel/Empresa" element={<PanelEmpresa />} />
-          <Route path="/panel/Empresa/mis-vacantes" element={<MisVacantes />} />
-          <Route path="/panel/Empresa/crear-vacante" element={<CrearVacante />} />
-        </Routes>
+        <div className="app-root">
+          <main className="main-content">
+            <AppRoutes />
+          </main>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   );

@@ -1,0 +1,174 @@
+/* footer.css - Versión final refinada */
+:root {
+    --footer-bg:  var(--color-primary-dark); /* fondo oscuro estable */
+    --footer-overlay: rgba(0,0,0,0.12);
+    --footer-text: #ffffff;
+    --footer-muted: rgba(255,255,255,0.78);
+    --footer-accent: var(--color-secondary);
+    --footer-gap: 14px;
+  }
+  
+  /* contenedor full-bleed (extremo a extremo) */
+  .footer {
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--footer-text);
+    background: var(--footer-bg);
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.22);
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* si tu layout necesita forzar full-bleed dentro de un contenedor centrado */
+  .footer--fullbleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+  
+  /* contenido principal */
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 22px 5%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--footer-gap);
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* bloque izquierdo (copyright + título) */
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+  }
+  
+  /* copyright */
+  .footer-institution {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--footer-text);
+  }
+  
+  /* descripción del sistema (subtítulo) */
+  .footer-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--footer-muted);
+  }
+  
+  /* enlaces agrupados */
+  .footer-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  /* enlace individual */
+  .footer-links a {
+    color: var(--footer-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 6px 2px;
+    position: relative;
+    transition: color 200ms ease, opacity 200ms ease;
+  }
+  
+  /* underline animated */
+  .footer-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    height: 2px;
+    width: 0;
+    background: var(--footer-accent);
+    transition: width 200ms ease;
+  }
+  
+  .footer-links a:hover,
+  .footer-links a:focus {
+    color: var(--footer-accent);
+    outline: none;
+  }
+  .footer-links a:hover::after,
+  .footer-links a:focus::after {
+    width: 100%;
+  }
+  
+  /* separadores verticales (opcionales visuales) */
+  .footer-separator {
+    color: rgba(255,255,255,0.28);
+    margin: 0 8px;
+  }
+  
+  /* bottom thin bar con texto de derechos */
+  .footer-bottom {
+    width: 100%;
+    background: var(--footer-overlay);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 10px 5%;
+    color: var(--footer-muted);
+    font-size: 0.88rem;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  /* ===== Responsive behaviour ===== */
+  
+  /* Tablets y desktop: layout en fila con separación */
+  @media (min-width: 769px) {
+    .footer-content {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 26px 4%;
+    }
+  
+    .footer-brand {
+      align-items: flex-start;
+      text-align: left;
+    }
+  
+    .footer-links {
+      order: 2;
+    }
+  }
+  
+  /* móviles pequeños: compactar fuentes y espaciamiento */
+  @media (max-width: 480px) {
+    .footer-content {
+      padding: 16px 6%;
+      gap: 10px;
+    }
+  
+    .footer-institution {
+      font-size: 0.96rem;
+    }
+  
+    .footer-title {
+      font-size: 0.88rem;
+    }
+  
+    .footer-links a {
+      font-size: 0.9rem;
+      padding: 8px 0;
+    }
+  
+    .footer-bottom {
+      padding: 8px 6%;
+      font-size: 0.78rem;
+    }
+  }
+  

@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import Header from '../components/header.jsx';
+
 import "../styles/index.css";
 import "../styles/auth.css";
 
 const Login = () => {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const [mostrarContrasena, setMostrarContrasena] = useState(false); // 👈 Nuevo estado
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -65,11 +66,24 @@ const Login = () => {
 
   return (
     <div className="fondoParqueTech">
-      <div className='layoutContent'>
+      <div className="contenidoTransparente">
         <Header />
-        <div className="authContainer">
-          <div className="authCard">
-            <h1>Iniciar Sesión</h1>
+        
+        <div className="descriptionContainer">
+          <img
+            src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
+            alt="Escudo Universidad Pascual Bravo"
+            className="firstpagesImg"
+          />
+          <h1 className="firstpagesTitle">Iniciar Sesión</h1>
+        </div>
+
+        <div className="optionsContainer" style={{ flexDirection: 'column', alignItems: 'center', gap: '0' }}>
+          <div className="authCard" style={{ 
+            maxWidth: '480px', 
+            margin: '0 auto',
+            transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+          }}>
             <form onSubmit={handleLogin}>
               <label htmlFor="email">Correo electrónico</label>
               <input 
@@ -85,14 +99,14 @@ const Login = () => {
               <label htmlFor="password">Contraseña</label>
               <div style={{ position: 'relative' }}>
                 <input 
-                  type={mostrarContrasena ? "text" : "password"}  // 👈 Aquí cambia el tipo
+                  type={mostrarContrasena ? "text" : "password"}
                   id="password" 
                   name="contrasena" 
                   value={contrasena} 
                   onChange={e => setContrasena(e.target.value)} 
                   required 
                   disabled={loading}
-                  style={{ paddingRight: '40px' }} // espacio para el botón
+                  style={{ paddingRight: '40px' }}
                 />
              
                 <button
@@ -126,12 +140,14 @@ const Login = () => {
               </button>
             </form>
 
-            <p>
+            <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
               ¿No tienes cuenta?{" "}
               <a href="/register" className="authLink">Regístrate aquí</a>
             </p>
           </div>
         </div>
+
+        
       </div>
     </div>
   );

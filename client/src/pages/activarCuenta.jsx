@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/header.jsx';
+
 import "../styles/index.css";
 import "../styles/auth.css";
 
@@ -92,7 +93,7 @@ const ActivarCuenta = () => {
     <div className="fondoParqueTech">
       <div className="contenidoTransparente">
         <Header />
-        
+      
         <div className="descriptionContainer">
           <img
             src="/escudo-pascual-bravo_Mesa-de-trabajo-1.png"
@@ -105,10 +106,8 @@ const ActivarCuenta = () => {
           </p>
         </div>
 
-        {/* CONTENEDOR PRINCIPAL - Misma estructura que PaginaInicial */}
         <div className="optionsContainer" style={{ flexDirection: 'column', alignItems: 'center', gap: '0' }}>
           
-          {/* TARJETA DE ACTIVACIÓN - Estilo consistente */}
           <div style={{ 
             background: '#fff',
             padding: '2.5rem 2rem',
@@ -246,22 +245,7 @@ const ActivarCuenta = () => {
           </div>
         </div>
 
-        <footer style={{ 
-          position: 'relative', 
-          marginTop: '2rem',
-          backgroundColor: 'var(--color-primary-dark)',
-          color: 'white',
-          textAlign: 'center',
-          padding: '1rem',
-          borderRadius: 'var(--radius)'
-        }}>
-          <p>© 2025 Institución Universitaria Pascual Bravo</p>
-          <p>
-            <a href="#" style={{ color: 'var(--color-secondary)' }}>Reglamento</a> | 
-            <a href="#" style={{ color: 'var(--color-secondary)' }}> Soporte</a> | 
-            <a href="#" style={{ color: 'var(--color-secondary)' }}> Contacto</a>
-          </p>
-        </footer>
+        
       </div>
     </div>
   );
