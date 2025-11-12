@@ -29,12 +29,12 @@ const PaginaInicial = () => {
           <div className={styles.optionsContainer}>
             <div className={styles.firstpagesButtons}>
               <h2>Registrarse</h2>
-              <Link to="/register" className={styles.firstpagesBtn}>Entra aquí</Link>
+              <Link to="/register" id='registerBtn' className={styles.firstpagesBtn}>Entra aquí</Link>
             </div>
 
             <div className={styles.firstpagesButtons}>
               <h2>Iniciar sesión</h2>
-              <Link to="/login" className={styles.firstpagesBtn}>Entra aquí</Link>
+              <Link to="/login" id='loginBtn' className={styles.firstpagesBtn}>Entra aquí</Link>
             </div>
           </div>
 

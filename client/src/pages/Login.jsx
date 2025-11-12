@@ -111,6 +111,7 @@ const Login = () => {
              
                 <button
                   type="button"
+                  id="entrarLoginBtn"
                   onClick={() => setMostrarContrasena(!mostrarContrasena)}
                   style={{
                     position: 'absolute',
