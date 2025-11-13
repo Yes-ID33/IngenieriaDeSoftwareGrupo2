@@ -205,12 +205,14 @@ const GestionEmpresas = () => {
                           <>
                             <button 
                               className="btnSuccess btnSmall"
+                              id="AprobarEmpresaAdmin"
                               onClick={() => handleAprobar(empresa.usuario_id, empresa.razon_social)}
                             >
                               ✅ Aprobar
                             </button>
                             <button 
                               className="btnDanger btnSmall"
+                              id="RechazarEmpresaAdmin"
                               onClick={() => handleRechazar(empresa.usuario_id, empresa.razon_social)}
                             >
                               ❌ Rechazar

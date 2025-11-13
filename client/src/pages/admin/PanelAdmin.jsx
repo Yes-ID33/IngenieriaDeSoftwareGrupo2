@@ -141,7 +141,7 @@ const PanelAdmin = () => {
           <h2>Acciones Rápidas</h2>
           <div className="actionsGrid">
             <Link to="/panel/admin/empresas" className="actionCard">
-              <div className="actionIcon">🏢</div>
+              <div id="IrAlPanelEmpresas" className="actionIcon">🏢</div>
               <h3>Gestionar Empresas</h3>
               <p>Aprobar o rechazar empresas pendientes</p>
               {estadisticas.empresasPendientes > 0 && (
