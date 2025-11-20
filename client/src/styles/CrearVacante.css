@@ -1,0 +1,150 @@
+.fondoParqueTech {
+  background-image: url('/Parque-Tech.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+}
+
+.authContainer {
+  position: relative;
+  z-index: 2;
+  background-color: white;
+  padding: 2rem;
+  max-width: 1000px; 
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+
+.infoBasicaGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 20px;
+}
+
+.infoBasicaGrid .authInput,
+.infoBasicaGrid select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.authCard > div:nth-of-type(3) > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.authCard select[name="programa_objetivo"],
+.authCard select[name="modalidad"] {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+
+.authCard > div:nth-of-type(4) > div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.authCard input[name="salario"],
+.authCard input[name="duracion_meses"],
+.authCard input[name="fecha_inicio"],
+.authCard input[name="horario"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.authCard textarea[name="beneficios"] {
+  width: 100%;
+  resize: none !important;
+  box-sizing: border-box;
+}
+
+
+.authCard textarea {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.5;
+  color: var(--color-text);
+  resize: none !important;
+  overflow: auto;
+}
+
+.authCard textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 6px rgba(2, 153, 216, 0.3);
+}
+
+.authLabel + textarea {
+  margin-bottom: 1rem;
+}
+
+
+.authCard select {
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.authCard select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 6px rgba(2, 153, 216, 0.3);
+}
+
+
+.authCard form > div:last-of-type {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
-import '../../styles/index.css';
-import '../../styles/auth.css';
+//import '../../styles/index.css';
+//import '../../styles/auth.css';
+import '../../styles/CrearVacante.css';
 
 const CrearVacante = () => {
   const { usuario } = useAuth();
@@ -166,21 +167,22 @@ const CrearVacante = () => {
   }
 
   return (
-    <div className="layoutContent">
+    <div className="fondoParqueTech">
       <Header />
-      <div className="authContainer">
+      <div className='Container'>
+        <div className="authContainer">
         <div className="authCard" style={{ maxWidth: '900px' }}>
           <h2>➕ Publicar Nueva Vacante</h2>
           <p style={{ marginBottom: '20px', color: '#666' }}>
             Completa la información de la práctica profesional que ofreces
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className=''>
             {/* Información Básica */}
             <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
               <h3 style={{ marginTop: 0 }}>📋 Información Básica</h3>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px' }}>
+              <div className="infoBasicaGrid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px' }}>
                 <div>
                   <label className="authLabel">
                     <strong>Título de la Vacante *</strong>
@@ -197,7 +199,7 @@ const CrearVacante = () => {
                 </div>
                 
                 <div>
-                  <label className="authLabel">
+                  <label className="authLabel" >
                     <strong>Sector *</strong>
                   </label>
                   <select
@@ -326,7 +328,7 @@ const CrearVacante = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                 <div>
                   <label className="authLabel">
-                    <strong>Salario Mensual (COP) *</strong>
+                    <strong>Salario Mensual (COP)</strong>
                   </label>
                   <input
                     type="number"
@@ -429,6 +431,8 @@ const CrearVacante = () => {
           </form>
         </div>
       </div>
+      </div>
+      
     </div>
   );
 };
