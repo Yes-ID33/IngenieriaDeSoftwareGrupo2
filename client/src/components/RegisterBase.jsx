@@ -1,19 +1,21 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-const RegisterBase = ({ formData, handleChange }) => (
-  <>
-    <label htmlFor="nombre">Nombre</label>
-    <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
+function Hello({ firstname, lastname }) {
+  return <div>Hello {firstname} {lastname}</div>;
+}
+Hello.propTypes = {
+  firstname: PropTypes.string.isRequired,
+  lastname: PropTypes.string.isRequired,
+};
 
-    <label htmlFor="correo">Correo electrónico</label>
-    <input type="email" id="correo" name="correo" value={formData.correo} onChange={handleChange} required />
+// Using legacy APIs
 
-    <label htmlFor="contrasena">Contraseña</label>
-    <input type="password" id="contrasena" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
-
-    <label htmlFor="confirmarContrasena">Confirmar contraseña</label>
-    <input type="password" id="confirmarContrasena" name="confirmarContrasena" value={formData.confirmarContrasena} onChange={handleChange} required />
-  </>
-);
-
-export default RegisterBase;
+class Hello extends React.Component {
+  render() {
+    return <div>Hello {this.props.firstname} {this.props.lastname}</div>;
+  }
+}
+Hello.propTypes = {
+  firstname: PropTypes.string.isRequired,
+  lastname: PropTypes.string.isRequired,
+};

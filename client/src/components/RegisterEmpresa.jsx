@@ -49,7 +49,7 @@ const RegisterEmpresa = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nit: parseInt(formData.nit),
+          nit: Number.parseInt(formData.nit),
           razon_social: formData.razon_social,
           nombre_reclutador: formData.nombre_reclutador,
           contacto_correo: formData.contacto_correo,
