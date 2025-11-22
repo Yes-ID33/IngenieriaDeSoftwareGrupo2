@@ -388,7 +388,7 @@ VALUES
 ),
 (2, 'Empresa Ejemplo S.A.S.', 'Sector Tecnológico', 'empresa.ejemplo@empresa.com', 
     '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi', 'empresa',
-    FALSE, '3001234567'
+    TRUE, '3001234567'
 );
 
 -- ======================================

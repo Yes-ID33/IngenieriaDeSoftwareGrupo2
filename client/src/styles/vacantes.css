@@ -1,3 +1,14 @@
+.vacantesIntro {
+  text-align: center;
+  margin: 30px 0 10px;
+}
+
+.vacantesIntro h2 {
+  font-size: 18;
+  font-weight: bold;
+  color: var(--color-support-green);
+}
+
 .vacantesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -6,11 +17,16 @@
 }
 
 .vacanteCard {
-  background-color: #fff;
+  background-color: #fff, 0.9;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 15px 35px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.vacanteCard:hover {
+  transform: translateY(-5px);
 }
 
 .vacanteCard h3 {
