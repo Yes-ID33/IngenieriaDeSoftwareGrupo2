@@ -62,9 +62,9 @@ const RegisterEstudiante = () => {
           celular: formData.celular,
           correo: formData.correo,
           contrasena: formData.contrasena,
-          cedula: parseInt(formData.cedula),
+          cedula: Number.parseInt(formData.cedula),
           programa: formData.programa,
-          creditos_aprobados: parseInt(formData.creditos_aprobados) || 0,
+          creditos_aprobados: Number.parseInt(formData.creditos_aprobados) || 0,
           modulo_empleabilidad: formData.modulo_empleabilidad
         })
       });
@@ -165,7 +165,8 @@ const RegisterEstudiante = () => {
             name="modulo_empleabilidad" 
             checked={formData.modulo_empleabilidad} 
             onChange={handleChange} 
-          />
+          />{/*
+        */}
           ¿Ha completado el módulo de empleabilidad?
         </label>
 
