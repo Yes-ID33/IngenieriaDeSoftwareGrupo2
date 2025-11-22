@@ -276,7 +276,7 @@ export const eliminarHojaVida = async (req, res) => {
       [id]
     );
 
-    if (parseInt(postulaciones.rows[0].total) > 0) {
+    if (Number.parseInt(postulaciones.rows[0].total) > 0) {
       return res.status(400).json({
         success: false,
         message: 'No puedes eliminar una hoja de vida que ha sido usada en postulaciones'

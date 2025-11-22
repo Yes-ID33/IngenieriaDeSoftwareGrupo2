@@ -66,7 +66,7 @@ export const registrarEstudiante = async (req, res) => {
     }
 
     // Validar cédula (números)
-    if (isNaN(cedula) || cedula <= 0) {
+    if (Number.isNaN(cedula) || cedula <= 0) {
       return res.status(400).json({
         success: false,
         message: 'La cédula debe ser un número válido'

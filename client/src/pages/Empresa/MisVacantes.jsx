@@ -223,6 +223,14 @@ const MisVacantes = () => {
     }).format(salario);
   };
 
+  // Manejadores de teclado para accesibilidad
+  const handleKeyDown = (e, action) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   const vacantesFiltradas = vacantes.filter(v => {
     if (filtro === 'aprobadas') return v.aprobada;
     if (filtro === 'pendientes') return !v.aprobada;
@@ -245,22 +253,31 @@ const MisVacantes = () => {
           </div>
         </div>
 
-        <div className="filterTabs">
+        <div className="filterTabs" role="tablist" aria-label="Filtros de vacantes">
           <button 
+            role="tab"
+            aria-selected={filtro === 'todas'}
             className={filtro === 'todas' ? 'active' : ''}
             onClick={() => setFiltro('todas')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('todas'))}
           >
             📋 Todas ({vacantes.length})
           </button>
           <button 
+            role="tab"
+            aria-selected={filtro === 'aprobadas'}
             className={filtro === 'aprobadas' ? 'active' : ''}
             onClick={() => setFiltro('aprobadas')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('aprobadas'))}
           >
             ✅ Aprobadas ({vacantes.filter(v => v.aprobada).length})
           </button>
           <button 
+            role="tab"
+            aria-selected={filtro === 'pendientes'}
             className={filtro === 'pendientes' ? 'active' : ''}
             onClick={() => setFiltro('pendientes')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('pendientes'))}
           >
             ⏳ Pendientes ({vacantes.filter(v => !v.aprobada).length})
           </button>
@@ -321,12 +338,24 @@ const MisVacantes = () => {
                       </td>
                       <td>{formatearSalario(vacante.salario)}</td>
                       <td>
-                        <span className="badge" style={{cursor: 'pointer'}}>
+                        <button 
+                          className="badge"
+                          style={{ 
+                            cursor: 'pointer', 
+                            border: 'none', 
+                            background: 'transparent',
+                            padding: 0,
+                            font: 'inherit',
+                            color: 'inherit'
+                          }}
+                          onClick={() => {/* Agregar función para ver postulaciones */}}
+                          onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
+                        >
                           {vacante.total_postulaciones || 0}
                           {Number.parseInt(vacante.postulaciones_pendientes) > 0 && (
                             <span style={{color: '#f39c12'}}> ({vacante.postulaciones_pendientes} nuevas)</span>
                           )}
-                        </span>
+                        </button>
                       </td>
                       <td>
                         {vacante.aprobada ? (
@@ -343,18 +372,21 @@ const MisVacantes = () => {
                           <button 
                             className="btnSecondary btnSmall"
                             onClick={() => verDetalles(vacante)}
+                            onKeyDown={(e) => handleKeyDown(e, () => verDetalles(vacante))}
                           >
                             👁️ Ver
                           </button>
                           <button 
                             className="btnPrimary btnSmall"
                             onClick={() => abrirEdicion(vacante)}
+                            onKeyDown={(e) => handleKeyDown(e, () => abrirEdicion(vacante))}
                           >
                             ✏️ Editar
                           </button>
                           <button 
                             className="btnDanger btnSmall"
                             onClick={() => handleEliminar(vacante.vacante_id, vacante.titulo)}
+                            onKeyDown={(e) => handleKeyDown(e, () => handleEliminar(vacante.vacante_id, vacante.titulo))}
                           >
                             🗑️ Eliminar
                           </button>
@@ -371,11 +403,24 @@ const MisVacantes = () => {
 
       {/* Modal */}
       {mostrarModal && vacanteSeleccionada && (
-        <div className="modal" onClick={() => setMostrarModal(false)}>
+        <div 
+          className="modal" 
+          onClick={() => setMostrarModal(false)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
+          aria-label="Cerrar modal"
+        >
           <div className="modalContent" onClick={(e) => e.stopPropagation()} style={{maxWidth: '900px'}}>
             <div className="modalHeader">
               <h2>{modoEdicion ? '✏️ Editar Vacante' : '👁️ Detalles de la Vacante'}</h2>
-              <button className="closeModal" onClick={() => setMostrarModal(false)}>✕</button>
+              <button 
+                className="closeModal" 
+                onClick={() => setMostrarModal(false)}
+                aria-label="Cerrar modal"
+              >
+                ✕
+              </button>
             </div>
             
             {modoEdicion ? (
@@ -383,8 +428,9 @@ const MisVacantes = () => {
                 <div className="modalBody">
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px'}}>
                     <div>
-                      <label><strong>Título *</strong></label>
+                      <label htmlFor="titulo-editar"><strong>Título *</strong></label>
                       <input
+                        id="titulo-editar"
                         type="text"
                         name="titulo"
                         value={formData.titulo}
@@ -394,8 +440,9 @@ const MisVacantes = () => {
                       />
                     </div>
                     <div>
-                      <label><strong>Sector *</strong></label>
+                      <label htmlFor="sector_id-editar"><strong>Sector *</strong></label>
                       <select
+                        id="sector_id-editar"
                         name="sector_id"
                         value={formData.sector_id}
                         onChange={handleInputChange}
@@ -413,8 +460,9 @@ const MisVacantes = () => {
                   </div>
 
                   <div style={{marginTop: '15px'}}>
-                    <label><strong>Descripción</strong></label>
+                    <label htmlFor="descripcion-editar"><strong>Descripción</strong></label>
                     <textarea
+                      id="descripcion-editar"
                       name="descripcion"
                       value={formData.descripcion}
                       onChange={handleInputChange}
@@ -425,8 +473,9 @@ const MisVacantes = () => {
 
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '15px'}}>
                     <div>
-                      <label><strong>Programa Objetivo</strong></label>
+                      <label htmlFor="programa_objetivo-editar"><strong>Programa Objetivo</strong></label>
                       <select
+                        id="programa_objetivo-editar"
                         name="programa_objetivo"
                         value={formData.programa_objetivo}
                         onChange={handleInputChange}
@@ -446,8 +495,9 @@ const MisVacantes = () => {
                       </select>
                     </div>
                     <div>
-                      <label><strong>Modalidad *</strong></label>
+                      <label htmlFor="modalidad-editar"><strong>Modalidad *</strong></label>
                       <select
+                        id="modalidad-editar"
                         name="modalidad"
                         value={formData.modalidad}
                         onChange={handleInputChange}
@@ -463,8 +513,9 @@ const MisVacantes = () => {
 
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginTop: '15px'}}>
                     <div>
-                      <label><strong>Salario Mensual *</strong></label>
+                      <label htmlFor="salario-editar"><strong>Salario Mensual *</strong></label>
                       <input
+                        id="salario-editar"
                         type="number"
                         name="salario"
                         value={formData.salario}
@@ -475,8 +526,9 @@ const MisVacantes = () => {
                       />
                     </div>
                     <div>
-                      <label><strong>Duración (meses)</strong></label>
+                      <label htmlFor="duracion_meses-editar"><strong>Duración (meses)</strong></label>
                       <input
+                        id="duracion_meses-editar"
                         type="number"
                         name="duracion_meses"
                         value={formData.duracion_meses}
@@ -486,8 +538,9 @@ const MisVacantes = () => {
                       />
                     </div>
                     <div>
-                      <label><strong>Fecha de Inicio</strong></label>
+                      <label htmlFor="fecha_inicio-editar"><strong>Fecha de Inicio</strong></label>
                       <input
+                        id="fecha_inicio-editar"
                         type="date"
                         name="fecha_inicio"
                         value={formData.fecha_inicio}
@@ -498,8 +551,9 @@ const MisVacantes = () => {
                   </div>
 
                   <div style={{marginTop: '15px'}}>
-                    <label><strong>Horario</strong></label>
+                    <label htmlFor="horario-editar"><strong>Horario</strong></label>
                     <input
+                      id="horario-editar"
                       type="text"
                       name="horario"
                       value={formData.horario}
@@ -509,8 +563,9 @@ const MisVacantes = () => {
                   </div>
 
                   <div style={{marginTop: '15px'}}>
-                    <label><strong>Requisitos</strong></label>
+                    <label htmlFor="requisitos-editar"><strong>Requisitos</strong></label>
                     <textarea
+                      id="requisitos-editar"
                       name="requisitos"
                       value={formData.requisitos}
                       onChange={handleInputChange}
@@ -520,8 +575,9 @@ const MisVacantes = () => {
                   </div>
 
                   <div style={{marginTop: '15px'}}>
-                    <label><strong>Beneficios</strong></label>
+                    <label htmlFor="beneficios-editar"><strong>Beneficios</strong></label>
                     <textarea
+                      id="beneficios-editar"
                       name="beneficios"
                       value={formData.beneficios}
                       onChange={handleInputChange}

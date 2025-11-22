@@ -146,34 +146,55 @@ const GestionVacantes = () => {
     }).format(salario);
   };
 
+  // Manejador de teclado para accesibilidad
+  const handleKeyDown = (e, action) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
     <div className="layoutContent">
       <Header />
       <div className="adminContainer">
         <div className="adminHeader">
           <h1>💼 Gestión de Vacantes</h1>
-          <button onClick={() => navigate('/panel/admin')} className="btnSecondary">
+          <button 
+            onClick={() => navigate('/panel/admin')} 
+            className="btnSecondary"
+            onKeyDown={(e) => handleKeyDown(e, () => navigate('/panel/admin'))}
+          >
             ← Volver al panel
           </button>
         </div>
 
         {/* Filtros */}
-        <div className="filterTabs">
+        <div className="filterTabs" role="tablist" aria-label="Filtros de vacantes">
           <button 
+            role="tab"
+            aria-selected={filtro === 'pendientes'}
             className={filtro === 'pendientes' ? 'active' : ''}
             onClick={() => setFiltro('pendientes')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('pendientes'))}
           >
             ⏳ Pendientes de Aprobación
           </button>
           <button 
+            role="tab"
+            aria-selected={filtro === 'aprobadas'}
             className={filtro === 'aprobadas' ? 'active' : ''}
             onClick={() => setFiltro('aprobadas')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('aprobadas'))}
           >
             ✅ Aprobadas
           </button>
           <button 
+            role="tab"
+            aria-selected={filtro === 'todas'}
             className={filtro === 'todas' ? 'active' : ''}
             onClick={() => setFiltro('todas')}
+            onKeyDown={(e) => handleKeyDown(e, () => setFiltro('todas'))}
           >
             📋 Todas
           </button>
@@ -231,7 +252,21 @@ const GestionVacantes = () => {
                       </td>
                       <td>{formatearSalario(vacante.salario)}</td>
                       <td>
-                        <span className="badge">{vacante.total_postulaciones}</span>
+                        <button 
+                          className="badge"
+                          style={{ 
+                            cursor: 'pointer', 
+                            border: 'none', 
+                            background: 'transparent',
+                            padding: 0,
+                            font: 'inherit',
+                            color: 'inherit'
+                          }}
+                          onClick={() => {/* Agregar función para ver postulaciones */}}
+                          onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
+                        >
+                          {vacante.total_postulaciones}
+                        </button>
                       </td>
                       <td>
                         {vacante.aprobada ? (
@@ -248,6 +283,7 @@ const GestionVacantes = () => {
                           <button 
                             className="btnSecondary btnSmall"
                             onClick={() => verDetalles(vacante)}
+                            onKeyDown={(e) => handleKeyDown(e, () => verDetalles(vacante))}
                           >
                             👁️ Ver
                           </button>
@@ -256,12 +292,14 @@ const GestionVacantes = () => {
                               <button 
                                 className="btnSuccess btnSmall"
                                 onClick={() => handleAprobar(vacante.vacante_id, vacante.titulo)}
+                                onKeyDown={(e) => handleKeyDown(e, () => handleAprobar(vacante.vacante_id, vacante.titulo))}
                               >
                                 ✅ Aprobar
                               </button>
                               <button 
                                 className="btnDanger btnSmall"
                                 onClick={() => handleRechazar(vacante.vacante_id, vacante.titulo)}
+                                onKeyDown={(e) => handleKeyDown(e, () => handleRechazar(vacante.vacante_id, vacante.titulo))}
                               >
                                 ❌ Rechazar
                               </button>
@@ -280,11 +318,24 @@ const GestionVacantes = () => {
 
       {/* Modal de Detalles */}
       {mostrarModal && vacanteSeleccionada && (
-        <div className="modal" onClick={() => setMostrarModal(false)}>
+        <div 
+          className="modal" 
+          onClick={() => setMostrarModal(false)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
+          aria-label="Cerrar modal"
+        >
           <div className="modalContent" onClick={(e) => e.stopPropagation()}>
             <div className="modalHeader">
               <h2>📋 Detalles de la Vacante</h2>
-              <button className="closeModal" onClick={() => setMostrarModal(false)}>✕</button>
+              <button 
+                className="closeModal" 
+                onClick={() => setMostrarModal(false)}
+                aria-label="Cerrar modal"
+              >
+                ✕
+              </button>
             </div>
             
             <div className="modalBody">
@@ -352,6 +403,10 @@ const GestionVacantes = () => {
                       setMostrarModal(false);
                       handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
                     }}
+                    onKeyDown={(e) => handleKeyDown(e, () => {
+                      setMostrarModal(false);
+                      handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    })}
                   >
                     ✅ Aprobar Vacante
                   </button>
@@ -361,6 +416,10 @@ const GestionVacantes = () => {
                       setMostrarModal(false);
                       handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
                     }}
+                    onKeyDown={(e) => handleKeyDown(e, () => {
+                      setMostrarModal(false);
+                      handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    })}
                   >
                     ❌ Rechazar Vacante
                   </button>
@@ -369,6 +428,7 @@ const GestionVacantes = () => {
               <button 
                 className="btnSecondary"
                 onClick={() => setMostrarModal(false)}
+                onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
               >
                 Cerrar
               </button>

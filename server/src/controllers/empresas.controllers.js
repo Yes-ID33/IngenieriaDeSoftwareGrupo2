@@ -45,7 +45,7 @@ export const registrarEmpresa = async (req, res) => {
     }
 
     // Validar NIT (números)
-    if (isNaN(nit) || nit <= 0) {
+    if (Number.isNaN(nit) || nit <= 0) {
       return res.status(400).json({
         success: false,
         message: 'El NIT debe ser un número válido'

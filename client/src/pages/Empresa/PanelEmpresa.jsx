@@ -57,9 +57,9 @@ const PanelEmpresa = () => {
           totalVacantes: vacantes.length,
           vacantesAprobadas: vacantes.filter(v => v.aprobada).length,
           vacantesPendientes: vacantes.filter(v => !v.aprobada).length,
-          totalPostulaciones: vacantes.reduce((sum, v) => sum + parseInt(v.total_postulaciones || 0), 0),
-          postulacionesPendientes: vacantes.reduce((sum, v) => sum + parseInt(v.postulaciones_pendientes || 0), 0),
-          postulacionesAceptadas: vacantes.reduce((sum, v) => sum + parseInt(v.postulaciones_aceptadas || 0), 0)
+          totalPostulaciones: vacantes.reduce((sum, v) => sum + Number.parseInt(v.total_postulaciones || 0), 0),
+          postulacionesPendientes: vacantes.reduce((sum, v) => sum + Number.parseInt(v.postulaciones_pendientes || 0), 0),
+          postulacionesAceptadas: vacantes.reduce((sum, v) => sum + Number.parseInt(v.postulaciones_aceptadas || 0), 0)
         };
         
         setEstadisticas(stats);

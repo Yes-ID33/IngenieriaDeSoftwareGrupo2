@@ -58,9 +58,9 @@ export const listarVacantesDisponibles = async (req, res) => {
       paramIndex++;
     }
 
-    if (salario_min && !isNaN(salario_min)) {
+    if (salario_min && !Number.isNaN(salario_min)) {
       query += ` AND v.salario >= $${paramIndex}`;
-      params.push(parseFloat(salario_min));
+      params.push(Number.parseFloat(salario_min));
       paramIndex++;
     }
 
