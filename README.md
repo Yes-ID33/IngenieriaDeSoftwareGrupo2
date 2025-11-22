@@ -4,12 +4,14 @@ Sistema web para la gestión de prácticas profesionales, desarrollado con React
 
 ---
 
-## Correr el proyecto
+## Entorno local
 
-### Levanta todos los servicios (frontend, backend y base de datos) con reconstrucción completa:
+Para levantar el proyecto desde cero y asegurarte de que no queden rastros antiguos de la base de datos:
 
+```bash
+# Apagar todos los servicios y eliminar volúmenes
+docker compose down -v
 
-
-### Importante antes de cerrar
-Antes de cerrar el proyecto, abre una nueva terminal del estilo git bash y ejecuta el siguiente código:
-bash server/src/database/backups/backup.sh
+# Reconstruir y levantar nuevamente todos los servicios (frontend, backend y base de datos)
+docker compose up --build
+```

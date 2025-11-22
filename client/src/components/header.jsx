@@ -18,7 +18,7 @@ const Header = () => {
         <nav>
           <ul>
             <li><Link to="/">Inicio</Link></li>
-            <li><Link to="/panel/Empresa/crear-vacante">Vacantes</Link></li>
+            <li><Link to="/vacantes">Vacantes</Link></li>
           </ul>
         </nav>
       </div>

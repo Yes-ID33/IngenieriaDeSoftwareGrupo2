@@ -13,8 +13,26 @@ import hojasVidaRoutes from './routes/hojasVida.routes.js';
 import postulacionesRoutes from './routes/postulaciones.routes.js';
 import catalogosRoutes from './routes/catalogos.routes.js';
 
-
 dotenv.config();
+//importante importar después de cargar el dotenv
+import { insertarDefault } from './database/defaultUsers.js';
+
+// función para probar la conexión x veces con un intervalo de z tiempo entre cada intento
+async function waitForDb(retries = 10, delay = 15000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const client = await pool.connect();
+      await client.query('SELECT 1');
+      client.release();
+      console.log('✅ DB lista');
+      return true;
+    } catch (err) {
+      console.log(`DB no lista, reintento ${i + 1}/${retries} en ${delay / 1000}s`);
+      await new Promise(res => setTimeout(res, delay));
+    }
+  }
+  throw new Error('No se pudo conectar a la DB después de varios intentos');
+}
 
 const app = express();
 
@@ -99,7 +117,17 @@ process.on('SIGTERM', async () => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`Verifica la conexion del servidor en http://localhost:${PORT}/api/conexionbd`);
-});
+(async () => {
+  try {
+    await waitForDb();          // espera hasta que la DB esté lista
+    await insertarDefault();    // inserta usuarios por defecto
+
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`Verifica la conexion del servidor en http://localhost:${PORT}/api/conexionbd`);
+    });
+  } catch (err) {
+    console.error('❌ Error al inicializar la aplicación:', err);
+    process.exit(1);
+  }
+})();

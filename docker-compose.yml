@@ -27,6 +27,8 @@ services:
       watch:
         - path: .
           action: rebuild
+    depends_on:
+      - db
     volumes:
       - ./server:/app
       - /app/node_modules

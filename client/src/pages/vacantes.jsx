@@ -13,9 +13,9 @@ const Vacantes = () => {
     useEffect(() =>{
         const obtenerVacantes = async () =>{
             try{
-                const res = await fetch('http://localhost:5000/api/vacantes');
+                const res = await fetch('http://localhost:5000/api/vacantes/publicas');
                 const data = await res.json();
-                if (data.succes){
+                if (data.success){
                     setVacantes(data.data.vacantes)
                 }
             }catch(error){
@@ -27,6 +27,11 @@ const Vacantes = () => {
 
     return(
         <div className="layoutContent">
+            <Header />
+            <div className="vacantesIntro">
+                <h2>Estas son las vacantes disponibles para los estudiantes del Pascual Bravo</h2>
+            </div>
+            
             <div className="vacantesGrid">
                 {vacantes.map(vacante =>(
                     <VacanteTarjeta 

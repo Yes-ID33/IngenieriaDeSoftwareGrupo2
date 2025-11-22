@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ActivarCuenta from './pages/activarCuenta';
 import Perfil from './pages/Perfil';
+import Vacantes from './pages/Vacantes';
 
 // Rutas admin
 import PanelAdmin from './pages/admin/PanelAdmin';
@@ -57,6 +58,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/activar-cuenta" element={<ActivarCuenta />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/vacantes" element= {<Vacantes />} />
         
         {/* 🛡️ Rutas admin */}
         <Route path="/panel/admin" element={<PanelAdmin />} />
