@@ -76,16 +76,18 @@ const CrearVacantes = () => {
         <div className="authCard">
           <h1>📋 Crear Vacante</h1>
           <form onSubmit={handleCrearVacante}>
-            <label>Sector</label>
+            <label htmlFor="sector">Sector</label>
             <input 
+              id="sector"
               type="text" 
               value={sector} 
               onChange={e => setSector(e.target.value)} 
               required 
             />
 
-            <label>Modalidad</label>
+            <label htmlFor="modalidad">Modalidad</label>
             <select 
+              id="modalidad"
               value={modalidad} 
               onChange={e => setModalidad(e.target.value)} 
               required
@@ -96,8 +98,9 @@ const CrearVacantes = () => {
               <option value="hibrido">Híbrido</option>
             </select>
 
-            <label>Salario</label>
+            <label htmlFor="salario">Salario</label>
             <input 
+              id="salario"
               type="number" 
               value={salario} 
               onChange={e => setSalario(e.target.value)} 
@@ -105,8 +108,9 @@ const CrearVacantes = () => {
               required 
             />
 
-            <label>Requisitos</label>
+            <label htmlFor="requisitos">Requisitos</label>
             <textarea 
+              id="requisitos"
               value={requisitos} 
               onChange={e => setRequisitos(e.target.value)} 
               rows="4"

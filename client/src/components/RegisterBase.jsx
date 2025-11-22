@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const RegisterBase = ({ formData, handleChange }) => (
   <>
@@ -15,5 +16,16 @@ const RegisterBase = ({ formData, handleChange }) => (
     <input type="password" id="confirmarContrasena" name="confirmarContrasena" value={formData.confirmarContrasena} onChange={handleChange} required />
   </>
 );
+
+// Validación de PropTypes
+RegisterBase.propTypes = {
+  formData: PropTypes.shape({
+    nombre: PropTypes.string.isRequired,
+    correo: PropTypes.string.isRequired,
+    contrasena: PropTypes.string.isRequired,
+    confirmarContrasena: PropTypes.string.isRequired
+  }).isRequired,
+  handleChange: PropTypes.func.isRequired
+};
 
 export default RegisterBase;

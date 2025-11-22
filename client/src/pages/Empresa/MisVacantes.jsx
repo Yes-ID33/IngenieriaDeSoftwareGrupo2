@@ -33,7 +33,7 @@ const MisVacantes = () => {
   useEffect(() => {
     if (modoEdicion && formData.sector_id) {
       const filtrados = programas.filter(
-        p => p.sector_id === parseInt(formData.sector_id)
+        p => p.sector_id === Number.parseInt(formData.sector_id)
       );
       setProgramasFiltrados(filtrados);
     } else {
@@ -165,7 +165,7 @@ const MisVacantes = () => {
       return;
     }
 
-    if (parseFloat(formData.salario) < 1300000) {
+    if (Number.parseFloat(formData.salario) < 1300000) {
       alert('⚠️ El salario debe ser al menos $1,300,000');
       return;
     }
@@ -323,7 +323,7 @@ const MisVacantes = () => {
                       <td>
                         <span className="badge" style={{cursor: 'pointer'}}>
                           {vacante.total_postulaciones || 0}
-                          {parseInt(vacante.postulaciones_pendientes) > 0 && (
+                          {Number.parseInt(vacante.postulaciones_pendientes) > 0 && (
                             <span style={{color: '#f39c12'}}> ({vacante.postulaciones_pendientes} nuevas)</span>
                           )}
                         </span>
