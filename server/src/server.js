@@ -16,6 +16,9 @@ import catalogosRoutes from './routes/catalogos.routes.js';
 dotenv.config();
 //importante importar después de cargar el dotenv
 import { insertarDefault } from './database/defaultUsers.js';
+//función para insertar programas y sectores sin repetir muchas líneas
+import { SectoresYProgramasDefault } from './database/defaultSectores&Programas.js';
+
 
 // función para probar la conexión x veces con un intervalo de z tiempo entre cada intento
 async function waitForDb(retries = 10, delay = 15000) {
@@ -28,6 +31,7 @@ async function waitForDb(retries = 10, delay = 15000) {
       return true;
     } catch (err) {
       console.log(`DB no lista, reintento ${i + 1}/${retries} en ${delay / 1000}s`);
+      console.log(`El error es: `, err);
       await new Promise(res => setTimeout(res, delay));
     }
   }
@@ -117,17 +121,17 @@ process.on('SIGTERM', async () => {
 
 const PORT = process.env.PORT || 3000;
 
-(async () => {
+
   try {
     await waitForDb();          // espera hasta que la DB esté lista
     await insertarDefault();    // inserta usuarios por defecto
+    await SectoresYProgramasDefault();    // inserta sectores y programas por defecto
 
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en http://localhost:${PORT}`);
       console.log(`Verifica la conexion del servidor en http://localhost:${PORT}/api/conexionbd`);
     });
   } catch (err) {
-    console.error('❌ Error al inicializar la aplicación:', err);
+    console.error('❌ Error al inicializar la aplicación: ', err);
     process.exit(1);
   }
-})();
