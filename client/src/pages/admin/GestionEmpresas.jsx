@@ -63,7 +63,7 @@ const GestionEmpresas = () => {
   };
 
   const handleAprobar = async (usuarioId, razonSocial) => {
-    if (!window.confirm(`¿Estás seguro de aprobar la empresa "${razonSocial}"?`)) {
+    if (!globalThis.confirm(`¿Estás seguro de aprobar la empresa "${razonSocial}"?`)) {
       return;
     }
 
@@ -93,11 +93,11 @@ const GestionEmpresas = () => {
   };
 
   const handleRechazar = async (usuarioId, razonSocial) => {
-    const motivo = window.prompt(`¿Por qué rechazas la empresa "${razonSocial}"?\n(Opcional)`);
+    const motivo = globalThis.prompt(`¿Por qué rechazas la empresa "${razonSocial}"?\n(Opcional)`);
     
     if (motivo === null) return; // Usuario canceló
 
-    if (!window.confirm(`¿Estás seguro de rechazar y eliminar la empresa "${razonSocial}"?`)) {
+    if (!globalThis.confirm(`¿Estás seguro de rechazar y eliminar la empresa "${razonSocial}"?`)) {
       return;
     }
 

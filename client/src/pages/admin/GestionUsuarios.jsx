@@ -73,7 +73,7 @@ const GestionUsuarios = () => {
   };
 
   const handleEliminar = async (id, nombre) => {
-    if (!window.confirm(`¿Estás seguro de eliminar el usuario "${nombre}"?\nEsta acción no se puede deshacer.`)) {
+    if (!globalThis.confirm(`¿Estás seguro de eliminar el usuario "${nombre}"?\nEsta acción no se puede deshacer.`)) {
       return;
     }
 

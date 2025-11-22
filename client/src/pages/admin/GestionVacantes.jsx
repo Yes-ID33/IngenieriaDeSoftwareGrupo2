@@ -330,22 +330,19 @@ const GestionVacantes = () => {
         )}
       </div>
 
-      {/* Modal de Detalles - CORREGIDO */}
+      {/* Modal de Detalles - COMPLETAMENTE CORREGIDO */}
       {mostrarModal && vacanteSeleccionada && (
         <div 
           className="modal" 
           onClick={() => setMostrarModal(false)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
-          aria-label="Cerrar modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title-detalles"
+          aria-describedby="modal-description-detalles"
         >
           <div 
             className="modalContent" 
             onClick={(e) => e.stopPropagation()}
-            role="document"
-            aria-labelledby="modal-title-detalles"
-            aria-describedby="modal-description-detalles"
           >
             <div className="modalHeader">
               <h2 id="modal-title-detalles">📋 Detalles de la Vacante</h2>
@@ -353,6 +350,7 @@ const GestionVacantes = () => {
                 className="closeModal" 
                 onClick={() => setMostrarModal(false)}
                 aria-label="Cerrar modal"
+                onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
               >
                 ✕
               </button>
