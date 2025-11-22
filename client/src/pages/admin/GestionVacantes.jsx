@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
@@ -14,6 +14,20 @@ const GestionVacantes = () => {
   const [error, setError] = useState('');
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+
+  // Manejador de Escape a nivel de documento
+  const handleEscapeKey = useCallback((e) => {
+    if (e.key === 'Escape' && mostrarModal) {
+      setMostrarModal(false);
+    }
+  }, [mostrarModal]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [handleEscapeKey]);
 
   useEffect(() => {
     if (usuario && usuario.rol !== 'administrador') {
@@ -316,141 +330,132 @@ const GestionVacantes = () => {
         )}
       </div>
 
+      {/* Modal de Detalles - CORREGIDO */}
       {mostrarModal && vacanteSeleccionada && (
-  <div 
-    className="modal" 
-    onClick={() => setMostrarModal(false)}
-    role="button"
-    tabIndex={0}
-    onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
-    aria-label="Cerrar modal"
-  >
-    <div 
-      className="modalContent" 
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => {
-        // Permitir cerrar el modal con Escape
-        if (e.key === 'Escape') {
-          setMostrarModal(false);
-        }
-      }}
-      tabIndex={0}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title-detalles"
-    >
-      <div className="modalHeader">
-        <h2 id="modal-title-detalles">📋 Detalles de la Vacante</h2>
-        <button 
-          className="closeModal" 
+        <div 
+          className="modal" 
           onClick={() => setMostrarModal(false)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
           aria-label="Cerrar modal"
         >
-          ✕
-        </button>
-      </div>
-      
-      {/* El resto del contenido del modal permanece igual */}
-      <div className="modalBody">
-        <div className="detailGroup">
-          <h3>Información General</h3>
-          <p><strong>Título:</strong> {vacanteSeleccionada.titulo}</p>
-          <p><strong>Empresa:</strong> {vacanteSeleccionada.razon_social}</p>
-          <p><strong>Sector:</strong> {vacanteSeleccionada.sector_icono} {vacanteSeleccionada.sector_nombre || 'No especificado'}</p>
-          <p><strong>Programa Objetivo:</strong> {vacanteSeleccionada.programa_objetivo || 'Todos los programas'}</p>
-        </div>
+          <div 
+            className="modalContent" 
+            onClick={(e) => e.stopPropagation()}
+            role="document"
+            aria-labelledby="modal-title-detalles"
+            aria-describedby="modal-description-detalles"
+          >
+            <div className="modalHeader">
+              <h2 id="modal-title-detalles">📋 Detalles de la Vacante</h2>
+              <button 
+                className="closeModal" 
+                onClick={() => setMostrarModal(false)}
+                aria-label="Cerrar modal"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div id="modal-description-detalles" className="modalBody">
+              <div className="detailGroup">
+                <h3>Información General</h3>
+                <p><strong>Título:</strong> {vacanteSeleccionada.titulo}</p>
+                <p><strong>Empresa:</strong> {vacanteSeleccionada.razon_social}</p>
+                <p><strong>Sector:</strong> {vacanteSeleccionada.sector_icono} {vacanteSeleccionada.sector_nombre || 'No especificado'}</p>
+                <p><strong>Programa Objetivo:</strong> {vacanteSeleccionada.programa_objetivo || 'Todos los programas'}</p>
+              </div>
 
-        <div className="detailGroup">
-          <h3>Condiciones</h3>
-          <p><strong>Modalidad:</strong> {vacanteSeleccionada.modalidad}</p>
-          <p><strong>Salario:</strong> {formatearSalario(vacanteSeleccionada.salario)}</p>
-          <p><strong>Duración:</strong> {vacanteSeleccionada.duracion_meses ? `${vacanteSeleccionada.duracion_meses} meses` : 'No especificada'}</p>
-          <p><strong>Horario:</strong> {vacanteSeleccionada.horario || 'No especificado'}</p>
-          {vacanteSeleccionada.fecha_inicio && (
-            <p><strong>Fecha de Inicio:</strong> {new Date(vacanteSeleccionada.fecha_inicio).toLocaleDateString('es-CO')}</p>
-          )}
-        </div>
+              <div className="detailGroup">
+                <h3>Condiciones</h3>
+                <p><strong>Modalidad:</strong> {vacanteSeleccionada.modalidad}</p>
+                <p><strong>Salario:</strong> {formatearSalario(vacanteSeleccionada.salario)}</p>
+                <p><strong>Duración:</strong> {vacanteSeleccionada.duracion_meses ? `${vacanteSeleccionada.duracion_meses} meses` : 'No especificada'}</p>
+                <p><strong>Horario:</strong> {vacanteSeleccionada.horario || 'No especificado'}</p>
+                {vacanteSeleccionada.fecha_inicio && (
+                  <p><strong>Fecha de Inicio:</strong> {new Date(vacanteSeleccionada.fecha_inicio).toLocaleDateString('es-CO')}</p>
+                )}
+              </div>
 
-        {vacanteSeleccionada.descripcion && (
-          <div className="detailGroup">
-            <h3>Descripción</h3>
-            <p>{vacanteSeleccionada.descripcion}</p>
+              {vacanteSeleccionada.descripcion && (
+                <div className="detailGroup">
+                  <h3>Descripción</h3>
+                  <p>{vacanteSeleccionada.descripcion}</p>
+                </div>
+              )}
+
+              {vacanteSeleccionada.requisitos && (
+                <div className="detailGroup">
+                  <h3>Requisitos</h3>
+                  <p>{vacanteSeleccionada.requisitos}</p>
+                </div>
+              )}
+
+              {vacanteSeleccionada.beneficios && (
+                <div className="detailGroup">
+                  <h3>Beneficios</h3>
+                  <p>{vacanteSeleccionada.beneficios}</p>
+                </div>
+              )}
+
+              <div className="detailGroup">
+                <h3>Contacto de la Empresa</h3>
+                <p><strong>Reclutador:</strong> {vacanteSeleccionada.nombre_reclutador}</p>
+                <p><strong>Correo:</strong> {vacanteSeleccionada.contacto_correo}</p>
+                <p><strong>Teléfono:</strong> {vacanteSeleccionada.contacto_telefono || 'No especificado'}</p>
+              </div>
+
+              <div className="detailGroup">
+                <h3>Estadísticas</h3>
+                <p><strong>Total de Postulaciones:</strong> {vacanteSeleccionada.total_postulaciones}</p>
+                <p><strong>Estado:</strong> {vacanteSeleccionada.aprobada ? '✅ Aprobada' : '⏳ Pendiente de aprobación'}</p>
+                <p><strong>Fecha de Creación:</strong> {new Date(vacanteSeleccionada.creada_en).toLocaleString('es-CO')}</p>
+              </div>
+            </div>
+
+            <div className="modalFooter">
+              {!vacanteSeleccionada.aprobada && (
+                <>
+                  <button 
+                    className="btnSuccess"
+                    onClick={() => {
+                      setMostrarModal(false);
+                      handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    }}
+                    onKeyDown={(e) => handleKeyDown(e, () => {
+                      setMostrarModal(false);
+                      handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    })}
+                  >
+                    ✅ Aprobar Vacante
+                  </button>
+                  <button 
+                    className="btnDanger"
+                    onClick={() => {
+                      setMostrarModal(false);
+                      handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    }}
+                    onKeyDown={(e) => handleKeyDown(e, () => {
+                      setMostrarModal(false);
+                      handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
+                    })}
+                  >
+                    ❌ Rechazar Vacante
+                  </button>
+                </>
+              )}
+              <button 
+                className="btnSecondary"
+                onClick={() => setMostrarModal(false)}
+                onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
-        )}
-
-        {vacanteSeleccionada.requisitos && (
-          <div className="detailGroup">
-            <h3>Requisitos</h3>
-            <p>{vacanteSeleccionada.requisitos}</p>
-          </div>
-        )}
-
-        {vacanteSeleccionada.beneficios && (
-          <div className="detailGroup">
-            <h3>Beneficios</h3>
-            <p>{vacanteSeleccionada.beneficios}</p>
-          </div>
-        )}
-
-        <div className="detailGroup">
-          <h3>Contacto de la Empresa</h3>
-          <p><strong>Reclutador:</strong> {vacanteSeleccionada.nombre_reclutador}</p>
-          <p><strong>Correo:</strong> {vacanteSeleccionada.contacto_correo}</p>
-          <p><strong>Teléfono:</strong> {vacanteSeleccionada.contacto_telefono || 'No especificado'}</p>
         </div>
-
-        <div className="detailGroup">
-          <h3>Estadísticas</h3>
-          <p><strong>Total de Postulaciones:</strong> {vacanteSeleccionada.total_postulaciones}</p>
-          <p><strong>Estado:</strong> {vacanteSeleccionada.aprobada ? '✅ Aprobada' : '⏳ Pendiente de aprobación'}</p>
-          <p><strong>Fecha de Creación:</strong> {new Date(vacanteSeleccionada.creada_en).toLocaleString('es-CO')}</p>
-        </div>
-      </div>
-
-      <div className="modalFooter">
-        {!vacanteSeleccionada.aprobada && (
-          <>
-            <button 
-              className="btnSuccess"
-              onClick={() => {
-                setMostrarModal(false);
-                handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
-              }}
-              onKeyDown={(e) => handleKeyDown(e, () => {
-                setMostrarModal(false);
-                handleAprobar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
-              })}
-            >
-              ✅ Aprobar Vacante
-            </button>
-            <button 
-              className="btnDanger"
-              onClick={() => {
-                setMostrarModal(false);
-                handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
-              }}
-              onKeyDown={(e) => handleKeyDown(e, () => {
-                setMostrarModal(false);
-                handleRechazar(vacanteSeleccionada.vacante_id, vacanteSeleccionada.titulo);
-              })}
-            >
-              ❌ Rechazar Vacante
-            </button>
-          </>
-        )}
-        <button 
-          className="btnSecondary"
-          onClick={() => setMostrarModal(false)}
-          onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-      )
+      )}
     </div>
   );
 };
