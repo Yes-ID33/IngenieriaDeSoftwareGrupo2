@@ -25,8 +25,18 @@ export const crearVacante = async (req, res) => {
       beneficios
     } = req.body;
 
+    // Obtener nombre del sector desde la tabla sectores
+    const sectorRes = await client.query(
+      'SELECT nombre FROM sectores WHERE id = $1',
+      [sector_id]
+    );
+    if (sectorRes.rows.length === 0) {
+      return res.status(400).json({ success: false, message: 'Sector inválido' });
+    }
+    const sectorNombre = sectorRes.rows[0].nombre;
+
     // Validaciones
-    if (!titulo || !sector_id || !modalidad || !salario) {
+    if (!titulo || !sector_id || !modalidad || !salario || !sectorNombre) {
       return res.status(400).json({
         success: false,
         message: 'Los campos título, sector, modalidad y salario son obligatorios'
@@ -69,13 +79,13 @@ export const crearVacante = async (req, res) => {
     // Insertar vacante (aprobada = false, requiere aprobación de admin)
     const nuevaVacante = await client.query(
       `INSERT INTO vacantes (
-        empresa_id, titulo, descripcion, sector_id, programa_objetivo,
+        empresa_id, titulo, descripcion, sector, sector_id, programa_objetivo,
         modalidad, salario, requisitos, fecha_inicio, duracion_meses,
         horario, beneficios, aprobada
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING *`,
       [
-        empresaId, titulo, descripcion, sector_id, programa_objetivo,
+        empresaId, titulo, descripcion, sectorNombre, sector_id, programa_objetivo,
         modalidad, salario, requisitos, fecha_inicio, duracion_meses,
         horario, beneficios, false
       ]
