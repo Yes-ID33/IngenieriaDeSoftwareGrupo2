@@ -1,10 +1,10 @@
 import pool from '../db.js';
 
 export async function insertarDefault() {
-  const adminEmail = (process.env.DB_ADMIN_CORREO || '').trim();
-  const adminPwdHash = (process.env.DB_ADMIN_PWD || '').trim();
-  const empresaEmail = (process.env.DB_EMPRESA_CORREO || '').trim();
-  const empresaPwdHash = (process.env.DB_EMPRESA_PWD || '').trim();
+  const adminEmail = (process.env.DB_ADMIN_CORREO).trim();
+  const adminPwdHash = (process.env.DB_ADMIN_PWD).trim();
+  const empresaEmail = (process.env.DB_EMPRESA_CORREO).trim();
+  const empresaPwdHash = (process.env.DB_EMPRESA_PWD).trim();
 
   if (!adminEmail || !adminPwdHash) {
     console.warn('Faltan DB_ADMIN_CORREO o DB_ADMIN_PWD en el entorno. Saltando inserción de admin.');

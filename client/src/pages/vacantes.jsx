@@ -36,7 +36,7 @@ const Vacantes = () => {
                 {vacantes.map(vacante =>(
                     <VacanteTarjeta 
                         key={vacante.vacante_id}
-                        vacante={vacante}
+                        Vacante={vacante}
                         onAplicar={() => navigate('./Solicitud.jsx', { state: {vacante} })}
                     />
                 ))}

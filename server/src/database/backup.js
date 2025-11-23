@@ -10,7 +10,6 @@ const dbName = process.env.DB_DATABASE;
 const dbUser = process.env.DB_USER;
 // Rutas absolutas seguras
 const PG_DUMP = '/usr/bin/pg_dump';
-const PSQL = '/usr/bin/psql';
 const AWS = '/usr/bin/aws';
 
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');

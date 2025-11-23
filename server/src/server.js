@@ -130,6 +130,10 @@ const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en http://localhost:${PORT}`);
       console.log(`Verifica la conexion del servidor en http://localhost:${PORT}/api/conexionbd`);
+      console.log("HASH ADMIN: ", process.env.DB_ADMIN_PWD);
+      console.log("HASH ADMIN LONGITUD: ", process.env.DB_ADMIN_PWD.length);
+      console.log("HASH EMPRESA: ", process.env.DB_EMPRESA_PWD);
+      console.log("HASH EMPRESA LONGITUD: ", process.env.DB_EMPRESA_PWD.length);
     });
   } catch (err) {
     console.error('❌ Error al inicializar la aplicación: ', err);
