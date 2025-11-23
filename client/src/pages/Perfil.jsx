@@ -5,7 +5,7 @@ import Header from '../components/header.jsx';
 import styles from '../styles/perfil.module.css';
 
 const Perfil = () => {
-  const { usuario } = useAuth();
+  //const { usuario } = useAuth();
   const [perfilCompleto, setPerfilCompleto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

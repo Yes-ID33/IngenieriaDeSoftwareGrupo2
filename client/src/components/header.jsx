@@ -26,12 +26,7 @@ const Header = () => {
       <div className="navRight">
         <nav>
           <ul>
-            {!usuario ? (
-              <>
-                <li><Link to="/login">Iniciar Sesión</Link></li>
-                <li><Link to="/register">Registrarse</Link></li>
-              </>
-            ) : (
+            {usuario ? (
               <li className="dropdown">
                 <button className="dropdownToggle">Perfil </button>
                 <ul className="dropdownMenu">
@@ -40,6 +35,12 @@ const Header = () => {
                   <li><button onClick={handleLogout}>Cerrar sesión</button></li>
                 </ul>
               </li>
+            ) : (
+                <>
+                <li><Link to="/login">Iniciar Sesión</Link></li>
+                <li><Link to="/register">Registrarse</Link></li>
+              </>
+              
             )}
           </ul>
         </nav>

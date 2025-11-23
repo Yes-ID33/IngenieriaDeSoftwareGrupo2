@@ -74,7 +74,7 @@ const GestionVacantes = () => {
   };
 
   const handleAprobar = async (vacanteId, titulo) => {
-    if (!window.confirm(`¿Estás seguro de aprobar la vacante "${titulo}"?\n\nLa vacante será visible para los estudiantes.`)) {
+    if (!globalThis.confirm(`¿Estás seguro de aprobar la vacante "${titulo}"?\n\nLa vacante será visible para los estudiantes.`)) {
       return;
     }
 
@@ -104,7 +104,7 @@ const GestionVacantes = () => {
   };
 
   const handleRechazar = async (vacanteId, titulo) => {
-    const motivo = window.prompt(
+    const motivo = globalThis.prompt(
       `¿Por qué rechazas la vacante "${titulo}"?\n\n` +
       `Ejemplo: "No cumple con requisitos institucionales", "Salario muy bajo", etc.\n\n` +
       `(Este mensaje se enviará a la empresa)`
@@ -117,7 +117,7 @@ const GestionVacantes = () => {
       return;
     }
 
-    if (!window.confirm(`¿Estás seguro de rechazar y eliminar la vacante "${titulo}"?`)) {
+    if (!globalThis.confirm(`¿Estás seguro de rechazar y eliminar la vacante "${titulo}"?`)) {
       return;
     }
 

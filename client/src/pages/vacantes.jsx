@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import {  useNavigate } from 'react-router-dom';
+//import { useAuth } from '../context/AuthContext.jsx';
 import Header from '../components/header.jsx';
 import "../styles/index.css";
 import "../styles/vacantes.css";

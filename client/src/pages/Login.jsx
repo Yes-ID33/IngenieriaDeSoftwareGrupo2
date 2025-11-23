@@ -44,18 +44,18 @@ const Login = () => {
         } else {
           navigate('/');
         }
-      } else {
-        if (data.codigo === 'CUENTA_NO_VERIFICADA') {
+      } else if (data.codigo === 'CUENTA_NO_VERIFICADA'){
+         
           setError('⚠️ Debes verificar tu cuenta. Revisa tu correo electrónico.');
           setTimeout(() => {
-            navigate('/activar-cuenta', { state: { correo } });
+          navigate('/activar-cuenta', { state: { correo } });
           }, 2000);
         } else if (data.codigo === 'CUENTA_PENDIENTE_APROBACION') {
           setError('⏳ Tu cuenta está pendiente de aprobación por un administrador.');
         } else {
           setError(data.message || 'Credenciales incorrectas');
         }
-      }
+      
     } catch (err) {
       console.error('Error en login:', err);
       setError('Error de conexión con el servidor');
