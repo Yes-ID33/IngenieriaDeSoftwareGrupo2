@@ -18,8 +18,6 @@ services:
     volumes:
       - backUpPracticasPascualinas:/var/lib/postgresql/data
       - ./server/src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./server/src/database/restore.sql:/docker-entrypoint-initdb.d/restore.sql
-      - ./server/src/database/backups:/docker-entrypoint-initdb.d/backups
           
   server:
     build:

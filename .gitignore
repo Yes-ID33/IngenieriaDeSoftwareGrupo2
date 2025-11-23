@@ -58,6 +58,7 @@ dist/
 *.swp
 *.swo
 *~
+.backups/
 
 # OS generated files
 .DS_Store

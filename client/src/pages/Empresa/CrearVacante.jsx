@@ -109,6 +109,10 @@ const CrearVacante = () => {
       alert('⚠️ La duración debe ser al menos 1 mes');
       return;
     }
+    if (formData.fecha_inicio && new Date(formData.fecha_inicio) < new Date()) {
+      alert('⚠️ La fecha de inicio debe ser posterior a hoy');
+      return;
+    }
 
     try {
       setLoading(true);
