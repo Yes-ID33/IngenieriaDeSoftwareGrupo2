@@ -15,9 +15,9 @@ const MisVacantes = () => {
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
-  const [sectores, setSectores] = useState([]);
+  const [setSectores] = useState([]);
   const [programas, setProgramas] = useState([]);
-  const [programasFiltrados, setProgramasFiltrados] = useState([]);
+  const [setProgramasFiltrados] = useState([]);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const MisVacantes = () => {
   };
 
   const handleEliminar = async (vacanteId, titulo) => {
-    if (!window.confirm(`¿Estás seguro de eliminar la vacante "${titulo}"?\n\nEsta acción no se puede deshacer y se eliminarán todas las postulaciones asociadas.`)) {
+    if (!globalThis.confirm(`¿Estás seguro de eliminar la vacante "${titulo}"?\n\nEsta acción no se puede deshacer y se eliminarán todas las postulaciones asociadas.`)) {
       return;
     }
 

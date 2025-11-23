@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
 import Header from '../components/header.jsx';
 import styles from '../styles/perfil.module.css';
 
 const Perfil = () => {
-  //const { usuario } = useAuth();
   const [perfilCompleto, setPerfilCompleto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -131,7 +129,7 @@ const Perfil = () => {
           <p>No hay información de usuario disponible.</p>
         )}
 
-        {perfilCompleto && perfilCompleto.rol === 'estudiante' && (
+        {perfilCompleto?.rol === 'estudiante' && (
           <>
             <h2>Últimas solicitudes</h2>
             <table className={styles.tablaSolicitudes}>
@@ -168,7 +166,7 @@ const Perfil = () => {
           </>
         )}
 
-{perfilCompleto && perfilCompleto.rol === 'empresa' && (
+{perfilCompleto?.rol === 'empresa' && (
   <>
     <h2>Panel de Gestión</h2>
     <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
@@ -179,7 +177,7 @@ const Perfil = () => {
   </>
 )}
 
-        {perfilCompleto && perfilCompleto.rol === 'administrador' && (
+        {perfilCompleto?.rol === 'administrador' && (
           <>
             <h2>Panel de administración</h2>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>

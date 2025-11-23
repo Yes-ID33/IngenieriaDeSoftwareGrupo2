@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 const AuthContext = createContext();
@@ -22,9 +22,15 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('usuario');
     setUsuario(null);
   };
+
+  const authValue = useMemo(() => ({
+  usuario,
+  iniciarSesion,
+  cerrarSesion
+}), [usuario, iniciarSesion, cerrarSesion]);
   
   return (
-    <AuthContext.Provider value={{ usuario, iniciarSesion, cerrarSesion }}>
+     <AuthContext.Provider value={authValue}>
       {children}
     </AuthContext.Provider>
   );

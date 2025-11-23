@@ -24,7 +24,7 @@ describe('Probando el login de admin',() =>{
         cy.get('#AprobarEmpresaAdmin').click();
         //fin del test
     });
-   
+    
 });
 
 
