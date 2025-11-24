@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
 import '../../styles/index.css';
 import '../../styles/admin.css';
-import PropTypes from 'prop-types';
+
 // Componente TabButton movido fuera del componente principal
 const TabButton = ({ activo, onClick, onKeyDown, children }) => (
   <button 
@@ -35,7 +36,6 @@ const MisVacantes = () => {
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
-  const [programas, setProgramas] = useState([]);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -44,7 +44,6 @@ const MisVacantes = () => {
       return;
     }
     obtenerVacantes();
-    obtenerCatalogos();
   }, [usuario, navigate]);
 
   // Controlar el dialog nativo
@@ -57,26 +56,6 @@ const MisVacantes = () => {
       }
     }
   }, [mostrarModal]);
-
-  const obtenerCatalogos = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      // Solo obtener programas (sectores no se usa)
-      const resProgramas = await fetch('http://localhost:5000/api/catalogos/programas', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const dataProgramas = await resProgramas.json();
-      if (dataProgramas.success) {
-        setProgramas(dataProgramas.data.programas || []);
-      }
-    } catch (error) {
-      console.error('Error al obtener catálogos:', error);
-    }
-  };
 
   const obtenerVacantes = async () => {
     try {
@@ -202,8 +181,6 @@ const MisVacantes = () => {
     }
   };
 
-  // SOLUCIÓN: Eliminada la función handleInputChange que no se usaba
-
   const formatearSalario = (salario) => {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -250,6 +227,14 @@ const MisVacantes = () => {
   const getColorPostulaciones = (vacante) => {
     const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
     return pendientes > 0 ? '#f39c12' : 'inherit';
+  };
+
+  // SOLUCIÓN: Función para texto de programa objetivo (ternario extraído)
+  const getTextoPrograma = (vacante) => {
+    if (vacante.programa_objetivo) {
+      return vacante.programa_objetivo;
+    }
+    return <span style={{color: '#888'}}>Todos</span>;
   };
 
   // Manejadores de teclado para accesibilidad
@@ -350,9 +335,7 @@ const MisVacantes = () => {
                         <small>{vacante.sector_nombre || 'Sin sector'}</small>
                       </td>
                       <td>
-                        {vacante.programa_objetivo || (
-                          <span style={{color: '#888'}}>Todos</span>
-                        )}
+                        {getTextoPrograma(vacante)}
                       </td>
                       <td>{getTextoModalidad(vacante.modalidad)}</td>
                       <td>{formatearSalario(vacante.salario)}</td>
@@ -441,7 +424,6 @@ const MisVacantes = () => {
           {modoEdicion ? (
             <form onSubmit={handleActualizar}>
               <div className="modalBody">
-                {/* Aquí iría el formulario de edición */}
                 <p>Formulario de edición...</p>
               </div>
               <div className="modalFooter">
@@ -460,7 +442,6 @@ const MisVacantes = () => {
           ) : (
             <>
               <div className="modalBody">
-                {/* Aquí irían los detalles de la vacante */}
                 <p>Detalles de la vacante...</p>
               </div>
               <div className="modalFooter">
