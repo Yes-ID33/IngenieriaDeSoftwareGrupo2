@@ -223,10 +223,6 @@ html, body, #root {
   height: 100%;
 }
 
-/* layout base para empujar footer hacia abajo */
-html, body, #root {
-  height: 100%;
-}
 
 .app-root {
   min-height: 100vh;

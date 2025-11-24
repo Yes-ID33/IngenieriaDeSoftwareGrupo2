@@ -17,6 +17,8 @@
   width: 100%;
   max-width: 650px;
   text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
 }
 
 /* Título */
@@ -102,11 +104,7 @@
   }
 }
 
-/* Mejoras para la tarjeta de activación */
-.authCard {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
-}
+
 
 .authCard:hover {
   transform: translateY(-4px);
@@ -127,28 +125,10 @@
   font-size: 1.2rem;
   font-weight: 600;
 }
+
 /* Mejoras para la tarjeta de activación */
 .authCard {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
 }
 
-.authCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.successMessage {
-  color: var(--color-support-green);
-  font-weight: 600;
-  margin: 0.8rem 0;
-  text-align: center;
-}
-
-/* Mejorar el input del código */
-.authCard input[type="text"] {
-  text-align: center;
-  letter-spacing: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
