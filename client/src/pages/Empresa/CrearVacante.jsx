@@ -141,6 +141,21 @@ const CrearVacante = () => {
     }
   };
 
+  // Calcular el mensaje para programas
+  const getMensajeProgramas = () => {
+    if (!formData.sector_id) {
+      return 'Selecciona un sector para ver los programas disponibles';
+    }
+    if (programasFiltrados.length === 0) {
+      return '⚠️ No hay programas disponibles en este sector';
+    }
+    return `${programasFiltrados.length} programa(s) disponible(s) en este sector`;
+  };
+
+  const getColorMensaje = () => {
+    return formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888';
+  };
+
   if (usuario && usuario.rol !== 'empresa') {
     navigate('/');
     return null;
@@ -278,12 +293,8 @@ const CrearVacante = () => {
                         </>
                       )}
                     </select>
-                    <small style={{ color: formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888' }}>
-                      {!formData.sector_id 
-                        ? 'Selecciona un sector para ver los programas disponibles'
-                        : programasFiltrados.length === 0 
-                          ? '⚠️ No hay programas disponibles en este sector'
-                          : `${programasFiltrados.length} programa(s) disponible(s) en este sector`}
+                    <small style={{ color: getColorMensaje() }}>
+                      {getMensajeProgramas()}
                     </small>
                   </div>
                   
