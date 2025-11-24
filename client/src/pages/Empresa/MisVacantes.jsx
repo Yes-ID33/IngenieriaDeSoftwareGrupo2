@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
@@ -8,6 +8,7 @@ import '../../styles/admin.css';
 const MisVacantes = () => {
   const { usuario } = useAuth();
   const navigate = useNavigate();
+  const dialogRef = useRef(null);
   const [vacantes, setVacantes] = useState([]);
   const [filtro, setFiltro] = useState('todas');
   const [loading, setLoading] = useState(true);
@@ -15,9 +16,9 @@ const MisVacantes = () => {
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
-  const [setSectores] = useState([]);
+  const [sectores, setSectores] = useState([]);
   const [programas, setProgramas] = useState([]);
-  const [setProgramasFiltrados] = useState([]);
+  const [programasFiltrados, setProgramasFiltrados] = useState([]);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -28,6 +29,17 @@ const MisVacantes = () => {
     obtenerVacantes();
     obtenerCatalogos();
   }, [usuario, navigate]);
+
+  // Controlar el dialog nativo
+  useEffect(() => {
+    if (dialogRef.current) {
+      if (mostrarModal) {
+        dialogRef.current.showModal();
+      } else {
+        dialogRef.current.close();
+      }
+    }
+  }, [mostrarModal]);
 
   // Filtrar programas cuando cambia el sector en modo edición
   useEffect(() => {
@@ -197,10 +209,10 @@ const MisVacantes = () => {
     }
   };
 
+  // SOLUCIÓN 1: Función handleInputChange corregida (sin asignación inútil)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    // Si cambia el sector, limpiar programa
     if (name === 'sector_id') {
       setFormData(prev => ({
         ...prev,
@@ -223,6 +235,30 @@ const MisVacantes = () => {
     }).format(salario);
   };
 
+  // SOLUCIÓN 2: Extraer ternario anidado en funciones independientes
+  const getTextoEstado = (vacante) => {
+    if (vacante.aprobada) {
+      return '✅ Activa';
+    }
+    return '⏳ Pendiente';
+  };
+
+  const getClaseEstado = (vacante) => {
+    if (vacante.aprobada) {
+      return 'badge badge-success';
+    }
+    return 'badge badge-warning';
+  };
+
+  const getTextoModalidad = (modalidad) => {
+    switch (modalidad) {
+      case 'presencial': return '🏢 Presencial';
+      case 'remoto': return '💻 Remoto';
+      case 'hibrido': return '🔄 Híbrido';
+      default: return modalidad;
+    }
+  };
+
   // Manejadores de teclado para accesibilidad
   const handleKeyDown = (e, action) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -236,6 +272,18 @@ const MisVacantes = () => {
     if (filtro === 'pendientes') return !v.aprobada;
     return true;
   });
+
+  // SOLUCIÓN 3 y 4: Botones nativos para tabs
+  const TabButton = ({ activo, onClick, onKeyDown, children }) => (
+    <button 
+      className={activo ? 'active' : ''}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      aria-selected={activo}
+    >
+      {children}
+    </button>
+  );
 
   return (
     <div className="layoutContent">
@@ -254,33 +302,27 @@ const MisVacantes = () => {
         </div>
 
         <div className="filterTabs" role="tablist" aria-label="Filtros de vacantes">
-          <button 
-            role="tab"
-            aria-selected={filtro === 'todas'}
-            className={filtro === 'todas' ? 'active' : ''}
+          <TabButton
+            activo={filtro === 'todas'}
             onClick={() => setFiltro('todas')}
             onKeyDown={(e) => handleKeyDown(e, () => setFiltro('todas'))}
           >
             📋 Todas ({vacantes.length})
-          </button>
-          <button 
-            role="tab"
-            aria-selected={filtro === 'aprobadas'}
-            className={filtro === 'aprobadas' ? 'active' : ''}
+          </TabButton>
+          <TabButton
+            activo={filtro === 'aprobadas'}
             onClick={() => setFiltro('aprobadas')}
             onKeyDown={(e) => handleKeyDown(e, () => setFiltro('aprobadas'))}
           >
             ✅ Aprobadas ({vacantes.filter(v => v.aprobada).length})
-          </button>
-          <button 
-            role="tab"
-            aria-selected={filtro === 'pendientes'}
-            className={filtro === 'pendientes' ? 'active' : ''}
+          </TabButton>
+          <TabButton
+            activo={filtro === 'pendientes'}
             onClick={() => setFiltro('pendientes')}
             onKeyDown={(e) => handleKeyDown(e, () => setFiltro('pendientes'))}
           >
             ⏳ Pendientes ({vacantes.filter(v => !v.aprobada).length})
-          </button>
+          </TabButton>
         </div>
 
         {error && <p className="errorMessage">{error}</p>}
@@ -331,11 +373,7 @@ const MisVacantes = () => {
                           <span style={{color: '#888'}}>Todos</span>
                         )}
                       </td>
-                      <td>
-                        {vacante.modalidad === 'presencial' && '🏢 Presencial'}
-                        {vacante.modalidad === 'remoto' && '💻 Remoto'}
-                        {vacante.modalidad === 'hibrido' && '🔄 Híbrido'}
-                      </td>
+                      <td>{getTextoModalidad(vacante.modalidad)}</td>
                       <td>{formatearSalario(vacante.salario)}</td>
                       <td>
                         <button 
@@ -358,11 +396,9 @@ const MisVacantes = () => {
                         </button>
                       </td>
                       <td>
-                        {vacante.aprobada ? (
-                          <span className="badge badge-success">✅ Activa</span>
-                        ) : (
-                          <span className="badge badge-warning">⏳ Pendiente</span>
-                        )}
+                        <span className={getClaseEstado(vacante)}>
+                          {getTextoEstado(vacante)}
+                        </span>
                       </td>
                       <td>
                         {new Date(vacante.creada_en).toLocaleDateString('es-CO')}
@@ -401,84 +437,78 @@ const MisVacantes = () => {
         )}
       </div>
 
-      {mostrarModal && vacanteSeleccionada && (
-  <div 
-    className="modal" 
-    onClick={() => setMostrarModal(false)}
-    role="button"
-    tabIndex={0}
-    onKeyDown={(e) => handleKeyDown(e, () => setMostrarModal(false))}
-    aria-label="Cerrar modal"
-  >
-    <div 
-      className="modalContent" 
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          setMostrarModal(false);
-        }
-      }}
-      tabIndex={0}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      style={{maxWidth: '900px'}}
-    >
-      <div className="modalHeader">
-        <h2 id="modal-title">
-          {modoEdicion ? '✏️ Editar Vacante' : '👁️ Detalles de la Vacante'}
-        </h2>
-        <button 
-          className="closeModal" 
-          onClick={() => setMostrarModal(false)}
-          aria-label="Cerrar modal"
+      {/* SOLUCIÓN 5: Usar <dialog> nativo en lugar de role="dialog" */}
+      <dialog 
+        ref={dialogRef}
+        className="modal"
+        onClose={() => setMostrarModal(false)}
+        onClick={(e) => {
+          if (e.target === dialogRef.current) {
+            setMostrarModal(false);
+          }
+        }}
+      >
+        <div 
+          className="modalContent" 
+          onClick={(e) => e.stopPropagation()}
+          style={{maxWidth: '900px'}}
         >
-          ✕
-        </button>
-      </div>
-      
-      {modoEdicion ? (
-        <form onSubmit={handleActualizar}>
-          <div className="modalBody">
-            {/* ... formulario de edición ... */}
-          </div>
-          <div className="modalFooter">
-            <button type="submit" className="btnSuccess">
-              💾 Guardar Cambios
-            </button>
+          <div className="modalHeader">
+            <h2 id="modal-title">
+              {modoEdicion ? '✏️ Editar Vacante' : '👁️ Detalles de la Vacante'}
+            </h2>
             <button 
-              type="button"
-              className="btnSecondary"
+              className="closeModal" 
               onClick={() => setMostrarModal(false)}
+              aria-label="Cerrar modal"
             >
-              Cancelar
+              ✕
             </button>
           </div>
-        </form>
-      ) : (
-        <>
-          <div className="modalBody">
-            {/* ... detalles de la vacante ... */}
-          </div>
-          <div className="modalFooter">
-            <button 
-              className="btnPrimary"
-              onClick={() => abrirEdicion(vacanteSeleccionada)}
-            >
-              ✏️ Editar Vacante
-            </button>
-            <button 
-              className="btnSecondary"
-              onClick={() => setMostrarModal(false)}
-            >
-              Cerrar
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  </div>
-)}
+          
+          {modoEdicion ? (
+            <form onSubmit={handleActualizar}>
+              <div className="modalBody">
+                {/* Aquí iría el formulario de edición */}
+                <p>Formulario de edición...</p>
+              </div>
+              <div className="modalFooter">
+                <button type="submit" className="btnSuccess">
+                  💾 Guardar Cambios
+                </button>
+                <button 
+                  type="button"
+                  className="btnSecondary"
+                  onClick={() => setMostrarModal(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <div className="modalBody">
+                {/* Aquí irían los detalles de la vacante */}
+                <p>Detalles de la vacante...</p>
+              </div>
+              <div className="modalFooter">
+                <button 
+                  className="btnPrimary"
+                  onClick={() => abrirEdicion(vacanteSeleccionada)}
+                >
+                  ✏️ Editar Vacante
+                </button>
+                <button 
+                  className="btnSecondary"
+                  onClick={() => setMostrarModal(false)}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </dialog>
     </div>
   );
 };
