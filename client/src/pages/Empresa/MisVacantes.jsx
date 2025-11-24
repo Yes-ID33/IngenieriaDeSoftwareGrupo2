@@ -4,6 +4,25 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
 import '../../styles/index.css';
 import '../../styles/admin.css';
+import PropTypes from 'prop-types';
+// Componente TabButton movido fuera del componente principal
+const TabButton = ({ activo, onClick, onKeyDown, children }) => (
+  <button 
+    className={activo ? 'active' : ''}
+    onClick={onClick}
+    onKeyDown={onKeyDown}
+  >
+    {children}
+  </button>
+);
+
+// Validación de props para TabButton
+TabButton.propTypes = {
+  activo: PropTypes.bool,
+  onClick: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  children: PropTypes.node
+};
 
 const MisVacantes = () => {
   const { usuario } = useAuth();
@@ -16,9 +35,7 @@ const MisVacantes = () => {
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
-  const [sectores, setSectores] = useState([]);
   const [programas, setProgramas] = useState([]);
-  const [programasFiltrados, setProgramasFiltrados] = useState([]);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -41,35 +58,11 @@ const MisVacantes = () => {
     }
   }, [mostrarModal]);
 
-  // Filtrar programas cuando cambia el sector en modo edición
-  useEffect(() => {
-    if (modoEdicion && formData.sector_id) {
-      const filtrados = programas.filter(
-        p => p.sector_id === Number.parseInt(formData.sector_id)
-      );
-      setProgramasFiltrados(filtrados);
-    } else {
-      setProgramasFiltrados([]);
-    }
-  }, [formData.sector_id, programas, modoEdicion]);
-
   const obtenerCatalogos = async () => {
     try {
       const token = localStorage.getItem('token');
       
-      // Obtener sectores
-      const resSectores = await fetch('http://localhost:5000/api/catalogos/sectores', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const dataSectores = await resSectores.json();
-      if (dataSectores.success) {
-        setSectores(dataSectores.data.sectores || []);
-      }
-
-      // Obtener programas
+      // Solo obtener programas (sectores no se usa)
       const resProgramas = await fetch('http://localhost:5000/api/catalogos/programas', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -209,23 +202,7 @@ const MisVacantes = () => {
     }
   };
 
-  // SOLUCIÓN 1: Función handleInputChange corregida (sin asignación inútil)
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name === 'sector_id') {
-      setFormData(prev => ({
-        ...prev,
-        sector_id: value,
-        programa_objetivo: ''
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
+  // SOLUCIÓN: Eliminada la función handleInputChange que no se usaba
 
   const formatearSalario = (salario) => {
     return new Intl.NumberFormat('es-CO', {
@@ -235,7 +212,7 @@ const MisVacantes = () => {
     }).format(salario);
   };
 
-  // SOLUCIÓN 2: Extraer ternario anidado en funciones independientes
+  // SOLUCIÓN: Extraer ternario anidado en funciones independientes
   const getTextoEstado = (vacante) => {
     if (vacante.aprobada) {
       return '✅ Activa';
@@ -259,6 +236,22 @@ const MisVacantes = () => {
     }
   };
 
+  // SOLUCIÓN: Función para manejar postulaciones con ternario extraído
+  const getTextoPostulaciones = (vacante) => {
+    const total = vacante.total_postulaciones || 0;
+    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
+    
+    if (pendientes > 0) {
+      return `${total} (${pendientes} nuevas)`;
+    }
+    return `${total}`;
+  };
+
+  const getColorPostulaciones = (vacante) => {
+    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
+    return pendientes > 0 ? '#f39c12' : 'inherit';
+  };
+
   // Manejadores de teclado para accesibilidad
   const handleKeyDown = (e, action) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -272,18 +265,6 @@ const MisVacantes = () => {
     if (filtro === 'pendientes') return !v.aprobada;
     return true;
   });
-
-  // SOLUCIÓN 3 y 4: Botones nativos para tabs
-  const TabButton = ({ activo, onClick, onKeyDown, children }) => (
-    <button 
-      className={activo ? 'active' : ''}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      aria-selected={activo}
-    >
-      {children}
-    </button>
-  );
 
   return (
     <div className="layoutContent">
@@ -384,15 +365,12 @@ const MisVacantes = () => {
                             background: 'transparent',
                             padding: 0,
                             font: 'inherit',
-                            color: 'inherit'
+                            color: getColorPostulaciones(vacante)
                           }}
                           onClick={() => {/* Agregar función para ver postulaciones */}}
                           onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
                         >
-                          {vacante.total_postulaciones || 0}
-                          {Number.parseInt(vacante.postulaciones_pendientes) > 0 && (
-                            <span style={{color: '#f39c12'}}> ({vacante.postulaciones_pendientes} nuevas)</span>
-                          )}
+                          {getTextoPostulaciones(vacante)}
                         </button>
                       </td>
                       <td>
@@ -437,20 +415,14 @@ const MisVacantes = () => {
         )}
       </div>
 
-      {/* SOLUCIÓN 5: Usar <dialog> nativo en lugar de role="dialog" */}
+      {/* SOLUCIÓN: Dialog nativo sin event listeners en elementos no interactivos */}
       <dialog 
         ref={dialogRef}
         className="modal"
         onClose={() => setMostrarModal(false)}
-        onClick={(e) => {
-          if (e.target === dialogRef.current) {
-            setMostrarModal(false);
-          }
-        }}
       >
         <div 
           className="modalContent" 
-          onClick={(e) => e.stopPropagation()}
           style={{maxWidth: '900px'}}
         >
           <div className="modalHeader">
