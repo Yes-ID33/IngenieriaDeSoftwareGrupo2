@@ -189,7 +189,7 @@ const MisVacantes = () => {
     }).format(salario);
   };
 
-  // SOLUCIÓN: Extraer ternario anidado en funciones independientes
+  // Funciones para extraer lógica condicional
   const getTextoEstado = (vacante) => {
     if (vacante.aprobada) {
       return '✅ Activa';
@@ -213,7 +213,6 @@ const MisVacantes = () => {
     }
   };
 
-  // SOLUCIÓN: Función para manejar postulaciones con ternario extraído
   const getTextoPostulaciones = (vacante) => {
     const total = vacante.total_postulaciones || 0;
     const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
@@ -229,12 +228,19 @@ const MisVacantes = () => {
     return pendientes > 0 ? '#f39c12' : 'inherit';
   };
 
-  // SOLUCIÓN: Función para texto de programa objetivo (ternario extraído)
   const getTextoPrograma = (vacante) => {
     if (vacante.programa_objetivo) {
       return vacante.programa_objetivo;
     }
     return <span style={{color: '#888'}}>Todos</span>;
+  };
+
+  // SOLUCIÓN: Función para el mensaje de estado vacío (ternario extraído)
+  const getMensajeEstadoVacio = () => {
+    if (filtro !== 'todas') {
+      return filtro;
+    }
+    return '';
   };
 
   // Manejadores de teclado para accesibilidad
@@ -297,7 +303,8 @@ const MisVacantes = () => {
           <p>Cargando vacantes...</p>
         ) : vacantesFiltradas.length === 0 ? (
           <div className="emptyState">
-            <p>📭 No tienes vacantes {filtro !== 'todas' ? filtro : ''}</p>
+            {/* SOLUCIÓN APLICADA: Ternario extraído a función */}
+            <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
             <Link to="/panel/empresa/crear-vacante">
               <button className="btnSuccess" style={{ marginTop: '15px' }}>
                 ➕ Publicar Mi Primera Vacante
@@ -398,7 +405,7 @@ const MisVacantes = () => {
         )}
       </div>
 
-      {/* SOLUCIÓN: Dialog nativo sin event listeners en elementos no interactivos */}
+      {/* Dialog nativo sin event listeners en elementos no interactivos */}
       <dialog 
         ref={dialogRef}
         className="modal"
