@@ -32,9 +32,9 @@ export async function subirPdfHojasDeVida(fileBuffer, originalName, nombre, apel
 
   // Normalización de nombre y apellido para evitar espacios y mayúsculas
   const timestamp = Date.now();
-  const safeNombre = nombre.replace(/\s+/g, "-").toLowerCase();
-  const safeApellido = apellido.replace(/\s+/g, "-").toLowerCase();
-  const safeOriginal = originalName.replace(/\s+/g, "-").toLowerCase();
+  const safeNombre = nombre.trim().replaceAll(" ", "-").toLowerCase();
+  const safeApellido = apellido.trim().replaceAll(" ", "-").toLowerCase();
+  const safeOriginal = originalName.trim().replaceAll(" ", "-").toLowerCase();
 
   // Clave única para el objeto en S3
   const key = `hojas-vida/${safeApellido}-${safeNombre}-${timestamp}-${safeOriginal}`;
