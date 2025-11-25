@@ -7,7 +7,7 @@ export const iniciarSesion = async (req, res) => {
   const client = await pool.connect();
   
   try {
-    const { correo, contrasena } = req.body; // Primera declaración de 'contrasena'
+    const { correo, contrasena } = req.body;
 
     // Validaciones básicas
     if (!correo || !contrasena) {
@@ -104,8 +104,8 @@ export const iniciarSesion = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    // SOLUCIÓN CORREGIDA: Usar un alias diferente para evitar redeclaración
-    const { contrasena: contrasenaHash, ...usuarioSinPassword } = usuarioData;
+    // SOLUCIÓN CORREGIDA: Usar el patrón de exclusión sin crear variable no utilizada
+    const { contrasena: _, ...usuarioSinPassword } = usuarioData;
 
     res.status(200).json({
       success: true,
