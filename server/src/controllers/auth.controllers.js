@@ -130,7 +130,7 @@ export const iniciarSesion = async (req, res) => {
   }
 };
 
-// Obtener perfil de usuario autenticado
+// ✅ ACTUALIZADO: Obtener perfil de usuario autenticado con información de programa
 export const obtenerPerfil = async (req, res) => {
   const client = await pool.connect();
   
@@ -152,13 +152,47 @@ export const obtenerPerfil = async (req, res) => {
     const usuarioData = usuario.rows[0];
     let datosAdicionales = {};
 
-    // Obtener datos adicionales según el rol
+  // ✅ Obtener datos adicionales según el rol
     if (usuarioData.rol === 'estudiante') {
-      const estudiante = await client.query(
-        'SELECT cedula_id, creditos_aprobados, modulo_empleabilidad FROM estudiantes WHERE usuario_id = $1',
-        [userId]
-      );
-      datosAdicionales = estudiante.rows[0] || {};
+      
+      const estudiante = await client.query(`
+        SELECT 
+          e.cedula_id,
+          e.creditos_aprobados,
+          e.modulo_empleabilidad,
+          e.programa_id,
+          p.nombre as programa_nombre,
+          p.facultad as programa_facultad,
+          p.nivel as programa_nivel,
+          s.nombre as sector_nombre,
+          s.icono as sector_icono
+        FROM estudiantes e
+        LEFT JOIN programas p ON e.programa_id = p.id
+        LEFT JOIN sectores s ON p.sector_id = s.id
+        WHERE e.usuario_id = $1
+      `, [userId]);
+
+      if (estudiante.rows.length > 0) {
+        const estData = estudiante.rows[0];
+        
+        datosAdicionales = {
+          cedula_id: estData.cedula_id,
+          creditos_aprobados: estData.creditos_aprobados,
+          modulo_empleabilidad: estData.modulo_empleabilidad
+        };
+
+        // ✅ Solo agregar programa si existe
+        if (estData.programa_id) {
+          datosAdicionales.programa = {
+            id: estData.programa_id,
+            nombre: estData.programa_nombre,
+            facultad: estData.programa_facultad,
+            nivel: estData.programa_nivel,
+            sector: estData.sector_nombre,
+            sector_icono: estData.sector_icono
+          };
+        }
+      }
     } else if (usuarioData.rol === 'empresa') {
       const empresa = await client.query(
         'SELECT nit_id, razon_social, nombre_reclutador, contacto_correo, contacto_telefono, creada_en FROM empresas WHERE usuario_id = $1',

@@ -13,13 +13,20 @@ import hojasVidaRoutes from './routes/hojasVida.routes.js';
 import postulacionesRoutes from './routes/postulaciones.routes.js';
 import catalogosRoutes from './routes/catalogos.routes.js';
 
-
 dotenv.config();
 
 const app = express();
 
+// =======================
+// CORS CONFIG SEGURO
+// =======================
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true
+}));
+
 // Middlewares globales
-app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,11 +35,10 @@ app.use('/api/estudiantes', estudiantesRoutes);
 app.use('/api/empresas', empresasRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/vacantes', vacantesRoutes); // Rutas para empresas Y públicas
+app.use('/api/vacantes', vacantesRoutes); 
 app.use('/api/estudiantes/hojas-vida', hojasVidaRoutes);
 app.use('/api/estudiantes/postulaciones', postulacionesRoutes);
 app.use('/api/catalogos', catalogosRoutes);
-
 
 // ===== RUTA TEMPORAL PARA GENERAR HASH (Eliminar) =====
 import bcrypt from 'bcrypt';
@@ -43,9 +49,7 @@ app.get('/api/generar-hash/:texto', async (req, res) => {
     const saltRounds = 12;
     const hash = await bcrypt.hash(texto, saltRounds);
     
-    res.status(200).json({
-      hash: hash
-    });
+    res.status(200).json({ hash });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -101,5 +105,5 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`Verifica la conexion del servidor en http://localhost:${PORT}/api/conexionbd`);
+  console.log(`Verifica la conexión del servidor en http://localhost:${PORT}/api/conexionbd`);
 });

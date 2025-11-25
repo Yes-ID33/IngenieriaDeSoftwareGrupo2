@@ -67,17 +67,17 @@ CREATE TABLE IF NOT EXISTS estudiantes (
 
 
 -- ======================================
--- TABLA: hojas de vida
+-- TABLA: hojas de vida (CORREGIDA)
 -- ======================================
 CREATE TABLE IF NOT EXISTS hojas_vida (
     id SERIAL PRIMARY KEY,
-    estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE,
+    estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE, -- CORREGIDO
     nombre_perfil VARCHAR(100) NOT NULL,
     descripcion TEXT,
     habilidades TEXT[],
     experiencia TEXT,
     educacion TEXT,
-    archivo_pdf VARCHAR(255),
+    archivo_url TEXT, -- URL al S3 o ruta en volumen
     es_principal BOOLEAN DEFAULT FALSE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -240,6 +240,66 @@ ON CONFLICT (nombre) DO NOTHING;
 
 
 -- ======================================
+-- INSERTAR ADMINISTRADOR POR DEFECTO
+-- ======================================
+-- Email: practicasprofecionalespascuali@gmail.com
+-- Contraseña: Admin2025!
+
+INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular)
+VALUES (
+    'Administrador',
+    'Sistema',
+    'practicasprofecionalespascuali@gmail.com',
+    '$2b$12$ZSU/tvAasitn3Z4I.HCV1uGMEc39aZCCHGsShkUOs9c1siu1trzru',  -- Admin2025!
+    'administrador',
+    TRUE,
+    '3001234567'
+) ON CONFLICT (correo) DO NOTHING;
+
+-- Crear registro en tabla administradores
+INSERT INTO administradores (usuario_id, cargo, departamento, activo)
+SELECT 
+    u.id,
+    'Administrador del Sistema',
+    'Tecnología e Innovación',
+    TRUE
+FROM usuarios u
+WHERE u.correo = 'practicasprofecionalespascuali@gmail.com'
+AND NOT EXISTS (SELECT 1 FROM administradores WHERE usuario_id = u.id);
+
+
+-- ======================================
+-- INSERTAR EMPRESA POR DEFECTO
+-- ======================================
+-- Email: empresa.ejemplo@empresa.com
+-- Contraseña: Hola1234
+
+INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular, telefono)
+VALUES (
+    'Empresa Ejemplo S.A.S.',
+    'Sector Tecnológico',
+    'empresa.ejemplo@empresa.com',
+    '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi',
+    'empresa',
+    TRUE,
+    '3001234567',
+    '6012345678'
+) ON CONFLICT (correo) DO NOTHING;
+
+INSERT INTO empresas (nit_id, usuario_id, razon_social, nombre_reclutador, contacto_correo, contacto_telefono)
+SELECT 
+    900123456,
+    u.id,
+    'Empresa Ejemplo S.A.S.',
+    'Ana María Rodríguez',
+    'rrhh@empresaejemplo.com',
+    '3012345678'
+FROM usuarios u
+WHERE u.correo = 'empresa.ejemplo@empresa.com'
+AND NOT EXISTS (SELECT 1 FROM empresas WHERE usuario_id = u.id);
+
+
+-- ======================================
 -- VISTAS ACTUALIZADAS
 -- ======================================
 
@@ -304,7 +364,7 @@ SELECT
     -- Datos de la hoja de vida
     hv.id as hoja_vida_id,
     hv.nombre_perfil,
-    hv.archivo_pdf,
+    hv.archivo_url,
     hv.descripcion as hoja_descripcion,
     -- Datos de la vacante
     v.vacante_id,
@@ -376,69 +436,6 @@ BEGIN
         v.creada_en DESC;
 END;
 $$ LANGUAGE plpgsql;
-
-
--- ======================================
--- INSERTAR ADMINISTRADOR POR DEFECTO
--- ======================================
--- Email: practicasprofecionalespascuali@gmail.com
--- Contraseña: Admin2025!
-
-INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular)
-VALUES (
-    'Administrador',
-    'Sistema',
-    'practicasprofecionalespascuali@gmail.com',
-    '$2b$12$ZSU/tvAasitn3Z4I.HCV1uGMEc39aZCCHGsShkUOs9c1siu1trzru',  -- Admin2025!
-    'administrador',
-    TRUE,
-    '3001234567'
-) ON CONFLICT (correo) DO NOTHING;
-
--- Crear registro en tabla administradores
-INSERT INTO administradores (usuario_id, cargo, departamento, activo)
-SELECT 
-    u.id,
-    'Administrador del Sistema',
-    'Tecnología e Innovación',
-    TRUE
-FROM usuarios u
-WHERE u.correo = 'practicasprofecionalespascuali@gmail.com'
-ON CONFLICT (usuario_id) DO NOTHING;
-
-
--- ======================================
--- INSERTAR EMPRESA POR DEFECTO
--- ======================================
--- Email: empresa.ejemplo@empresa.com
--- Contraseña: Hola1234
-
-WITH nuevo_usuario AS (
-    INSERT INTO usuarios (nombre, apellido, correo, contrasena, rol, verificado, celular, telefono)
-    VALUES (
-        'Empresa Ejemplo S.A.S.',
-        'Sector Tecnológico',
-        'empresa.ejemplo@empresa.com',
-        '$2b$12$/6Vlv0bb6v/6ieVzqgOFxOFnN6M2HNAU38lVMukA5TQCstNg01bKi',
-        'empresa',
-        TRUE,
-        '3001234567',
-        '6012345678'
-    )
-    RETURNING id
-)
-INSERT INTO empresas (nit_id, usuario_id, razon_social, nombre_reclutador, contacto_correo, contacto_telefono)
-VALUES (
-    900123456,
-    (SELECT id FROM nuevo_usuario),
-    'Empresa Ejemplo S.A.S.',
-    'Ana María Rodríguez',
-    'rrhh@empresaejemplo.com',
-    '3012345678'
-);
-
-
-
 
 
 -- ======================================

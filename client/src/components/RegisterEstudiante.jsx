@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RegisterBase from './RegisterBase.jsx';
 import "../styles/index.css";
@@ -7,20 +7,47 @@ import "../styles/auth.css";
 const RegisterEstudiante = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    apellido: '', // ✅ AGREGADO (Opcional)
-    celular: '', // ✅ AGREGADO
+    apellido: '',
+    celular: '',
     correo: '',
     contrasena: '',
     confirmarContrasena: '',
-    cedula: '', // ✅ CAMBIADO de cedula_id a cedula
-    programa: '',
+    cedula: '',
+    programa_id: '', // ✅ Guardar ID del programa
     creditos_aprobados: '',
     modulo_empleabilidad: false
   });
   
+  const [programas, setProgramas] = useState([]);
+  const [loadingProgramas, setLoadingProgramas] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // ✅ Cargar programas al montar el componente
+  useEffect(() => {
+    const cargarProgramas = async () => {
+      try {
+        // ✅ Usa la ruta correcta de tu backend
+        const res = await fetch('http://localhost:5000/api/catalogos/programas');
+        const data = await res.json();
+        
+        if (data.success) {
+          // ✅ Tu backend devuelve data.data.programas
+          setProgramas(data.data.programas);
+        } else {
+          setError('Error al cargar programas');
+        }
+      } catch (err) {
+        console.error('Error al cargar programas:', err);
+        setError('Error de conexión al cargar programas');
+      } finally {
+        setLoadingProgramas(false);
+      }
+    };
+
+    cargarProgramas();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -53,10 +80,15 @@ const RegisterEstudiante = () => {
       return;
     }
 
+    // ✅ Validar que se haya seleccionado un programa
+    if (!formData.programa_id) {
+      setError('Debes seleccionar un programa');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // ✅ NUEVA URL CORRECTA
       const res = await fetch('http://localhost:5000/api/estudiantes/registro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -66,8 +98,8 @@ const RegisterEstudiante = () => {
           celular: formData.celular,
           correo: formData.correo,
           contrasena: formData.contrasena,
-          cedula: parseInt(formData.cedula), // Convertir a número
-          programa: formData.programa,
+          cedula: parseInt(formData.cedula),
+          programa_id: parseInt(formData.programa_id), // ✅ Enviar ID del programa
           creditos_aprobados: parseInt(formData.creditos_aprobados) || 0,
           modulo_empleabilidad: formData.modulo_empleabilidad
         })
@@ -76,7 +108,6 @@ const RegisterEstudiante = () => {
       const data = await res.json();
 
       if (data.success) {
-        // ✅ Redirigir a activación de cuenta
         navigate('/activar-cuenta', { 
           state: { 
             correo: formData.correo,
@@ -93,6 +124,16 @@ const RegisterEstudiante = () => {
       setLoading(false);
     }
   };
+
+  // ✅ Agrupar programas por facultad
+  const programasPorFacultad = programas.reduce((acc, programa) => {
+    const facultad = programa.facultad || 'Sin Facultad';
+    if (!acc[facultad]) {
+      acc[facultad] = [];
+    }
+    acc[facultad].push(programa);
+    return acc;
+  }, {});
 
   return (
     <div className="authContainer">
@@ -114,7 +155,6 @@ const RegisterEstudiante = () => {
             ⚠️ <strong>Importante:</strong> Debes usar tu correo institucional (@pascualbravo.edu.co)
           </div>
 
-          {/* ✅ CAMPOS ADICIONALES */}
           <label htmlFor="apellido">Apellido</label>
           <input 
             type="text" 
@@ -147,17 +187,41 @@ const RegisterEstudiante = () => {
             required 
           />
 
-          <label htmlFor="programa">Programa</label>
-          <input 
-            type="text" 
-            id="programa" 
-            name="programa" 
-            value={formData.programa} 
-            onChange={handleChange} 
-            required 
-          />
+          {/* ✅ SELECT DE PROGRAMAS CON AGRUPACIÓN POR FACULTAD */}
+          <label htmlFor="programa_id">Programa Académico</label>
+          <select 
+            id="programa_id" 
+            name="programa_id" 
+            value={formData.programa_id} 
+            onChange={handleChange}
+            disabled={loadingProgramas}
+            required
+            style={{
+              padding: '10px',
+              borderRadius: '5px',
+              border: '1px solid #ccc',
+              fontSize: '14px',
+              width: '100%',
+              backgroundColor: loadingProgramas ? '#f0f0f0' : 'white'
+            }}
+          >
+            <option value="">
+              {loadingProgramas ? 'Cargando programas...' : '-- Selecciona tu programa --'}
+            </option>
+            
+            {/* ✅ Agrupar por facultad usando optgroup */}
+            {Object.entries(programasPorFacultad).map(([facultad, progs]) => (
+              <optgroup key={facultad} label={`📚 ${facultad.toUpperCase()}`}>
+                {progs.map(programa => (
+                  <option key={programa.id} value={programa.id}>
+                    {programa.nombre} • {programa.nivel.charAt(0).toUpperCase() + programa.nivel.slice(1)}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
 
-          <label htmlFor="creditos_aprobados">Créditos aprobados</label>
+          <label htmlFor="creditos_aprobados">Créditos Aprobados</label>
           <input 
             type="number" 
             id="creditos_aprobados" 
@@ -165,31 +229,56 @@ const RegisterEstudiante = () => {
             value={formData.creditos_aprobados} 
             onChange={handleChange}
             min="0"
+            placeholder="Ej: 45"
             required 
           />
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <label style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px',
+            cursor: 'pointer',
+            marginTop: '10px'
+          }}>
             <input 
               type="checkbox" 
               name="modulo_empleabilidad" 
               checked={formData.modulo_empleabilidad} 
-              onChange={handleChange} 
+              onChange={handleChange}
+              style={{ cursor: 'pointer' }}
             />
-            ¿Ha completado el módulo de empleabilidad?
+            <span>¿Ha completado el módulo de empleabilidad?</span>
           </label>
 
-          {error && <p className="errorMessage">{error}</p>}
+          {error && (
+            <div style={{
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              color: '#721c24',
+              padding: '10px',
+              borderRadius: '5px',
+              marginTop: '15px',
+              fontSize: '14px'
+            }}>
+              {error}
+            </div>
+          )}
           
           <button 
             type="submit" 
             className="authBtn" 
-            disabled={loading}
+            disabled={loading || loadingProgramas}
+            style={{
+              marginTop: '20px',
+              opacity: (loading || loadingProgramas) ? 0.6 : 1,
+              cursor: (loading || loadingProgramas) ? 'not-allowed' : 'pointer'
+            }}
           >
-            {loading ? 'Registrando...' : 'Registrar estudiante'}
+            {loading ? '⏳ Registrando...' : '✅ Registrar estudiante'}
           </button>
         </form>
         
-        <p>
+        <p style={{ textAlign: 'center', marginTop: '20px' }}>
           ¿Ya tienes cuenta?{" "}
           <a href="/login" className="authLink">Inicia sesión aquí</a>
         </p>

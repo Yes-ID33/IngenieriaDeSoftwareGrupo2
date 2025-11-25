@@ -16,13 +16,13 @@ export const registrarEstudiante = async (req, res) => {
       correo, 
       contrasena,
       cedula,
-      programa,
+      programa_id,  
       creditos_aprobados,
       modulo_empleabilidad
     } = req.body;
    
-    // Validaciones básicas
-    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula || !programa) {
+
+    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula || !programa_id) {
       return res.status(400).json({
         success: false,
         message: 'Todos los campos obligatorios deben ser completados'
@@ -38,7 +38,7 @@ export const registrarEstudiante = async (req, res) => {
       });
     }
 
-      // VALIDAR DOMINIO INSTITUCIONAL
+    // VALIDAR DOMINIO INSTITUCIONAL
     const dominioInstitucional = '@pascualbravo.edu.co';
     if (!correo.toLowerCase().endsWith(dominioInstitucional)) {
       return res.status(400).json({
@@ -72,6 +72,22 @@ export const registrarEstudiante = async (req, res) => {
         message: 'La cédula debe ser un número válido'
       });
     }
+
+    // ✅ NUEVO: Validar que el programa_id exista y esté activo
+    const programaValido = await client.query(
+      'SELECT id, nombre, facultad, nivel FROM programas WHERE id = $1 AND activo = TRUE',
+      [programa_id]
+    );
+
+    if (programaValido.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        success: false,
+        message: 'El programa seleccionado no es válido o no está disponible'
+      });
+    }
+
+    const programaData = programaValido.rows[0];
 
     // Verificar si el correo ya existe
     const correoExistente = await client.query(
@@ -128,11 +144,19 @@ export const registrarEstudiante = async (req, res) => {
 
     const usuarioId = nuevoUsuario.rows[0].id;
 
-    // Insertar en tabla estudiantes
+    // ✅ ACTUALIZADO: Insertar en tabla estudiantes con programa_id
+    // Opción: llenar ambos campos (programa y programa_id) para compatibilidad
     await client.query(
-      `INSERT INTO estudiantes (cedula_id, usuario_id, programa, creditos_aprobados, modulo_empleabilidad)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [cedula, usuarioId, programa, creditos_aprobados || 0, modulo_empleabilidad || false]
+      `INSERT INTO estudiantes (cedula_id, usuario_id, programa, programa_id, creditos_aprobados, modulo_empleabilidad)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        cedula, 
+        usuarioId, 
+        programaData.nombre,  // ✅ Llenar campo legacy con el nombre
+        programa_id,          // ✅ Usar el ID del programa
+        creditos_aprobados || 0, 
+        modulo_empleabilidad || false
+      ]
     );
 
     // Enviar email de verificación
@@ -154,6 +178,12 @@ export const registrarEstudiante = async (req, res) => {
       data: {
         usuario: nuevoUsuario.rows[0],
         cedula: cedula,
+        programa: {
+          id: programa_id,
+          nombre: programaData.nombre,
+          facultad: programaData.facultad,
+          nivel: programaData.nivel
+        },
         mensaje_adicional: 'Se ha enviado un código de verificación a tu correo. El código expira en 15 minutos.'
       }
     });
