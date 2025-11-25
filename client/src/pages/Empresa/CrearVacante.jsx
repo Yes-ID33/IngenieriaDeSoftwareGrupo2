@@ -102,12 +102,12 @@ const CrearVacante = () => {
       return;
     }
 
-    if (Number.parseFloat(formData.salario) < 1300000) {
+    if (parseFloat(formData.salario) < 1300000) {
       alert('⚠️ El salario debe ser al menos $1,300,000 COP (salario mínimo legal)');
       return;
     }
 
-    if (formData.duracion_meses && Number.parseInt(formData.duracion_meses) < 1) {
+    if (formData.duracion_meses && parseInt(formData.duracion_meses) < 1) {
       alert('⚠️ La duración debe ser al menos 1 mes');
       return;
     }
@@ -243,7 +243,27 @@ const CrearVacante = () => {
                 </div>
               </div>
 
-
+              {/* Descripción de la vacante */}
+              <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
+                <h3 style={{ marginTop: 0 }}>📝 Descripción de la Vacante</h3>
+  
+                <label htmlFor="descripcion" className="authLabel">
+                  <strong>Descripción</strong>
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  value={formData.descripcion}
+                  onChange={handleInputChange}
+                  className="authInput"
+                  rows="4"
+                  placeholder="Describe la oportunidad de práctica profesional que ofreces, responsabilidades principales y contexto de la empresa..."
+                />
+                <small style={{ color: '#888' }}>
+                  Incluye información sobre tu empresa, el equipo de trabajo y las tareas principales
+                </small>
+              </div>
+              
               {/* Requisitos y Modalidad */}
               <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
                 <h3 style={{ marginTop: 0 }}>🎯 Requisitos y Modalidad</h3>
@@ -328,7 +348,7 @@ const CrearVacante = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                   <div>
                     <label htmlFor="salario" className="authLabel">
-                      <strong>Salario Mensual (COP)</strong>
+                      <strong>Salario Mensual (COP) *</strong>
                     </label>
                     <input
                       type="number"
@@ -402,182 +422,17 @@ const CrearVacante = () => {
                   <strong>Beneficios</strong>
                 </label>
                 <textarea
-                  name="descripcion"
-                  value={formData.descripcion}
+                  name="beneficios"
+                  value={formData.beneficios}
                   onChange={handleInputChange}
                   className="authInput"
-                  rows="4"
+                  rows="3"
                   placeholder="Describe la oportunidad de práctica profesional que ofreces..."
                 />
                 <small style={{ color: '#888' }}>
-                  Incluye información sobre tu empresa, el equipo de trabajo y las responsabilidades principales
+                  Incluye información sobre beneficios adicionales en tu empresa
                 </small>
               </div>
-            </div>
-
-            {/* Requisitos y Modalidad */}
-            <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <h3 style={{ marginTop: 0 }}>🎯 Requisitos y Modalidad</h3>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                <div>
-                  <label className="authLabel">
-                    <strong>Programa Académico Objetivo</strong>
-                  </label>
-                  <select
-                    name="programa_objetivo"
-                    value={formData.programa_objetivo}
-                    onChange={handleInputChange}
-                    className="authInput"
-                    disabled={!formData.sector_id}
-                  >
-                    <option value="">
-                      {!formData.sector_id 
-                        ? 'Primero selecciona un sector' 
-                        : 'Todos los programas del sector'}
-                    </option>
-                    {programasFiltrados.length > 0 && (
-                      <>
-                        {/* Agrupar por facultad */}
-                        {[...new Set(programasFiltrados.map(p => p.facultad))].map(facultad => (
-                          <optgroup key={facultad} label={facultad}>
-                            {programasFiltrados
-                              .filter(p => p.facultad === facultad)
-                              .map(programa => (
-                                <option key={programa.id} value={programa.nombre}>
-                                  {programa.nombre} ({programa.nivel})
-                                </option>
-                              ))
-                            }
-                          </optgroup>
-                        ))}
-                      </>
-                    )}
-                  </select>
-                  <small style={{ color: formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888' }}>
-                    {!formData.sector_id 
-                      ? 'Selecciona un sector para ver los programas disponibles'
-                      : programasFiltrados.length === 0 
-                        ? '⚠️ No hay programas disponibles en este sector'
-                        : `${programasFiltrados.length} programa(s) disponible(s) en este sector`}
-                  </small>
-                </div>
-                
-                <div>
-                  <label className="authLabel">
-                    <strong>Modalidad de Trabajo *</strong>
-                  </label>
-                  <select
-                    name="modalidad"
-                    value={formData.modalidad}
-                    onChange={handleInputChange}
-                    className="authInput"
-                    required
-                  >
-                    <option value="presencial">🏢 Presencial</option>
-                    <option value="remoto">💻 Remoto</option>
-                    <option value="hibrido">🔄 Híbrido</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '15px' }}>
-                <label className="authLabel">
-                  <strong>Requisitos</strong>
-                </label>
-                <textarea
-                  name="requisitos"
-                  value={formData.requisitos}
-                  onChange={handleInputChange}
-                  className="authInput"
-                  rows="4"
-                  placeholder="Ej: Conocimientos en Node.js, PostgreSQL, trabajo en equipo..."
-                />
-              </div>
-            </div>
-
-            {/* Condiciones Económicas y Temporales */}
-            <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <h3 style={{ marginTop: 0 }}>💰 Condiciones</h3>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-                <div>
-                  <label className="authLabel">
-                    <strong>Salario Mensual (COP) *</strong>
-                  </label>
-                  <input
-                    type="number"
-                    name="salario"
-                    value={formData.salario}
-                    onChange={handleInputChange}
-                    className="authInput"
-                    min="1300000"
-                    step="50000"
-                    placeholder="1300000"
-                    required
-                  />
-                  <small style={{ color: '#888' }}>
-                    Mínimo: $1,300,000 COP
-                  </small>
-                </div>
-                
-                <div>
-                  <label className="authLabel">
-                    <strong>Duración (meses)</strong>
-                  </label>
-                  <input
-                    type="number"
-                    name="duracion_meses"
-                    value={formData.duracion_meses}
-                    onChange={handleInputChange}
-                    className="authInput"
-                    min="1"
-                    max="24"
-                    placeholder="6"
-                  />
-                </div>
-                
-                <div>
-                  <label className="authLabel">
-                    <strong>Fecha de Inicio</strong>
-                  </label>
-                  <input
-                    type="date"
-                    name="fecha_inicio"
-                    value={formData.fecha_inicio}
-                    onChange={handleInputChange}
-                    className="authInput"
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginTop: '15px' }}>
-                <label className="authLabel">
-                  <strong>Horario</strong>
-                </label>
-                <input
-                  type="text"
-                  name="horario"
-                  value={formData.horario}
-                  onChange={handleInputChange}
-                  className="authInput"
-                  placeholder="Ej: Lunes a viernes de 8:00 AM a 5:00 PM"
-                />
-              </div>
-            </div>
-
-            {/* Beneficios */}
-            <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <h3 style={{ marginTop: 0 }}>🎁 Beneficios Adicionales</h3>
-              
-              <textarea
-                name="beneficios"
-                value={formData.beneficios}
-                onChange={handleInputChange}
-                className="authInput"
-                rows="3"
-                placeholder="Ej: Transporte, alimentación, ambiente de aprendizaje, capacitaciones..."
-              />
             </div>
 
             {/* Botones */}

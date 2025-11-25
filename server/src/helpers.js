@@ -1,4 +1,4 @@
-import pool from "./db";
+import pool from "./db.js";
 //este archivo se puede usar para tener consultas frecuentes y no repetir tanto código, 
 // especialmente en los controladores
 

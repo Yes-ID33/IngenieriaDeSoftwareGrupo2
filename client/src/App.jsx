@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ActivarCuenta from './pages/activarCuenta';
 import Perfil from './pages/Perfil';
-import Vacantes from './pages/Vacantes';
+import Vacantes from './pages/vacantes';
 import Hojas from './pages/Hojas'; // nueva importación
 import Solicitud from './pages/Solicitud';
 

@@ -214,7 +214,7 @@ const EstadoVacio = ({ filtro, totalVacantes }) => {
 
   return (
     <div className="emptyState">
-      <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
+      <p>📭 No tienes vacantes {getMensajeEstadoVacio()} (total: {totalVacantes})</p>
       <Link to="/panel/empresa/crear-vacante">
         <button className="btnSuccess" style={{ marginTop: '15px' }}>
           ➕ Publicar Mi Primera Vacante
@@ -321,6 +321,8 @@ const MisVacantes = () => {
   };
 
   const abrirEdicion = (vacante) => {
+    if(!vacante) return; //que no haga nada si la vacante no existe
+
     setVacanteSeleccionada(vacante);
     setFormData({
       titulo: vacante.titulo || '',
@@ -470,6 +472,7 @@ const MisVacantes = () => {
         ref={dialogRef}
         className="modal"
         onClose={() => setMostrarModal(false)}
+        aria-labelledby="modal-title"
       >
         <div 
           className="modalContent" 
@@ -514,7 +517,7 @@ const MisVacantes = () => {
               <div className="modalFooter">
                 <button 
                   className="btnPrimary"
-                  onClick={() => abrirEdicion(vacanteSeleccionada)}
+                  onClick={() => vacanteSeleccionada && abrirEdicion(vacanteSeleccionada)}
                 >
                   ✏️ Editar Vacante
                 </button>
