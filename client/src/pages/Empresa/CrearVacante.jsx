@@ -156,6 +156,14 @@ const CrearVacante = () => {
     return formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888';
   };
 
+  // SOLUCIÓN: Función para obtener el texto del placeholder del select
+  const getPlaceholderPrograma = () => {
+    if (formData.sector_id) {
+      return 'Todos los programas del sector';
+    }
+    return 'Primero selecciona un sector';
+  };
+
   if (usuario && usuario.rol !== 'empresa') {
     navigate('/');
     return null;
@@ -271,10 +279,9 @@ const CrearVacante = () => {
                       className="authInput"
                       disabled={!formData.sector_id}
                     >
+                      {/* SOLUCIÓN: Eliminado el ternario con negación */}
                       <option value="">
-                        {!formData.sector_id 
-                          ? 'Primero selecciona un sector' 
-                          : 'Todos los programas del sector'}
+                        {getPlaceholderPrograma()}
                       </option>
                       {programasFiltrados.length > 0 && (
                         <>
