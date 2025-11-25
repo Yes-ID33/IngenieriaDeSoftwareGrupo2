@@ -6,7 +6,7 @@ import Header from '../../components/header.jsx';
 import '../../styles/index.css';
 import '../../styles/admin.css';
 
-// Componente TabButton movido fuera del componente principal
+// Componente TabButton
 const TabButton = ({ activo, onClick, onKeyDown, children }) => (
   <button 
     className={activo ? 'active' : ''}
@@ -17,7 +17,6 @@ const TabButton = ({ activo, onClick, onKeyDown, children }) => (
   </button>
 );
 
-// Validación de props para TabButton
 TabButton.propTypes = {
   activo: PropTypes.bool,
   onClick: PropTypes.func,
@@ -25,6 +24,212 @@ TabButton.propTypes = {
   children: PropTypes.node
 };
 
+// Componente FilaVacante para separar la lógica de cada fila
+const FilaVacante = ({ 
+  vacante, 
+  onVerDetalles, 
+  onEditar, 
+  onEliminar, 
+  onKeyDown 
+}) => {
+  const getTextoEstado = (vacante) => {
+    return vacante.aprobada ? '✅ Activa' : '⏳ Pendiente';
+  };
+
+  const getClaseEstado = (vacante) => {
+    return vacante.aprobada ? 'badge badge-success' : 'badge badge-warning';
+  };
+
+  const getTextoModalidad = (modalidad) => {
+    const modalidades = {
+      'presencial': '🏢 Presencial',
+      'remoto': '💻 Remoto',
+      'hibrido': '🔄 Híbrido'
+    };
+    return modalidades[modalidad] || modalidad;
+  };
+
+  const getTextoPostulaciones = (vacante) => {
+    const total = vacante.total_postulaciones || 0;
+    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
+    return pendientes > 0 ? `${total} (${pendientes} nuevas)` : `${total}`;
+  };
+
+  const getColorPostulaciones = (vacante) => {
+    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
+    return pendientes > 0 ? '#f39c12' : 'inherit';
+  };
+
+  const getTextoPrograma = (vacante) => {
+    return vacante.programa_objetivo || <span style={{color: '#888'}}>Todos</span>;
+  };
+
+  const formatearSalario = (salario) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(salario);
+  };
+
+  return (
+    <tr key={vacante.vacante_id}>
+      <td>{vacante.vacante_id}</td>
+      <td>
+        <strong>{vacante.titulo}</strong>
+        <br />
+        <small>{vacante.sector_nombre || 'Sin sector'}</small>
+      </td>
+      <td>{getTextoPrograma(vacante)}</td>
+      <td>{getTextoModalidad(vacante.modalidad)}</td>
+      <td>{formatearSalario(vacante.salario)}</td>
+      <td>
+        <button 
+          className="badge"
+          style={{ 
+            cursor: 'pointer', 
+            border: 'none', 
+            background: 'transparent',
+            padding: 0,
+            font: 'inherit',
+            color: getColorPostulaciones(vacante)
+          }}
+          onClick={() => {/* Agregar función para ver postulaciones */}}
+          onKeyDown={(e) => onKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
+        >
+          {getTextoPostulaciones(vacante)}
+        </button>
+      </td>
+      <td>
+        <span className={getClaseEstado(vacante)}>
+          {getTextoEstado(vacante)}
+        </span>
+      </td>
+      <td>
+        {new Date(vacante.creada_en).toLocaleDateString('es-CO')}
+      </td>
+      <td>
+        <div className="actionButtons">
+          <button 
+            className="btnSecondary btnSmall"
+            onClick={() => onVerDetalles(vacante)}
+            onKeyDown={(e) => onKeyDown(e, () => onVerDetalles(vacante))}
+          >
+            👁️ Ver
+          </button>
+          <button 
+            className="btnPrimary btnSmall"
+            onClick={() => onEditar(vacante)}
+            onKeyDown={(e) => onKeyDown(e, () => onEditar(vacante))}
+          >
+            ✏️ Editar
+          </button>
+          <button 
+            className="btnDanger btnSmall"
+            onClick={() => onEliminar(vacante.vacante_id, vacante.titulo)}
+            onKeyDown={(e) => onKeyDown(e, () => onEliminar(vacante.vacante_id, vacante.titulo))}
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+};
+
+FilaVacante.propTypes = {
+  vacante: PropTypes.object.isRequired,
+  onVerDetalles: PropTypes.func.isRequired,
+  onEditar: PropTypes.func.isRequired,
+  onEliminar: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired
+};
+
+// Componente TablaVacantes
+const TablaVacantes = ({ 
+  vacantes, 
+  onVerDetalles, 
+  onEditar, 
+  onEliminar, 
+  onKeyDown 
+}) => {
+  if (vacantes.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="tableInfo">
+        <p>Mostrando <strong>{vacantes.length}</strong> vacante(s)</p>
+      </div>
+      <div className="tableContainer">
+        <table className="adminTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Programa</th>
+              <th>Modalidad</th>
+              <th>Salario</th>
+              <th>Postulaciones</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vacantes.map((vacante) => (
+              <FilaVacante
+                key={vacante.vacante_id}
+                vacante={vacante}
+                onVerDetalles={onVerDetalles}
+                onEditar={onEditar}
+                onEliminar={onEliminar}
+                onKeyDown={onKeyDown}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
+
+TablaVacantes.propTypes = {
+  vacantes: PropTypes.array.isRequired,
+  onVerDetalles: PropTypes.func.isRequired,
+  onEditar: PropTypes.func.isRequired,
+  onEliminar: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired
+};
+
+// Componente EstadoVacio
+const EstadoVacio = ({ filtro, totalVacantes }) => {
+  const getMensajeEstadoVacio = () => {
+    if (filtro !== 'todas') {
+      return filtro;
+    }
+    return '';
+  };
+
+  return (
+    <div className="emptyState">
+      <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
+      <Link to="/panel/empresa/crear-vacante">
+        <button className="btnSuccess" style={{ marginTop: '15px' }}>
+          ➕ Publicar Mi Primera Vacante
+        </button>
+      </Link>
+    </div>
+  );
+};
+
+EstadoVacio.propTypes = {
+  filtro: PropTypes.string.isRequired,
+  totalVacantes: PropTypes.number.isRequired
+};
+
+// Componente principal refactorizado
 const MisVacantes = () => {
   const { usuario } = useAuth();
   const navigate = useNavigate();
@@ -38,6 +243,7 @@ const MisVacantes = () => {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [formData, setFormData] = useState({});
 
+  // Efectos y funciones de la lógica principal...
   useEffect(() => {
     if (usuario && usuario.rol !== 'empresa') {
       navigate('/');
@@ -46,7 +252,6 @@ const MisVacantes = () => {
     obtenerVacantes();
   }, [usuario, navigate]);
 
-  // Controlar el dialog nativo
   useEffect(() => {
     if (dialogRef.current) {
       if (mostrarModal) {
@@ -181,180 +386,6 @@ const MisVacantes = () => {
     }
   };
 
-  const formatearSalario = (salario) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0
-    }).format(salario);
-  };
-
-  // Funciones para extraer lógica condicional
-  const getTextoEstado = (vacante) => {
-    if (vacante.aprobada) {
-      return '✅ Activa';
-    }
-    return '⏳ Pendiente';
-  };
-
-  const getClaseEstado = (vacante) => {
-    if (vacante.aprobada) {
-      return 'badge badge-success';
-    }
-    return 'badge badge-warning';
-  };
-
-  const getTextoModalidad = (modalidad) => {
-    switch (modalidad) {
-      case 'presencial': return '🏢 Presencial';
-      case 'remoto': return '💻 Remoto';
-      case 'hibrido': return '🔄 Híbrido';
-      default: return modalidad;
-    }
-  };
-
-  const getTextoPostulaciones = (vacante) => {
-    const total = vacante.total_postulaciones || 0;
-    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
-    
-    if (pendientes > 0) {
-      return `${total} (${pendientes} nuevas)`;
-    }
-    return `${total}`;
-  };
-
-  const getColorPostulaciones = (vacante) => {
-    const pendientes = Number.parseInt(vacante.postulaciones_pendientes) || 0;
-    return pendientes > 0 ? '#f39c12' : 'inherit';
-  };
-
-  const getTextoPrograma = (vacante) => {
-    if (vacante.programa_objetivo) {
-      return vacante.programa_objetivo;
-    }
-    return <span style={{color: '#888'}}>Todos</span>;
-  };
-
-  const getMensajeEstadoVacio = () => {
-    if (filtro !== 'todas') {
-      return filtro;
-    }
-    return '';
-  };
-
-  // SOLUCIÓN: Extraer el ternario principal a una función
-  const renderContenidoPrincipal = () => {
-    if (loading) {
-      return <p>Cargando vacantes...</p>;
-    }
-
-    if (vacantesFiltradas.length === 0) {
-      return (
-        <div className="emptyState">
-          <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
-          <Link to="/panel/empresa/crear-vacante">
-            <button className="btnSuccess" style={{ marginTop: '15px' }}>
-              ➕ Publicar Mi Primera Vacante
-            </button>
-          </Link>
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="tableInfo">
-          <p>Mostrando <strong>{vacantesFiltradas.length}</strong> de <strong>{vacantes.length}</strong> vacante(s)</p>
-        </div>
-        <div className="tableContainer">
-          <table className="adminTable">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Programa</th>
-                <th>Modalidad</th>
-                <th>Salario</th>
-                <th>Postulaciones</th>
-                <th>Estado</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vacantesFiltradas.map((vacante) => (
-                <tr key={vacante.vacante_id}>
-                  <td>{vacante.vacante_id}</td>
-                  <td>
-                    <strong>{vacante.titulo}</strong>
-                    <br />
-                    <small>{vacante.sector_nombre || 'Sin sector'}</small>
-                  </td>
-                  <td>
-                    {getTextoPrograma(vacante)}
-                  </td>
-                  <td>{getTextoModalidad(vacante.modalidad)}</td>
-                  <td>{formatearSalario(vacante.salario)}</td>
-                  <td>
-                    <button 
-                      className="badge"
-                      style={{ 
-                        cursor: 'pointer', 
-                        border: 'none', 
-                        background: 'transparent',
-                        padding: 0,
-                        font: 'inherit',
-                        color: getColorPostulaciones(vacante)
-                      }}
-                      onClick={() => {/* Agregar función para ver postulaciones */}}
-                      onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
-                    >
-                      {getTextoPostulaciones(vacante)}
-                    </button>
-                  </td>
-                  <td>
-                    <span className={getClaseEstado(vacante)}>
-                      {getTextoEstado(vacante)}
-                    </span>
-                  </td>
-                  <td>
-                    {new Date(vacante.creada_en).toLocaleDateString('es-CO')}
-                  </td>
-                  <td>
-                    <div className="actionButtons">
-                      <button 
-                        className="btnSecondary btnSmall"
-                        onClick={() => verDetalles(vacante)}
-                        onKeyDown={(e) => handleKeyDown(e, () => verDetalles(vacante))}
-                      >
-                        👁️ Ver
-                      </button>
-                      <button 
-                        className="btnPrimary btnSmall"
-                        onClick={() => abrirEdicion(vacante)}
-                        onKeyDown={(e) => handleKeyDown(e, () => abrirEdicion(vacante))}
-                      >
-                        ✏️ Editar
-                      </button>
-                      <button 
-                        className="btnDanger btnSmall"
-                        onClick={() => handleEliminar(vacante.vacante_id, vacante.titulo)}
-                        onKeyDown={(e) => handleKeyDown(e, () => handleEliminar(vacante.vacante_id, vacante.titulo))}
-                      >
-                        🗑️ Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </>
-    );
-  };
-
-  // Manejadores de teclado para accesibilidad
   const handleKeyDown = (e, action) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -367,6 +398,27 @@ const MisVacantes = () => {
     if (filtro === 'pendientes') return !v.aprobada;
     return true;
   });
+
+  // Renderizado simplificado
+  const renderContenido = () => {
+    if (loading) {
+      return <p>Cargando vacantes...</p>;
+    }
+
+    if (vacantesFiltradas.length === 0) {
+      return <EstadoVacio filtro={filtro} totalVacantes={vacantes.length} />;
+    }
+
+    return (
+      <TablaVacantes
+        vacantes={vacantesFiltradas}
+        onVerDetalles={verDetalles}
+        onEditar={abrirEdicion}
+        onEliminar={handleEliminar}
+        onKeyDown={handleKeyDown}
+      />
+    );
+  };
 
   return (
     <div className="layoutContent">
@@ -410,12 +462,10 @@ const MisVacantes = () => {
 
         {error && <p className="errorMessage">{error}</p>}
 
-        {/* SOLUCIÓN APLICADA: Reemplazar ternario anidado por función */}
-        {renderContenidoPrincipal()}
+        {renderContenido()}
 
       </div>
 
-      {/* Dialog nativo sin event listeners en elementos no interactivos */}
       <dialog 
         ref={dialogRef}
         className="modal"

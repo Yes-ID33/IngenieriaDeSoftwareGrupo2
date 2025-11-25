@@ -9,6 +9,6 @@ if docker ps --format '{{.Names}}' | grep -q "^$CONTAINER$"; then
   docker exec $CONTAINER pg_dump -U postgres -d practicasPascualinas > "$BACKUP_PATH"
   echo "Backup guardado en $BACKUP_PATH"
 else
-  echo "❌ Error: el contenedor '$CONTAINER' no está corriendo."
-  echo "⚠️ No se generó el backup. Se conserva el archivo anterior."
+  echo "❌ Error: el contenedor '$CONTAINER' no está corriendo." >&2
+  echo "⚠️ No se generó el backup. Se conserva el archivo anterior." >&2
 fi

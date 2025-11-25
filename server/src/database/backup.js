@@ -1,8 +1,8 @@
-import { spawnSync } from 'child_process';
-import dotenv from 'dotenv';
-import fs from 'fs';
+import { spawnSync } from 'node:child_process'; 
+import dotenv from 'dotenv'; 
+import fs from 'node:fs';  
 
-dotenv.config();
+dotenv.config();  
 
 const bucket = process.env.S3_BUCKET;
 const region = process.env.AWS_REGION;
@@ -12,7 +12,8 @@ const dbUser = process.env.DB_USER;
 const PG_DUMP = '/usr/bin/pg_dump';
 const AWS = '/usr/bin/aws';
 
-const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+// SOLUCIÓN: Usar replaceAll() en lugar de replace()
+const timestamp = new Date().toISOString().replaceAll(':', '-').replaceAll('.', '-');
 const fileTimestamp = `./backups/backup_${timestamp}.sql`;
 const fileLatest = `./backups/ultimoBackup.sql`;
 

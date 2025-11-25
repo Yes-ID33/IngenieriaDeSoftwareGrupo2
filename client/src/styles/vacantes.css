@@ -4,7 +4,7 @@
 }
 
 .vacantesIntro h2 {
-  font-size: 18;
+  font-size: 18px; /* Agregué 'px' que faltaba */
   font-weight: bold;
   color: var(--color-support-green);
 }
@@ -17,7 +17,7 @@
 }
 
 .vacanteCard {
-  background-color: #fff, 0.9;
+  background-color: #fff; /* Corregí la sintaxis - eliminé ', 0.9' */
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 15px 35px;
@@ -41,11 +41,18 @@
   line-height: 1.4;
 }
 
+/* SOLUCIÓN: Mejor contraste para accesibilidad */
 .aplicarBtn {
-  background-color: #2E8B57;
+  background-color: #1e5631; /* Verde más oscuro para mejor contraste */
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: 600; /* Texto más grueso para mejor legibilidad */
+  transition: background-color 0.3s ease;
+}
+
+.aplicarBtn:hover {
+  background-color: #164625; /* Verde aún más oscuro en hover */
 }

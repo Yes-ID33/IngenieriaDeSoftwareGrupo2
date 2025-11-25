@@ -38,7 +38,7 @@ export const registrarEstudiante = async (req, res) => {
       });
     }
 
-      // VALIDAR DOMINIO INSTITUCIONAL
+    // VALIDAR DOMINIO INSTITUCIONAL
     const dominioInstitucional = '@pascualbravo.edu.co';
     if (!correo.toLowerCase().endsWith(dominioInstitucional)) {
       return res.status(400).json({
@@ -138,7 +138,7 @@ export const registrarEstudiante = async (req, res) => {
     // Enviar email de verificación
     try {
       await enviarEmailVerificacion(correo, nombre, tokenVerificacion);
-    } catch (emailError) {
+    } catch (error) { // SOLUCIÓN: Usar 'error' en lugar de 'emailError' si no lo usas
       await client.query('ROLLBACK');
       return res.status(500).json({
         success: false,
@@ -235,8 +235,8 @@ export const verificarCuentaEstudiante = async (req, res) => {
     // Enviar email de bienvenida
     try {
       await enviarEmailBienvenida(correo, usuarioData.nombre);
-    } catch (emailError) {
-      console.error('Error enviando email de bienvenida:', emailError);
+    } catch (error) { // SOLUCIÓN: Usar 'error' en lugar de 'emailError'
+      console.error('Error enviando email de bienvenida:', error);
     }
 
     res.status(200).json({
@@ -311,7 +311,15 @@ export const reenviarCodigoEstudiante = async (req, res) => {
     );
 
     // Enviar nuevo email
-    await enviarEmailVerificacion(correo, usuarioData.nombre, nuevoToken);
+    try {
+      await enviarEmailVerificacion(correo, usuarioData.nombre, nuevoToken);
+    } catch (error) { // SOLUCIÓN: Agregar catch para el email en esta función también
+      console.error('Error al reenviar código de verificación:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error al enviar el correo de verificación. Intenta nuevamente.'
+      });
+    }
 
     res.status(200).json({
       success: true,

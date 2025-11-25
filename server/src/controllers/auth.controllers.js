@@ -104,7 +104,7 @@ export const iniciarSesion = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    // Remover contraseña de la respuesta
+    // SOLUCIÓN CORREGIDA: Usar el patrón de exclusión sin crear variable no utilizada
     const { contrasena: _, ...usuarioSinPassword } = usuarioData;
 
     res.status(200).json({

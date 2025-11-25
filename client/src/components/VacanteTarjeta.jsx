@@ -25,7 +25,7 @@ const VacanteTarjeta = ({ Vacante, onAplicar }) => {
     );
 };
 
-// Validación de PropTypes
+// Validación de PropTypes - SOLUCIÓN: Eliminar defaultProps o cambiar isRequired
 VacanteTarjeta.propTypes = {
     Vacante: PropTypes.shape({
         empresa: PropTypes.string.isRequired,
@@ -35,10 +35,10 @@ VacanteTarjeta.propTypes = {
         salario: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         requisitos: PropTypes.string.isRequired
     }).isRequired,
-    onAplicar: PropTypes.func.isRequired
+    onAplicar: PropTypes.func // SOLUCIÓN: Quitamos .isRequired
 };
 
-// Valores por defecto (opcional)
+// SOLUCIÓN: Mantenemos defaultProps pero quitamos isRequired en PropTypes
 VacanteTarjeta.defaultProps = {
     onAplicar: () => console.warn('onAplicar function not provided')
 };

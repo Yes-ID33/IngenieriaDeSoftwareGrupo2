@@ -141,6 +141,29 @@ const CrearVacante = () => {
     }
   };
 
+  // Calcular el mensaje para programas
+  const getMensajeProgramas = () => {
+    if (!formData.sector_id) {
+      return 'Selecciona un sector para ver los programas disponibles';
+    }
+    if (programasFiltrados.length === 0) {
+      return '⚠️ No hay programas disponibles en este sector';
+    }
+    return `${programasFiltrados.length} programa(s) disponible(s) en este sector`;
+  };
+
+  const getColorMensaje = () => {
+    return formData.sector_id && programasFiltrados.length === 0 ? '#e74c3c' : '#888';
+  };
+
+  // SOLUCIÓN: Función para obtener el texto del placeholder del select
+  const getPlaceholderPrograma = () => {
+    if (formData.sector_id) {
+      return 'Todos los programas del sector';
+    }
+    return 'Primero selecciona un sector';
+  };
+
   if (usuario && usuario.rol !== 'empresa') {
     navigate('/');
     return null;
@@ -220,9 +243,163 @@ const CrearVacante = () => {
                 </div>
               </div>
 
-              <div style={{ marginTop: '15px' }}>
-                <label className="authLabel">
-                  <strong>Descripción de la Vacante</strong>
+
+              {/* Requisitos y Modalidad */}
+              <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
+                <h3 style={{ marginTop: 0 }}>🎯 Requisitos y Modalidad</h3>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                  <div>
+                    <label htmlFor="programa_objetivo" className="authLabel">
+                      <strong>Programa Académico Objetivo</strong>
+                    </label>
+                    <select
+                      id="programa_objetivo"
+                      name="programa_objetivo"
+                      value={formData.programa_objetivo}
+                      onChange={handleInputChange}
+                      className="authInput"
+                      disabled={!formData.sector_id}
+                    >
+                      {/* SOLUCIÓN: Eliminado el ternario con negación */}
+                      <option value="">
+                        {getPlaceholderPrograma()}
+                      </option>
+                      {programasFiltrados.length > 0 && (
+                        <>
+                          {[...new Set(programasFiltrados.map(p => p.facultad))].map(facultad => (
+                            <optgroup key={facultad} label={facultad}>
+                              {programasFiltrados
+                                .filter(p => p.facultad === facultad)
+                                .map(programa => (
+                                  <option key={programa.id} value={programa.nombre}>
+                                    {programa.nombre} ({programa.nivel})
+                                  </option>
+                                ))
+                              }
+                            </optgroup>
+                          ))}
+                        </>
+                      )}
+                    </select>
+                    <small style={{ color: getColorMensaje() }}>
+                      {getMensajeProgramas()}
+                    </small>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="modalidad" className="authLabel">
+                      <strong>Modalidad de Trabajo *</strong>
+                    </label>
+                    <select
+                      id="modalidad"
+                      name="modalidad"
+                      value={formData.modalidad}
+                      onChange={handleInputChange}
+                      className="authInput"
+                      required
+                    >
+                      <option value="presencial">🏢 Presencial</option>
+                      <option value="remoto">💻 Remoto</option>
+                      <option value="hibrido">🔄 Híbrido</option>
+                    </select>
+                  </div>
+                </div>
+                <div style={{ marginTop: '15px' }}>
+                  <label htmlFor="requisitos" className="authLabel">
+                    <strong>Requisitos</strong>
+                  </label>
+                  <textarea
+                    id="requisitos"
+                    name="requisitos"
+                    value={formData.requisitos}
+                    onChange={handleInputChange}
+                    className="authInput"
+                    rows="4"
+                    placeholder="Ej: Conocimientos en Node.js, PostgreSQL, trabajo en equipo..."
+                  />
+                </div>
+              </div>
+
+              {/* Condiciones Económicas y Temporales */}
+              <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
+                <h3 style={{ marginTop: 0 }}>💰 Condiciones</h3>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
+                  <div>
+                    <label htmlFor="salario" className="authLabel">
+                      <strong>Salario Mensual (COP)</strong>
+                    </label>
+                    <input
+                      type="number"
+                      id="salario"
+                      name="salario"
+                      value={formData.salario}
+                      onChange={handleInputChange}
+                      className="authInput"
+                      min="1300000"
+                      step="50000"
+                      placeholder="1300000"
+                      required
+                    />
+                    <small style={{ color: '#888' }}>
+                      Mínimo: $1,300,000 COP
+                    </small>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="duracion_meses" className="authLabel">
+                      <strong>Duración (meses)</strong>
+                    </label>
+                    <input
+                      type="number"
+                      id="duracion_meses"
+                      name="duracion_meses"
+                      value={formData.duracion_meses}
+                      onChange={handleInputChange}
+                      className="authInput"
+                      min="1"
+                      max="24"
+                      placeholder="6"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="fecha_inicio" className="authLabel">
+                      <strong>Fecha de Inicio</strong>
+                    </label>
+                    <input
+                      type="date"
+                      id="fecha_inicio"
+                      name="fecha_inicio"
+                      value={formData.fecha_inicio}
+                      onChange={handleInputChange}
+                      className="authInput"
+                    />
+                  </div>
+                </div>
+                <div style={{ marginTop: '15px' }}>
+                  <label htmlFor="horario" className="authLabel">
+                    <strong>Horario</strong>
+                  </label>
+                  <input
+                    type="text"
+                    id="horario"
+                    name="horario"
+                    value={formData.horario}
+                    onChange={handleInputChange}
+                    className="authInput"
+                    placeholder="Ej: Lunes a viernes de 8:00 AM a 5:00 PM"
+                  />
+                </div>
+              </div>
+
+              {/* Beneficios */}
+              <div style={{ marginBottom: '25px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
+                <h3 style={{ marginTop: 0 }}>🎁 Beneficios Adicionales</h3>
+                
+                <label htmlFor="beneficios" className="authLabel">
+                  <strong>Beneficios</strong>
                 </label>
                 <textarea
                   name="descripcion"
