@@ -2,822 +2,757 @@
    PANEL DE ADMINISTRACIÓN - ESTILOS
    ============================================ */
 
-.adminContainer {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
-
-.adminHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.adminHeader h1 {
-  font-size: 2rem;
-  color: #2E8B57;
-  margin: 0;
-}
-
-.adminHeader p {
-  color: #666;
-  margin-top: 5px;
-}
-
-/* ============================================
-   TARJETAS DE ESTADÍSTICAS
-   ============================================ */
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.statCard {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.statCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.statIcon {
-  font-size: 3rem;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(46, 139, 87, 0.1);
-}
-
-.statCard.pending .statIcon {
-  background: rgba(255, 193, 7, 0.1);
-}
-
-.statCard.approved .statIcon {
-  background: rgba(40, 167, 69, 0.1);
-}
-
-.statCard.students .statIcon {
-  background: rgba(0, 123, 255, 0.1);
-}
-
-.statCard.vacantes .statIcon {
-  background: rgba(108, 117, 125, 0.1);
-}
-
-.statInfo h3 {
-  font-size: 2.5rem;
-  margin: 0;
-  color: #333;
-}
-
-.statInfo p {
-  margin: 5px 0 0 0;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* ============================================
-   ACCIONES RÁPIDAS
-   ============================================ */
-
-.quickActions {
-  margin-bottom: 40px;
-}
-
-.quickActions h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.actionsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.actionCard {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.actionCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
-.actionIcon {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.actionCard h3 {
-  font-size: 1.2rem;
-  margin: 0 0 10px 0;
-  color: #2E8B57;
-}
-
-.actionCard p {
-  color: #666;
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.actionCard .badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #dc3545;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-/* ============================================
-   ACTIVIDAD RECIENTE
-   ============================================ */
-
-.recentActivity {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.recentActivity h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0 0 20px 0;
-}
-
-.activityList {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.activityItem {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.activityItem:hover {
-  background: #e9ecef;
-}
-
-.activityIcon {
-  font-size: 2rem;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 50%;
-}
-
-.activityInfo p {
-  margin: 0;
-  color: #333;
-}
-
-.activityTime {
-  font-size: 0.85rem;
-  color: #999 !important;
-  margin-top: 5px !important;
-}
-
-/* ============================================
-   FILTROS Y TABS
-   ============================================ */
-
-.filterTabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 10px;
-}
-
-.filterTabs button {
-  padding: 10px 20px;
-  border: none;
-  background: transparent;
-  color: #666;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 5px 5px 0 0;
-  transition: all 0.3s ease;
-}
-
-.filterTabs button:hover {
-  background: #f8f9fa;
-  color: #2E8B57;
-}
-
-.filterTabs button.active {
-  background: #2E8B57;
-  color: white;
-}
-
-/* ============================================
-   BARRA DE BÚSQUEDA
-   ============================================ */
-
-.searchBar {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
-  align-items: center;
-}
-
-.searchInput {
-  flex: 1;
-  padding: 12px 20px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: #2E8B57;
-}
-
-.filterSelect {
-  padding: 12px 20px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: white;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-}
-
-.filterSelect:focus {
-  outline: none;
-  border-color: #2E8B57;
-}
-
-/* ============================================
-   TABLAS
-   ============================================ */
-
-.tableContainer {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  overflow-x: auto;
-}
-
-.adminTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.adminTable thead {
-  background: #f8f9fa;
-}
-
-.adminTable th {
-  padding: 15px;
-  text-align: left;
-  font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #e9ecef;
-  white-space: nowrap;
-}
-
-.adminTable td {
-  padding: 15px;
-  border-bottom: 1px solid #f0f0f0;
-  vertical-align: middle;
-}
-
-.adminTable tbody tr:hover {
-  background: #f8f9fa;
-}
-
-.adminTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.tableInfo {
-  margin-bottom: 15px;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* ============================================
-   BADGES Y ESTADOS
-   ============================================ */
-
-.badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.badge-success {
-  background: #d4edda;
-  color: #155724;
-}
-
-.badge-warning {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.badge-danger {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.badge-info {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-/* ============================================
-   BOTONES
-   ============================================ */
-
-.actionButtons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.btnSmall {
-  padding: 8px 15px;
-  font-size: 0.85rem;
-}
-
-.btnPrimary {
-  background: #2E8B57;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btnPrimary:hover {
-  background: #267347;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(46, 139, 87, 0.3);
-}
-
-.btnSecondary {
-  background: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btnSecondary:hover {
-  background: #5a6268;
-  transform: translateY(-2px);
-}
-
-.btnSuccess {
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btnSuccess:hover {
-  background: #218838;
-  transform: translateY(-2px);
-}
-
-.btnDanger {
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btnDanger:hover {
-  background: #c82333;
-  transform: translateY(-2px);
-}
-
-.btnPrimary:disabled,
-.btnSecondary:disabled,
-.btnSuccess:disabled,
-.btnDanger:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ============================================
-   ESTADO VACÍO
-   ============================================ */
-
-.emptyState {
-  text-align: center;
-  padding: 60px 20px;
-  color: #999;
-  font-size: 1.1rem;
-}
-
-.emptyState p {
-  margin: 0;
-}
-
-/* ========================================
-   ESTILOS ADICIONALES PARA ADMIN
-   Agregar al final de admin.css
-   ======================================== */
-
-/* Modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
-}
-
-.modalContent {
-  background: white;
-  border-radius: 12px;
-  max-width: 800px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
-}
-
-.modalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-  border-bottom: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 12px 12px 0 0;
-}
-
-.modalHeader h2 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.closeModal {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.closeModal:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: rotate(90deg);
-}
-
-.modalBody {
-  padding: 30px;
-}
-
-.detailGroup {
-  margin-bottom: 25px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
-}
-
-.detailGroup h3 {
-  margin: 0 0 15px 0;
-  color: #667eea;
-  font-size: 1.1rem;
-}
-
-.detailGroup p {
-  margin: 10px 0;
-  line-height: 1.6;
-  color: #333;
-}
-
-.detailGroup strong {
-  color: #555;
-  display: inline-block;
-  min-width: 150px;
-}
-
-.modalFooter {
-  padding: 20px 30px;
-  border-top: 1px solid #e0e0e0;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  background: #f8f9fa;
-  border-radius: 0 0 12px 12px;
-}
-
-/* Resumen Rápido */
-.quickSummary {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  margin-top: 30px;
-}
-
-.quickSummary h2 {
-  margin: 0 0 20px 0;
-  color: #333;
-  font-size: 1.3rem;
-}
-
-.summaryGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.summaryItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 3px solid #667eea;
-}
-
-.summaryLabel {
-  color: #666;
-  font-size: 0.95rem;
-}
-
-.summaryValue {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.summaryValue.highlight {
-  color: #f39c12;
-}
-
-/* Alert Box */
-.alertBox {
-  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-  border-radius: 12px;
-  padding: 20px 25px;
-  margin-top: 30px;
-  border-left: 5px solid #e17055;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.alertBox h3 {
-  margin: 0 0 15px 0;
-  color: #d63031;
-  font-size: 1.2rem;
-}
-
-.alertBox p {
-  margin: 8px 0;
-  color: #2d3436;
-  font-size: 1rem;
-}
-
-/* Mejoras en badges */
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: #e0e0e0;
-  color: #555;
-}
-
-.badge-success {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.badge-warning {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
-}
-
-.badge-danger {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Mejoras en tabla */
-.adminTable tbody tr:hover {
-  background: #f8f9fa;
-  transform: scale(1.01);
-  transition: all 0.2s ease;
-}
-
-/* Botones de acción mejorados */
-.btnSmall {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-.btnSuccess {
-  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btnSuccess:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
-}
-
-.btnDanger {
-  background: linear-gradient(135deg, #d63031 0%, #e17055 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btnDanger:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(214, 48, 49, 0.3);
-}
-
-/* Responsive modal */
-@media (max-width: 768px) {
-  .modalContent {
-    width: 95%;
-    max-height: 95vh;
+   .adminContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
   }
   
-  .modalHeader,
-  .modalBody,
-  .modalFooter {
-    padding: 15px;
+  .adminHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
   }
   
-  .modalFooter {
+  .adminHeader h1 {
+    font-size: 2rem;
+    color: #2E8B57;
+    margin: 0;
+  }
+  
+  .adminHeader p {
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  /* ============================================
+     TARJETAS DE ESTADÍSTICAS
+     ============================================ */
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .statCard {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .statCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  }
+  
+  .statIcon {
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(46, 139, 87, 0.1);
+  }
+  
+  .statCard.pending .statIcon {
+    background: rgba(255, 193, 7, 0.1);
+  }
+  
+  .statCard.approved .statIcon {
+    background: rgba(40, 167, 69, 0.1);
+  }
+  
+  .statCard.students .statIcon {
+    background: rgba(0, 123, 255, 0.1);
+  }
+  
+  .statCard.vacantes .statIcon {
+    background: rgba(108, 117, 125, 0.1);
+  }
+  
+  .statInfo h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: #333;
+  }
+  
+  .statInfo p {
+    margin: 5px 0 0 0;
+    color: #666;
+    font-size: 0.95rem;
+  }
+  
+  /* ============================================
+     ACCIONES RÁPIDAS
+     ============================================ */
+  
+  .quickActions {
+    margin-bottom: 40px;
+  }
+  
+  .quickActions h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .actionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .actionCard {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .actionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  }
+  
+  .actionIcon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+  
+  .actionCard h3 {
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    color: #2E8B57;
+  }
+  
+  .actionCard p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  
+  .actionCard .badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #dc3545;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+  
+  /* ============================================
+     ACTIVIDAD RECIENTE
+     ============================================ */
+  
+  .recentActivity {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .recentActivity h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 0 20px 0;
+  }
+  
+  .activityList {
+    display: flex;
     flex-direction: column;
+    gap: 15px;
   }
   
-  .modalFooter button {
+  .activityItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+  
+  .activityItem:hover {
+    background: #e9ecef;
+  }
+  
+  .activityIcon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+  }
+  
+  .activityInfo p {
+    margin: 0;
+    color: #333;
+  }
+  
+  .activityTime {
+    font-size: 0.85rem;
+    color: #999 !important;
+    margin-top: 5px !important;
+  }
+  
+  /* ============================================
+     FILTROS Y TABS - CORREGIDO CONTRASTE
+     ============================================ */
+  
+  .filterTabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+  }
+  
+  .filterTabs button {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    transition: all 0.3s ease;
+  }
+  
+  /* SOLUCIÓN: Mejor contraste en hover */
+  .filterTabs button:hover {
+    background: #e9ecef;
+    color: #1e5631; /* Verde más oscuro para mejor contraste */
+  }
+  
+  /* SOLUCIÓN: Mejor contraste en activo */
+  .filterTabs button.active {
+    background: #1e5631; /* Verde más oscuro */
+    color: white;
+  }
+  
+  /* ============================================
+     BARRA DE BÚSQUEDA
+     ============================================ */
+  
+  .searchBar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: center;
+  }
+  
+  .searchInput {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #2E8B57;
+  }
+  
+  .filterSelect {
+    padding: 12px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  
+  .filterSelect:focus {
+    outline: none;
+    border-color: #2E8B57;
+  }
+  
+  /* ============================================
+     TABLAS
+     ============================================ */
+  
+  .tableContainer {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow-x: auto;
+  }
+  
+  .adminTable {
     width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .adminTable thead {
+    background: #f8f9fa;
+  }
+  
+  .adminTable th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #e9ecef;
+    white-space: nowrap;
+  }
+  
+  .adminTable td {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  
+  .adminTable tbody tr:hover {
+    background: #f8f9fa;
+  }
+  
+  .adminTable tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .tableInfo {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 0.95rem;
+  }
+  
+  /* ============================================
+     BADGES Y ESTADOS - SIN DUPLICADOS
+     ============================================ */
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #e0e0e0;
+    color: #555;
+    border: 1px solid transparent;
+  }
+  
+  .badge-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .badge-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+  
+  .badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .badge-info {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+  
+  /* ============================================
+     BOTONES - CORREGIDO CONTRASTE
+     ============================================ */
+  
+  .actionButtons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .btnSmall {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  /* SOLUCIÓN: Verde más oscuro para mejor contraste */
+  .btnPrimary {
+    background: #1e5631;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btnPrimary:hover {
+    background: #164625;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(30, 86, 49, 0.3);
+  }
+  
+  .btnSecondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btnSecondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+  }
+  
+  /* SOLUCIÓN: Verde más oscuro para mejor contraste */
+  .btnSuccess {
+    background: #1e7e34;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btnSuccess:hover {
+    background: #186429;
+    transform: translateY(-2px);
+  }
+  
+  .btnDanger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btnDanger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+  }
+  
+  .btnPrimary:disabled,
+  .btnSecondary:disabled,
+  .btnSuccess:disabled,
+  .btnDanger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* ============================================
+     ESTADO VACÍO
+     ============================================ */
+  
+  .emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1.1rem;
+  }
+  
+  .emptyState p {
+    margin: 0;
+  }
+  
+  /* ========================================
+     ESTILOS ADICIONALES PARA ADMIN
+     ======================================== */
+  
+  /* Modal - CORREGIDO CONTRASTE */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  .modalContent {
+    background: white;
+    border-radius: 12px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+  }
+  
+  /* SOLUCIÓN: Gradiente más oscuro para mejor contraste */
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .modalHeader h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  /* SOLUCIÓN: Mejor contraste en botón cerrar */
+  .closeModal {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: #2d3748;
+    font-size: 1.5rem;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .closeModal:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(90deg);
+  }
+  
+  .modalBody {
+    padding: 30px;
+  }
+  
+  .detailGroup {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #4a5568;
+  }
+  
+  .detailGroup h3 {
+    margin: 0 0 15px 0;
+    color: #4a5568;
+    font-size: 1.1rem;
+  }
+  
+  .detailGroup p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #333;
   }
   
   .detailGroup strong {
-    min-width: auto;
-    display: block;
-    margin-bottom: 5px;
+    color: #555;
+    display: inline-block;
+    min-width: 150px;
   }
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-
-@media (max-width: 768px) {
-  .adminHeader {
-    flex-direction: column;
-    align-items: flex-start;
+  
+  .modalFooter {
+    padding: 20px 30px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  /* Resumen Rápido */
+  .quickSummary {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+  }
+  
+  .quickSummary h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.3rem;
+  }
+  
+  .summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
   }
-
-  .statsGrid {
-    grid-template-columns: 1fr;
+  
+  .summaryItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #4a5568;
   }
-
-  .actionsGrid {
-    grid-template-columns: 1fr;
+  
+  .summaryLabel {
+    color: #666;
+    font-size: 0.95rem;
   }
-
-  .searchBar {
-    flex-direction: column;
+  
+  .summaryValue {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
   }
-
-  .searchInput,
-  .filterSelect {
-    width: 100%;
+  
+  .summaryValue.highlight {
+    color: #f39c12;
   }
-
-  .tableContainer {
-    overflow-x: scroll;
+  
+  /* Alert Box */
+  .alertBox {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 12px;
+    padding: 20px 25px;
+    margin-top: 30px;
+    border-left: 5px solid #e17055;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
-
-  .adminTable {
-    min-width: 800px;
+  
+  .alertBox h3 {
+    margin: 0 0 15px 0;
+    color: #d63031;
+    font-size: 1.2rem;
   }
-
-  .actionButtons {
-    flex-direction: column;
+  
+  .alertBox p {
+    margin: 8px 0;
+    color: #2d3436;
+    font-size: 1rem;
   }
-
-  .actionButtons button {
-    width: 100%;
+  
+  /* Animaciones */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
-}
-
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive modal */
+  @media (max-width: 768px) {
+    .modalContent {
+      width: 95%;
+      max-height: 95vh;
+    }
+    
+    .modalHeader,
+    .modalBody,
+    .modalFooter {
+      padding: 15px;
+    }
+    
+    .modalFooter {
+      flex-direction: column;
+    }
+    
+    .modalFooter button {
+      width: 100%;
+    }
+    
+    .detailGroup strong {
+      min-width: auto;
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+  
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  
+  @media (max-width: 768px) {
+    .adminHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  
+    .statsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .actionsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .searchBar {
+      flex-direction: column;
+    }
+  
+    .searchInput,
+    .filterSelect {
+      width: 100%;
+    }
+  
+    .tableContainer {
+      overflow-x: scroll;
+    }
+  
+    .adminTable {
+      min-width: 800px;
+    }
+  
+    .actionButtons {
+      flex-direction: column;
+    }
+  
+    .actionButtons button {
+      width: 100%;
+    }
+  }
