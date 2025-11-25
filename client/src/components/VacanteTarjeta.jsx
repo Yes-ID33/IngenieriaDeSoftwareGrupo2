@@ -4,7 +4,7 @@ import "../styles/vacantes.css";
 
 const VacanteTarjeta = ({ vacante, onAplicar }) => {
     const {
-        empresa,
+        razon_social,
         titulo,
         sector,
         modalidad,
@@ -15,7 +15,7 @@ const VacanteTarjeta = ({ vacante, onAplicar }) => {
     return(
         <div className="vacanteCard">
             <h3>{titulo}</h3>
-            <p><strong>Empresa:</strong> {empresa}</p>
+            <p><strong>Empresa:</strong> {razon_social}</p>
             <p><strong>Sector:</strong> {sector}</p>
             <p><strong>Modalidad:</strong> {modalidad}</p>
             <p><strong>Salario:</strong> {salario}</p>
@@ -28,7 +28,7 @@ const VacanteTarjeta = ({ vacante, onAplicar }) => {
 // Validación de PropTypes - SOLUCIÓN: Eliminar defaultProps o cambiar isRequired
 VacanteTarjeta.propTypes = {
     vacante: PropTypes.shape({
-        empresa: PropTypes.string.isRequired,
+        razon_social: PropTypes.string.isRequired,
         titulo: PropTypes.string.isRequired,
         sector: PropTypes.string.isRequired,
         modalidad: PropTypes.string.isRequired,

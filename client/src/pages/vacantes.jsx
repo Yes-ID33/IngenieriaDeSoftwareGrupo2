@@ -37,7 +37,7 @@ const Vacantes = () => {
                     <VacanteTarjeta 
                         key={vacante.vacante_id}
                         vacante={vacante}
-                        onAplicar={() => navigate('./solicitud', { state: {vacante} })}
+                        onAplicar={() => navigate('/solicitud', { state: {vacante} })}
                     />
                 ))}
             </div>

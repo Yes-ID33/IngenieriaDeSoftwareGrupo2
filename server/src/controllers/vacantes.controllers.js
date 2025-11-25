@@ -423,7 +423,6 @@ export const responderPostulacion = async (req, res) => {
 // ==========================================
 // CONTROLADOR PÚBLICO (para listar vacantes)
 // ==========================================
-
 export const listarVacantesConEmpresa = async (req, res) => {
   const client = await pool.connect();
   try {

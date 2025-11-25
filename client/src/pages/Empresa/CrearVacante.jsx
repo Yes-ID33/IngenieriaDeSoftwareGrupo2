@@ -34,7 +34,7 @@ const CrearVacante = () => {
   useEffect(() => {
     if (formData.sector_id) {
       const filtrados = programas.filter(
-        p => p.sector_id === parseInt(formData.sector_id)
+        p => p.sector_id === Number.parseInt(formData.sector_id)
       );
       setProgramasFiltrados(filtrados);
     } else {
@@ -102,12 +102,12 @@ const CrearVacante = () => {
       return;
     }
 
-    if (parseFloat(formData.salario) < 1300000) {
+    if (Number.parseFloat(formData.salario) < 1300000) {
       alert('⚠️ El salario debe ser al menos $1,300,000 COP (salario mínimo legal)');
       return;
     }
 
-    if (formData.duracion_meses && parseInt(formData.duracion_meses) < 1) {
+    if (formData.duracion_meses && Number.parseInt(formData.duracion_meses) < 1) {
       alert('⚠️ La duración debe ser al menos 1 mes');
       return;
     }

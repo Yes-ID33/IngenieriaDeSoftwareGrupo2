@@ -15,7 +15,12 @@ const router = Router();
 
 // configurar multer
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 8000000 //8MB
+  }
+});
 
 // Todas las rutas requieren autenticación y rol de estudiante
 router.use(verificarToken);
