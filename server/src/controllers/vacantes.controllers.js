@@ -108,7 +108,6 @@ export const crearVacante = async (req, res) => {
   }
 };
 
-
 // Listar vacantes de mi empresa
 export const listarMisVacantes = async (req, res) => {
   const client = await pool.connect();
@@ -169,7 +168,7 @@ export const listarMisVacantes = async (req, res) => {
   }
 };
 
-// Actualizar vacante
+// Actualizar vacante - CORREGIDO: eliminada variable "sector" no utilizada
 export const actualizarVacante = async (req, res) => {
   const client = await pool.connect();
   
@@ -193,10 +192,10 @@ export const actualizarVacante = async (req, res) => {
       });
     }
 
+    // SOLUCIÓN: Eliminada la variable "sector" que no se usaba
     const {
       titulo,
       descripcion,
-      sector,
       programa_objetivo,
       modalidad,
       salario,
@@ -212,19 +211,18 @@ export const actualizarVacante = async (req, res) => {
       `UPDATE vacantes SET
         titulo = COALESCE($1, titulo),
         descripcion = COALESCE($2, descripcion),
-        sector_id = COALESCE($3, sector_id),
-        programa_objetivo = COALESCE($4, programa_objetivo),
-        modalidad = COALESCE($5, modalidad),
-        salario = COALESCE($6, salario),
-        requisitos = COALESCE($7, requisitos),
-        fecha_inicio = COALESCE($8, fecha_inicio),
-        duracion_meses = COALESCE($9, duracion_meses),
-        horario = COALESCE($10, horario),
-        beneficios = COALESCE($11, beneficios)
-      WHERE vacante_id = $12
+        programa_objetivo = COALESCE($3, programa_objetivo),
+        modalidad = COALESCE($4, modalidad),
+        salario = COALESCE($5, salario),
+        requisitos = COALESCE($6, requisitos),
+        fecha_inicio = COALESCE($7, fecha_inicio),
+        duracion_meses = COALESCE($8, duracion_meses),
+        horario = COALESCE($9, horario),
+        beneficios = COALESCE($10, beneficios)
+      WHERE vacante_id = $11
       RETURNING *`,
       [
-        titulo, descripcion, sector_id, programa_objetivo, modalidad,
+        titulo, descripcion, programa_objetivo, modalidad,
         salario, requisitos, fecha_inicio, duracion_meses, horario,
         beneficios, id
       ]

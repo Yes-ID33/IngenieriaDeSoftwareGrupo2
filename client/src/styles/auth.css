@@ -8,7 +8,7 @@
   padding: 2rem;
 }
 
-/* Card */
+/* Card - CORREGIDO: Unificado en una sola definición */
 .authCard {
   background: #fff;
   padding: 2.5rem 2rem;
@@ -19,6 +19,11 @@
   text-align: center;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
+}
+
+.authCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Título */
@@ -53,6 +58,14 @@
   border-color: var(--color-primary);
   outline: none;
   box-shadow: 0 0 6px rgba(2, 153, 216, 0.3);
+}
+
+/* Mejorar el input del código */
+.authCard input[type="text"] {
+  text-align: center;
+  letter-spacing: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 /* Botón */
@@ -97,20 +110,6 @@
   margin: 0.8rem 0;
 }
 
-@media (max-width: 768px) {
-  .authCard {
-    max-width: 90%;
-    padding: 2rem 1.5rem;
-  }
-}
-
-
-
-.authCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
 .successMessage {
   color: var(--color-support-green);
   font-weight: 600;
@@ -118,17 +117,9 @@
   text-align: center;
 }
 
-/* Mejorar el input del código */
-.authCard input[type="text"] {
-  text-align: center;
-  letter-spacing: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
+@media (max-width: 768px) {
+  .authCard {
+    max-width: 90%;
+    padding: 2rem 1.5rem;
+  }
 }
-
-/* Mejoras para la tarjeta de activación */
-.authCard {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid color-mix(in srgb, var(--color-text) 10%, white 90%);
-}
-
