@@ -235,12 +235,123 @@ const MisVacantes = () => {
     return <span style={{color: '#888'}}>Todos</span>;
   };
 
-  // SOLUCIÓN: Función para el mensaje de estado vacío (ternario extraído)
   const getMensajeEstadoVacio = () => {
     if (filtro !== 'todas') {
       return filtro;
     }
     return '';
+  };
+
+  // SOLUCIÓN: Extraer el ternario principal a una función
+  const renderContenidoPrincipal = () => {
+    if (loading) {
+      return <p>Cargando vacantes...</p>;
+    }
+
+    if (vacantesFiltradas.length === 0) {
+      return (
+        <div className="emptyState">
+          <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
+          <Link to="/panel/empresa/crear-vacante">
+            <button className="btnSuccess" style={{ marginTop: '15px' }}>
+              ➕ Publicar Mi Primera Vacante
+            </button>
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className="tableInfo">
+          <p>Mostrando <strong>{vacantesFiltradas.length}</strong> de <strong>{vacantes.length}</strong> vacante(s)</p>
+        </div>
+        <div className="tableContainer">
+          <table className="adminTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Programa</th>
+                <th>Modalidad</th>
+                <th>Salario</th>
+                <th>Postulaciones</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vacantesFiltradas.map((vacante) => (
+                <tr key={vacante.vacante_id}>
+                  <td>{vacante.vacante_id}</td>
+                  <td>
+                    <strong>{vacante.titulo}</strong>
+                    <br />
+                    <small>{vacante.sector_nombre || 'Sin sector'}</small>
+                  </td>
+                  <td>
+                    {getTextoPrograma(vacante)}
+                  </td>
+                  <td>{getTextoModalidad(vacante.modalidad)}</td>
+                  <td>{formatearSalario(vacante.salario)}</td>
+                  <td>
+                    <button 
+                      className="badge"
+                      style={{ 
+                        cursor: 'pointer', 
+                        border: 'none', 
+                        background: 'transparent',
+                        padding: 0,
+                        font: 'inherit',
+                        color: getColorPostulaciones(vacante)
+                      }}
+                      onClick={() => {/* Agregar función para ver postulaciones */}}
+                      onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
+                    >
+                      {getTextoPostulaciones(vacante)}
+                    </button>
+                  </td>
+                  <td>
+                    <span className={getClaseEstado(vacante)}>
+                      {getTextoEstado(vacante)}
+                    </span>
+                  </td>
+                  <td>
+                    {new Date(vacante.creada_en).toLocaleDateString('es-CO')}
+                  </td>
+                  <td>
+                    <div className="actionButtons">
+                      <button 
+                        className="btnSecondary btnSmall"
+                        onClick={() => verDetalles(vacante)}
+                        onKeyDown={(e) => handleKeyDown(e, () => verDetalles(vacante))}
+                      >
+                        👁️ Ver
+                      </button>
+                      <button 
+                        className="btnPrimary btnSmall"
+                        onClick={() => abrirEdicion(vacante)}
+                        onKeyDown={(e) => handleKeyDown(e, () => abrirEdicion(vacante))}
+                      >
+                        ✏️ Editar
+                      </button>
+                      <button 
+                        className="btnDanger btnSmall"
+                        onClick={() => handleEliminar(vacante.vacante_id, vacante.titulo)}
+                        onKeyDown={(e) => handleKeyDown(e, () => handleEliminar(vacante.vacante_id, vacante.titulo))}
+                      >
+                        🗑️ Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    );
   };
 
   // Manejadores de teclado para accesibilidad
@@ -299,110 +410,9 @@ const MisVacantes = () => {
 
         {error && <p className="errorMessage">{error}</p>}
 
-        {loading ? (
-          <p>Cargando vacantes...</p>
-        ) : vacantesFiltradas.length === 0 ? (
-          <div className="emptyState">
-            {/* SOLUCIÓN APLICADA: Ternario extraído a función */}
-            <p>📭 No tienes vacantes {getMensajeEstadoVacio()}</p>
-            <Link to="/panel/empresa/crear-vacante">
-              <button className="btnSuccess" style={{ marginTop: '15px' }}>
-                ➕ Publicar Mi Primera Vacante
-              </button>
-            </Link>
-          </div>
-        ) : (
-          <>
-            <div className="tableInfo">
-              <p>Mostrando <strong>{vacantesFiltradas.length}</strong> de <strong>{vacantes.length}</strong> vacante(s)</p>
-            </div>
+        {/* SOLUCIÓN APLICADA: Reemplazar ternario anidado por función */}
+        {renderContenidoPrincipal()}
 
-            <div className="tableContainer">
-              <table className="adminTable">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Programa</th>
-                    <th>Modalidad</th>
-                    <th>Salario</th>
-                    <th>Postulaciones</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {vacantesFiltradas.map((vacante) => (
-                    <tr key={vacante.vacante_id}>
-                      <td>{vacante.vacante_id}</td>
-                      <td>
-                        <strong>{vacante.titulo}</strong>
-                        <br />
-                        <small>{vacante.sector_nombre || 'Sin sector'}</small>
-                      </td>
-                      <td>
-                        {getTextoPrograma(vacante)}
-                      </td>
-                      <td>{getTextoModalidad(vacante.modalidad)}</td>
-                      <td>{formatearSalario(vacante.salario)}</td>
-                      <td>
-                        <button 
-                          className="badge"
-                          style={{ 
-                            cursor: 'pointer', 
-                            border: 'none', 
-                            background: 'transparent',
-                            padding: 0,
-                            font: 'inherit',
-                            color: getColorPostulaciones(vacante)
-                          }}
-                          onClick={() => {/* Agregar función para ver postulaciones */}}
-                          onKeyDown={(e) => handleKeyDown(e, () => {/* Agregar función para ver postulaciones */})}
-                        >
-                          {getTextoPostulaciones(vacante)}
-                        </button>
-                      </td>
-                      <td>
-                        <span className={getClaseEstado(vacante)}>
-                          {getTextoEstado(vacante)}
-                        </span>
-                      </td>
-                      <td>
-                        {new Date(vacante.creada_en).toLocaleDateString('es-CO')}
-                      </td>
-                      <td>
-                        <div className="actionButtons">
-                          <button 
-                            className="btnSecondary btnSmall"
-                            onClick={() => verDetalles(vacante)}
-                            onKeyDown={(e) => handleKeyDown(e, () => verDetalles(vacante))}
-                          >
-                            👁️ Ver
-                          </button>
-                          <button 
-                            className="btnPrimary btnSmall"
-                            onClick={() => abrirEdicion(vacante)}
-                            onKeyDown={(e) => handleKeyDown(e, () => abrirEdicion(vacante))}
-                          >
-                            ✏️ Editar
-                          </button>
-                          <button 
-                            className="btnDanger btnSmall"
-                            onClick={() => handleEliminar(vacante.vacante_id, vacante.titulo)}
-                            onKeyDown={(e) => handleKeyDown(e, () => handleEliminar(vacante.vacante_id, vacante.titulo))}
-                          >
-                            🗑️ Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
       </div>
 
       {/* Dialog nativo sin event listeners en elementos no interactivos */}
