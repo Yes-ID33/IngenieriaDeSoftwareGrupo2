@@ -7,7 +7,7 @@ export const iniciarSesion = async (req, res) => {
   const client = await pool.connect();
   
   try {
-    const { correo, contrasena } = req.body;
+    const { correo, contrasena } = req.body; // Primera declaración de 'contrasena'
 
     // Validaciones básicas
     if (!correo || !contrasena) {
@@ -104,8 +104,8 @@ export const iniciarSesion = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    // Remover contraseña de la respuesta
-    const { contrasena: _, ...usuarioSinPassword } = usuarioData;
+    // SOLUCIÓN CORREGIDA: Usar un alias diferente para evitar redeclaración
+    const { contrasena: contrasenaHash, ...usuarioSinPassword } = usuarioData;
 
     res.status(200).json({
       success: true,
