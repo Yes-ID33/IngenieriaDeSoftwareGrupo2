@@ -1,6 +1,6 @@
-import { spawnSync } from 'child_process';
+import { spawnSync } from 'node:child_process';
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs from 'node:fs';
 
 dotenv.config();
 
