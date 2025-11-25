@@ -1,9 +1,28 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/header.jsx';
 import '../../styles/index.css';
 import '../../styles/admin.css';
+
+// SOLUCIÓN: Mover TabButton fuera del componente principal y agregar PropTypes
+const TabButton = ({ activo, onClick, onKeyDown, children }) => (
+  <button 
+    className={activo ? 'active' : ''}
+    onClick={onClick}
+    onKeyDown={onKeyDown}
+  >
+    {children}
+  </button>
+);
+
+TabButton.propTypes = {
+  activo: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired
+};
 
 const GestionVacantes = () => {
   const { usuario } = useAuth();
@@ -172,7 +191,7 @@ const GestionVacantes = () => {
     }).format(salario);
   };
 
-  // SOLUCIÓN: Funciones para extraer lógica condicional
+  // Funciones para extraer lógica condicional
   const getMensajeEstadoVacio = () => {
     if (filtro !== 'todas') {
       return filtro;
@@ -315,17 +334,6 @@ const GestionVacantes = () => {
     );
   };
 
-  // SOLUCIÓN: Componente TabButton para mejor accesibilidad
-  const TabButton = ({ activo, onClick, onKeyDown, children }) => (
-    <button 
-      className={activo ? 'active' : ''}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-    >
-      {children}
-    </button>
-  );
-
   // Manejador de teclado para accesibilidad
   const handleKeyDown = (e, action) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -349,7 +357,7 @@ const GestionVacantes = () => {
           </button>
         </div>
 
-        {/* Filtros - SOLUCIÓN: Botones nativos sin role="button" */}
+        {/* Filtros - SOLUCIÓN: Usar TabButton externo */}
         <div className="filterTabs" role="tablist" aria-label="Filtros de vacantes">
           <TabButton
             activo={filtro === 'pendientes'}
@@ -380,7 +388,7 @@ const GestionVacantes = () => {
         {renderContenidoPrincipal()}
       </div>
 
-      {/* SOLUCIÓN: Usar <dialog> nativo en lugar de div con role="button" */}
+      {/* SOLUCIÓN: Usar <dialog> nativo */}
       <dialog 
         ref={dialogRef}
         className="modal"
