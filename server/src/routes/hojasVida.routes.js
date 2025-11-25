@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import multer from 'multer';
 import {
   crearHojaVida,
   listarMisHojasVida,
@@ -11,6 +12,10 @@ import { verificarToken } from '../middleware/autentificacion.js';
 import { verificarRol } from '../middleware/verificarRol.js';
 
 const router = Router();
+
+// configurar multer
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Todas las rutas requieren autenticación y rol de estudiante
 router.use(verificarToken);

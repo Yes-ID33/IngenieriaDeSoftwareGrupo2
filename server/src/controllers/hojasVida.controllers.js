@@ -1,4 +1,6 @@
 import pool from '../db.js';
+import { getEstudianteID } from '../helpers.js';
+import { subirPdfHojasDeVida } from '../utils/subirAWS.js';
 
 const parseHabilidades = (raw) => {
   if (!raw) return [];
@@ -34,6 +36,9 @@ export const crearHojaVida = async (req, res) => {
     const usuarioId = req.usuario?.id;
     if (!usuarioId) return res.status(401).json({ success: false, message: 'No autenticado' });
 
+    //obtener la cedula del estudiante
+    const estudianteId = await getEstudianteID(usuarioId);
+
     const {
       nombre_perfil = '',
       descripcion = '',
@@ -45,6 +50,14 @@ export const crearHojaVida = async (req, res) => {
 
     // parse y normalización
     const habilidadesNormalized = parseHabilidades(habilidades);
+
+    //recibir el pdf
+    const file = req.file;
+    let archivoUrl = null;
+    if (file){
+      archivoUrl = await subirPdfHojasDeVida(file.buffer, file.originalname, req.usuario.nombre, req.usuario.apellido);
+    }
+
 
     // consulta límites de columnas (si la tabla tiene restricciones)
     const limits = await getColumnLimits(client, 'hojas_vida');
@@ -74,18 +87,18 @@ export const crearHojaVida = async (req, res) => {
 
     const insertQuery = `
       INSERT INTO hojas_vida
-        (usuario_id, nombre_perfil, descripcion, habilidades, experiencia, educacion, archivo_url, es_principal)
+        (estudiante_id, nombre_perfil, descripcion, habilidades, experiencia, educacion, archivo_url, es_principal)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
     `;
     const values = [
-      usuarioId,
+      estudianteId,
       nombre_perfil,
       descripcion,
       habilidadesNormalized, // node-postgres convierte JS array a text[]
       experiencia,
       educacion,
-      null, // no guardamos URL ahora
+      archivoUrl, // url del archivo subido a S3
       es_principal
     ];
 

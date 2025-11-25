@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS estudiantes (
 -- ======================================
 CREATE TABLE IF NOT EXISTS hojas_vida (
     id SERIAL PRIMARY KEY,
-    usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+    estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE,
     nombre_perfil VARCHAR(100) NOT NULL,
     descripcion TEXT,
     habilidades TEXT[],

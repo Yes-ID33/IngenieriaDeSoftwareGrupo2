@@ -332,8 +332,6 @@ export const listarTodasEmpresas = async (req, res) => {
 };
 
 // GESTIÓN DE VACANTES 
-
-
 export const listarTodasVacantes = async (req, res) => {
   const client = await pool.connect();
   

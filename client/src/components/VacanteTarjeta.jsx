@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import "../styles/vacantes.css";
 
-const VacanteTarjeta = ({ Vacante, onAplicar }) => {
+const VacanteTarjeta = ({ vacante, onAplicar }) => {
     const {
         empresa,
         titulo,
@@ -10,7 +10,7 @@ const VacanteTarjeta = ({ Vacante, onAplicar }) => {
         modalidad,
         salario,
         requisitos
-    } = Vacante;
+    } = vacante;
 
     return(
         <div className="vacanteCard">
@@ -27,7 +27,7 @@ const VacanteTarjeta = ({ Vacante, onAplicar }) => {
 
 // Validación de PropTypes - SOLUCIÓN: Eliminar defaultProps o cambiar isRequired
 VacanteTarjeta.propTypes = {
-    Vacante: PropTypes.shape({
+    vacante: PropTypes.shape({
         empresa: PropTypes.string.isRequired,
         titulo: PropTypes.string.isRequired,
         sector: PropTypes.string.isRequired,
