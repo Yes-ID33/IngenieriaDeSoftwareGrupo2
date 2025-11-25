@@ -127,6 +127,97 @@ const GestionEmpresas = () => {
     }
   };
 
+  // SOLUCIÓN: Extraer el ternario anidado a una función
+  const getMensajeEstadoVacio = () => {
+    if (filtro === 'todas') {
+      return '';
+    }
+    return filtro;
+  };
+
+  // SOLUCIÓN: Extraer el ternario principal a una función
+  const renderContenidoPrincipal = () => {
+    if (loading) {
+      return <p>Cargando empresas...</p>;
+    }
+
+    if (empresas.length === 0) {
+      return (
+        <div className="emptyState">
+          <p>📭 No hay empresas {getMensajeEstadoVacio()} en este momento</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="tableContainer">
+        <table className="adminTable">
+          <thead>
+            <tr>
+              <th>NIT</th>
+              <th>Razón Social</th>
+              <th>Reclutador</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Fecha Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {empresas.map((empresa) => (
+              <tr key={empresa.usuario_id}>
+                <td>{empresa.nit_id}</td>
+                <td><strong>{empresa.razon_social}</strong></td>
+                <td>{empresa.nombre_reclutador}</td>
+                <td>{empresa.correo}</td>
+                <td>{empresa.contacto_telefono || 'N/A'}</td>
+                <td>
+                  {empresa.verificado ? (
+                    <span className="badge badge-success">✅ Aprobada</span>
+                  ) : (
+                    <span className="badge badge-warning">⏳ Pendiente</span>
+                  )}
+                </td>
+                <td>{new Date(empresa.fecha_creacion).toLocaleDateString('es-CO')}</td>
+                <td>
+                  <div className="actionButtons">
+                    {!empresa.verificado && (
+                      <>
+                        <button 
+                          className="btnSuccess btnSmall"
+                          id="AprobarEmpresaAdmin"
+                          onClick={() => handleAprobar(empresa.usuario_id, empresa.razon_social)}
+                        >
+                          ✅ Aprobar
+                        </button>
+                        <button 
+                          className="btnDanger btnSmall"
+                          id="RechazarEmpresaAdmin"
+                          onClick={() => handleRechazar(empresa.usuario_id, empresa.razon_social)}
+                        >
+                          ❌ Rechazar
+                        </button>
+                      </>
+                    )}
+                    {empresa.verificado && (
+                      <button 
+                        className="btnSecondary btnSmall"
+                        onClick={() => alert('Ver detalles (próximamente)')}
+                      >
+                        👁️ Ver
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="layoutContent">
       <Header />
@@ -162,79 +253,9 @@ const GestionEmpresas = () => {
 
         {error && <p className="errorMessage">{error}</p>}
 
-        {loading ? (
-          <p>Cargando empresas...</p>
-        ) : empresas.length === 0 ? (
-          <div className="emptyState">
-            <p>📭 No hay empresas {filtro === 'todas' ? '' : filtro} en este momento</p>
-          </div>
-        ) : (
-          <div className="tableContainer">
-            <table className="adminTable">
-              <thead>
-                <tr>
-                  <th>NIT</th>
-                  <th>Razón Social</th>
-                  <th>Reclutador</th>
-                  <th>Correo</th>
-                  <th>Teléfono</th>
-                  <th>Estado</th>
-                  <th>Fecha Registro</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {empresas.map((empresa) => (
-                  <tr key={empresa.usuario_id}>
-                    <td>{empresa.nit_id}</td>
-                    <td><strong>{empresa.razon_social}</strong></td>
-                    <td>{empresa.nombre_reclutador}</td>
-                    <td>{empresa.correo}</td>
-                    <td>{empresa.contacto_telefono || 'N/A'}</td>
-                    <td>
-                      {empresa.verificado ? (
-                        <span className="badge badge-success">✅ Aprobada</span>
-                      ) : (
-                        <span className="badge badge-warning">⏳ Pendiente</span>
-                      )}
-                    </td>
-                    <td>{new Date(empresa.fecha_creacion).toLocaleDateString('es-CO')}</td>
-                    <td>
-                      <div className="actionButtons">
-                        {!empresa.verificado && (
-                          <>
-                            <button 
-                              className="btnSuccess btnSmall"
-                              id="AprobarEmpresaAdmin"
-                              onClick={() => handleAprobar(empresa.usuario_id, empresa.razon_social)}
-                            >
-                              ✅ Aprobar
-                            </button>
-                            <button 
-                              className="btnDanger btnSmall"
-                              id="RechazarEmpresaAdmin"
-                              onClick={() => handleRechazar(empresa.usuario_id, empresa.razon_social)}
-                            >
-                              ❌ Rechazar
-                            </button>
-                          </>
-                        )}
-                        {empresa.verificado && (
-                          <button 
-                            className="btnSecondary btnSmall"
-                            onClick={() => alert('Ver detalles (próximamente)')}
-                          >
-                            👁️ Ver
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {/* SOLUCIÓN APLICADA: Reemplazar ternario anidado por función */}
+        {renderContenidoPrincipal()}
+        
       </div>
     </div>
   );
