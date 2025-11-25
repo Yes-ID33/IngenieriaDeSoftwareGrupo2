@@ -32,6 +32,7 @@ const Header = () => {
                 <ul className="dropdownMenu">
                   <li><Link to="/perfil">Mi perfil</Link></li>
                   <li><Link to="/solicitudes">Mis solicitudes</Link></li>
+                  <li><Link to="/hojas/crear" className="nav-link">Crear Hoja de Vida</Link></li>
                   <li><button onClick={handleLogout}>Cerrar sesión</button></li>
                 </ul>
               </li>
@@ -49,4 +50,5 @@ const Header = () => {
   );
 };
 
+{/*/solicitudes*/}
 export default Header;

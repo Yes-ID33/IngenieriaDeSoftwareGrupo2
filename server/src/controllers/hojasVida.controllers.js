@@ -1,78 +1,105 @@
 import pool from '../db.js';
 
+const parseHabilidades = (raw) => {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.map(h => String(h).trim()).filter(Boolean);
+  if (typeof raw === 'string') {
+    // intenta JSON.parse, si falla usa CSV
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed.map(h => String(h).trim()).filter(Boolean);
+    } catch (e) { /* no es JSON */ }
+    return raw.split(',').map(s => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
+const getColumnLimits = async (client, table) => {
+  const q = `
+    SELECT column_name, character_maximum_length
+    FROM information_schema.columns
+    WHERE table_name = $1 AND character_maximum_length IS NOT NULL;
+  `;
+  const r = await client.query(q, [table]);
+  return r.rows.reduce((acc, row) => {
+    acc[row.column_name] = row.character_maximum_length;
+    return acc;
+  }, {});
+};
+
 // Crear hoja de vida
 export const crearHojaVida = async (req, res) => {
   const client = await pool.connect();
-  
   try {
-    const usuarioId = req.usuario.id;
-    
+    const usuarioId = req.usuario?.id;
+    if (!usuarioId) return res.status(401).json({ success: false, message: 'No autenticado' });
+
     const {
-      nombre_perfil,
-      descripcion,
+      nombre_perfil = '',
+      descripcion = '',
       habilidades,
-      experiencia,
-      educacion,
-      archivo_pdf,
-      es_principal
+      experiencia = '',
+      educacion = '',
+      es_principal = false
     } = req.body;
 
-    // Validaciones
-    if (!nombre_perfil) {
-      return res.status(400).json({
-        success: false,
-        message: 'El nombre del perfil es obligatorio'
-      });
-    }
+    // parse y normalización
+    const habilidadesNormalized = parseHabilidades(habilidades);
 
-    // Obtener cédula del estudiante
-    const estudiante = await client.query(
-      'SELECT cedula_id FROM estudiantes WHERE usuario_id = $1',
-      [usuarioId]
-    );
+    // consulta límites de columnas (si la tabla tiene restricciones)
+    const limits = await getColumnLimits(client, 'hojas_vida');
 
-    if (estudiante.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Estudiante no encontrado'
-      });
-    }
+    const tooLong = [];
+    const checkField = (key, value) => {
+      if (value == null) return;
+      const s = String(value);
+      const max = limits[key];
+      if (max && s.length > max) tooLong.push({ field: key, length: s.length, max });
+    };
 
-    const cedulaId = estudiante.rows[0].cedula_id;
-
-    // Si es_principal = true, desmarcar otras hojas como principales
-    if (es_principal) {
-      await client.query(
-        'UPDATE hojas_vida SET es_principal = FALSE WHERE estudiante_id = $1',
-        [cedulaId]
-      );
-    }
-
-    // Insertar hoja de vida
-    const nuevaHoja = await client.query(
-      `INSERT INTO hojas_vida (
-        estudiante_id, nombre_perfil, descripcion, habilidades,
-        experiencia, educacion, archivo_pdf, es_principal
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING *`,
-      [
-        cedulaId, nombre_perfil, descripcion, habilidades,
-        experiencia, educacion, archivo_pdf, es_principal || false
-      ]
-    );
-
-    res.status(201).json({
-      success: true,
-      message: 'Hoja de vida creada exitosamente',
-      data: nuevaHoja.rows[0]
+    checkField('nombre_perfil', nombre_perfil);
+    checkField('descripcion', descripcion);
+    checkField('experiencia', experiencia);
+    checkField('educacion', educacion);
+    // no check para habilidades array aquí (pg convierte), pero puedes validar items:
+    habilidadesNormalized.forEach((h, i) => {
+      if (limits['habilidades'] && h.length > limits['habilidades']) {
+        tooLong.push({ field: `habilidades[${i}]`, length: h.length, max: limits['habilidades'] });
+      }
     });
 
+    if (tooLong.length) {
+      return res.status(400).json({ success: false, message: 'Campos demasiado largos', details: tooLong });
+    }
+
+    const insertQuery = `
+      INSERT INTO hojas_vida
+        (usuario_id, nombre_perfil, descripcion, habilidades, experiencia, educacion, archivo_url, es_principal)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING *;
+    `;
+    const values = [
+      usuarioId,
+      nombre_perfil,
+      descripcion,
+      habilidadesNormalized, // node-postgres convierte JS array a text[]
+      experiencia,
+      educacion,
+      null, // no guardamos URL ahora
+      es_principal
+    ];
+
+    const result = await client.query(insertQuery, values);
+    return res.status(201).json({ success: true, data: result.rows[0] });
   } catch (error) {
     console.error('Error al crear hoja de vida:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error interno del servidor'
-    });
+    if (error && error.code === '22P02') {
+      return res.status(400).json({ success: false, message: 'Formato inválido en campos (habilidades). Envía un array o CSV.' });
+    }
+    if (error && error.code === '22001') {
+      return res.status(400).json({ success: false, message: 'Algún campo excede la longitud permitida.' });
+    }
+    return res.status(500).json({ success: false, message: 'Error interno del servidor' });
   } finally {
     client.release();
   }
@@ -202,7 +229,6 @@ export const actualizarHojaVida = async (req, res) => {
       habilidades,
       experiencia,
       educacion,
-      archivo_pdf,
       es_principal
     } = req.body;
 
@@ -222,11 +248,10 @@ export const actualizarHojaVida = async (req, res) => {
         habilidades = COALESCE($3, habilidades),
         experiencia = COALESCE($4, experiencia),
         educacion = COALESCE($5, educacion),
-        archivo_pdf = COALESCE($6, archivo_pdf),
-        es_principal = COALESCE($7, es_principal)
-      WHERE id = $8
+        es_principal = COALESCE($6, es_principal)
+      WHERE id = $7
       RETURNING *`,
-      [nombre_perfil, descripcion, habilidades, experiencia, educacion, archivo_pdf, es_principal, id]
+      [nombre_perfil, descripcion, habilidades, experiencia, educacion, es_principal, id]
     );
 
     res.status(200).json({

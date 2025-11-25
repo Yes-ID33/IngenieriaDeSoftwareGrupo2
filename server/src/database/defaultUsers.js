@@ -86,6 +86,10 @@ export async function insertarDefault() {
         );
       }
 
+      await client.query(`
+        SELECT setval('usuarios_id_seq', (SELECT MAX(id) FROM usuarios) + 1)
+      `);
+
       await client.query('COMMIT');
       console.log('Inserción de usuarios por defecto completada.');
     } catch (err) {

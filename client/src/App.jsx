@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import ActivarCuenta from './pages/activarCuenta';
 import Perfil from './pages/Perfil';
 import Vacantes from './pages/Vacantes';
+import Hojas from './pages/Hojas'; // nueva importación
 
 // Rutas admin
 import PanelAdmin from './pages/admin/PanelAdmin';
@@ -74,6 +75,9 @@ function AppRoutes() {
         {/* Ejemplo: si RegisterEmpresa/RegisterEstudiante son páginas bajo /register/... */}
         <Route path="/register/empresa" element={/* tu componente */ null} />
         <Route path="/register/estudiante" element={/* tu componente */ null} />
+        
+        {/* 🗂️ Ruta para crear hoja de vida */}
+        <Route path="/hojas/crear" element={<Hojas />} />
       </Routes>
 
       {showFooter && <Footer />}

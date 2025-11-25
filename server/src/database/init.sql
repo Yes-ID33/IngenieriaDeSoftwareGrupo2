@@ -71,13 +71,13 @@ CREATE TABLE IF NOT EXISTS estudiantes (
 -- ======================================
 CREATE TABLE IF NOT EXISTS hojas_vida (
     id SERIAL PRIMARY KEY,
-    estudiante_id INT REFERENCES estudiantes(cedula_id) ON DELETE CASCADE,
+    usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
     nombre_perfil VARCHAR(100) NOT NULL,
     descripcion TEXT,
     habilidades TEXT[],
     experiencia TEXT,
     educacion TEXT,
-    archivo_pdf VARCHAR(255),
+    archivo_url TEXT, -- URL al S3 o ruta en volumen
     es_principal BOOLEAN DEFAULT FALSE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -242,7 +242,7 @@ SELECT
     -- Datos de la hoja de vida
     hv.id as hoja_vida_id,
     hv.nombre_perfil,
-    hv.archivo_pdf,
+    hv.archivo_url,
     hv.descripcion as hoja_descripcion,
     -- Datos de la vacante
     v.vacante_id,
