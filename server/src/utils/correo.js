@@ -1,9 +1,10 @@
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 // Configurar transportador
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number.parseInt(process.env.SMTP_PORT),
+  port: parseInt(process.env.SMTP_PORT),
   secure: false,
   auth: {
     user: process.env.SMTP_USER,
@@ -23,9 +24,9 @@ export const verificarConfiguracionEmail = async () => {
   }
 };
 
-// Generar token de verificación (6 dígitos)
+// Generar token de verificación (6 dígitos) – SEGURO
 export const generarTokenVerificacion = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 999999).toString();
 };
 
 // Enviar email de verificación (ESTUDIANTES)
