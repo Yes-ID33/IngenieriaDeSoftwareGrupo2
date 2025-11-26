@@ -50,5 +50,4 @@ const Header = () => {
   );
 };
 
-{/*/solicitudes*/}
 export default Header;
