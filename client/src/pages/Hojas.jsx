@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
+import Header from '../components/header.jsx';
+import "../styles/hoja.css";
+
+
 
 const MAX = {
   NOMBRE_PERFIL: 60,
@@ -163,100 +167,112 @@ const Hojas = () => {
     }
   };
 
-  return (
-    <div style={{ maxWidth: 1000, margin: '24px auto', padding: 12 }}>
-      <h2>Crear Hoja de Vida</h2>
+   return (
+    <div className="Container">
+        <Header />
+      <div className="authContainer">
+        
+        
 
-      <form onSubmit={handleGenerateAndSave}>
-        <div>
-          <label>Nombre del perfil *</label><br />
-          <input
-            name="nombre_perfil"
-            value={form.nombre_perfil}
-            onChange={handleChange}
-            maxLength={MAX.NOMBRE_PERFIL}
-            style={{ width: 360 }}
-            required
-          />
-        </div>
+        <form onSubmit={handleGenerateAndSave}>
+            <h2>Crear Hoja de Vida</h2>
+          <div className="infoBasicaGrid">
+            <div>
+              <label className="authLabel">Nombre del perfil *</label>
+              <input
+                className="authInput"
+                name="nombre_perfil"
+                value={form.nombre_perfil}
+                onChange={handleChange}
+                maxLength={MAX.NOMBRE_PERFIL}
+                required
+              />
+            </div>
 
-        <div>
-          <label>Descripción</label><br />
-          <textarea
-            name="descripcion"
-            value={form.descripcion}
-            onChange={handleChange}
-            maxLength={MAX.DESCRIPCION}
-            rows={3}
-            style={{ width: 520 }}
-          />
-        </div>
+            <div>
+              <label className="authLabel">Descripción</label>
+              <textarea
+                className="authInput"
+                name="descripcion"
+                value={form.descripcion}
+                onChange={handleChange}
+                maxLength={MAX.DESCRIPCION}
+                rows={3}
+              />
+            </div>
+          </div>
 
-        <div>
-          <label>Habilidades (coma-separadas)</label><br />
-          <input
-            name="habilidades"
-            value={form.habilidades}
-            onChange={handleChange}
-            placeholder="ej: React,Node,SQL"
-            style={{ width: 520 }}
-          />
-        </div>
+          <div>
+            <label className="authLabel">Habilidades (coma-separadas)</label>
+            <input
+              className="authInput"
+              name="habilidades"
+              value={form.habilidades}
+              onChange={handleChange}
+              placeholder="ej: React,Node,SQL"
+            />
+          </div>
 
-        <div>
-          <label>Experiencia</label><br />
-          <textarea
-            name="experiencia"
-            value={form.experiencia}
-            onChange={handleChange}
-            maxLength={MAX.EXPERIENCIA}
-            rows={3}
-            style={{ width: 520 }}
-          />
-        </div>
+          <div>
+            <label className="authLabel">Experiencia</label>
+            <textarea
+              className="authInput"
+              name="experiencia"
+              value={form.experiencia}
+              onChange={handleChange}
+              maxLength={MAX.EXPERIENCIA}
+              rows={3}
+            />
+          </div>
 
-        <div>
-          <label>Educación</label><br />
-          <textarea
-            name="educacion"
-            value={form.educacion}
-            onChange={handleChange}
-            maxLength={MAX.EDUCACION}
-            rows={2}
-            style={{ width: 520 }}
-          />
-        </div>
+          <div>
+            <label className="authLabel">Educación</label>
+            <textarea
+              className="authInput"
+              name="educacion"
+              value={form.educacion}
+              onChange={handleChange}
+              maxLength={MAX.EDUCACION}
+              rows={2}
+            />
+          </div>
 
-        <div style={{ marginTop: 12 }}>
-          <label>
-            <input type="checkbox" name="es_principal" checked={form.es_principal} onChange={handleChange} />
-            Establecer como hoja principal
-          </label>
-        </div>
+          <div className="Check">
+            <label>
+              <input
+                type="checkbox"
+                name="es_principal"
+                checked={form.es_principal}
+                onChange={handleChange}
+              />
+              Establecer como hoja principal
+            </label>
+          </div>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
-        <div style={{ marginTop: 12 }}>
-          <button type="submit" disabled={loading}>
-            {loading ? 'Generando y guardando...' : 'Generar (descargar) y guardar'}
-          </button>
-          <button
-            type="button"
-            style={{ marginLeft: 8 }}
-            onClick={() => {
-              try {
-                const blob = generarPdfBlob();
-                const filename = (form.nombre_perfil || 'hoja-de-vida').replace(/\s+/g, '-') + '.pdf';
-                triggerDownload(blob, filename);
-              } catch {
-                setError('Error generando PDF');
-              }
-            }}
-          >
-            Descargar solo PDF
-          </button>
-        </div>
-      </form>
+          <div>
+            <button className="authButton" type="submit" disabled={loading}>
+              {loading ? 'Generando y guardando...' : 'Generar (descargar) y guardar'}
+            </button>
+            <button
+              className="authButton"
+              type="button"
+              onClick={() => {
+                try {
+                  const blob = generarPdfBlob();
+                  const filename = (form.nombre_perfil || 'hoja-de-vida').replace(/\s+/g, '-') + '.pdf';
+                  triggerDownload(blob, filename);
+                } catch {
+                  setError('Error generando PDF');
+                }
+              }}
+            >
+              Descargar solo PDF
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

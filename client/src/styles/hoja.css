@@ -1,0 +1,115 @@
+:root {
+  --radius: 8px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f6f8;
+}
+
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.authContainer {
+  position: relative;
+  z-index: 2;
+  background-color: white;
+  padding: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+
+.authContainer h2 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+ color: var(--color-text); 
+}
+
+.authLabel {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-text);
+}
+
+.authInput,
+.authContainer textarea {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.5;
+  color: var(--color-text);
+  resize: none;
+  overflow: auto;
+}
+
+.authInput:focus,
+.authContainer textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 6px rgba(2, 153, 216, 0.3);
+}
+
+.infoBasicaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 1rem;
+}
+
+.Check {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.authButton {
+  display: inline-block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+}
+
+.authButton:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.authContainer form > div:not(.infoBasicaGrid):not(.Check):not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.authContainer p {
+  color: red;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
