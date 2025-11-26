@@ -17,7 +17,7 @@ const Header = () => {
       <div className="navLeft">
         <nav>
           <ul>
-            <li><Link to="/">Inicio</Link></li>
+            {!usuario && <li><Link to="/">Inicio</Link></li>}
             <li><Link to="/vacantes">Vacantes</Link></li>
           </ul>
         </nav>

@@ -13,22 +13,18 @@ import { verificarRol } from '../middleware/verificarRol.js';
 
 const router = Router();
 
-// Ruta pública para listar vacantes aprobadas
+// ===== RUTA PÚBLICA (sin autenticación) =====
 router.get('/publicas', listarVacantesConEmpresa);
 
 // ===== RUTAS PROTEGIDAS PARA EMPRESAS =====
-// Middleware de autenticación y rol para las siguientes rutas
-router.use(verificarToken);
-router.use(verificarRol('empresa'));
-
-// CRUD de vacantes
-router.post('/', crearVacante);
-router.get('/mis-vacantes', listarMisVacantes);
-router.put('/:id', actualizarVacante);
-router.delete('/:id', eliminarVacante);
+// ✅ Aplicar middlewares INDIVIDUALMENTE a cada ruta
+router.post('/', verificarToken, verificarRol('empresa'), crearVacante);
+router.get('/mis-vacantes', verificarToken, verificarRol('empresa'), listarMisVacantes);
+router.put('/:id', verificarToken, verificarRol('empresa'), actualizarVacante);
+router.delete('/:id', verificarToken, verificarRol('empresa'), eliminarVacante);
 
 // Gestión de postulaciones
-router.get('/:id/postulaciones', verPostulacionesVacante);
-router.patch('/postulaciones/:id/responder', responderPostulacion);
+router.get('/:id/postulaciones', verificarToken, verificarRol('empresa'), verPostulacionesVacante);
+router.patch('/postulaciones/:id/responder', verificarToken, verificarRol('empresa'), responderPostulacion);
 
 export default router;

@@ -57,9 +57,10 @@ header nav ul li a:hover::after {
   width: 100%;
 }
 
-/* Dropdown */
+/* Dropdown - CORREGIDO */
 .dropdown {
   position: relative;
+  display: inline-block;
 }
 
 .dropdownToggle {
@@ -70,6 +71,8 @@ header nav ul li a:hover::after {
   cursor: pointer;
   padding: 0.5rem 1rem;
   transition: var(--transition);
+  font-size: 0.95rem;
+  font-family: inherit;
 }
 
 .dropdownToggle:hover {
@@ -82,9 +85,26 @@ header nav ul li a:hover::after {
   margin-left: 0.3rem;
 }
 
+/* SOLUCIÓN: Crear un puente invisible entre el botón y el menú */
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 10px; /* Mismo valor que la separación del menú */
+  background: transparent;
+  z-index: 1999;
+  display: none;
+}
+
+.dropdown:hover::before {
+  display: block;
+}
+
 .dropdownMenu {
   position: absolute;
-  top: 30px;
+  top: calc(100% + 10px);
   right: 0;
   background-color: white;
   color: var(--color-text);
@@ -92,48 +112,62 @@ header nav ul li a:hover::after {
   padding: 0.5rem 0;
   margin: 0;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   border: 1px solid var(--color-primary);
-  min-width: 160px;
+  min-width: 180px;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  display: none;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   z-index: 2000;
+  
+  /* Disposición vertical */
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown:hover .dropdownMenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .dropdownMenu li {
-  padding: 0.5rem 1rem;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 .dropdownMenu li a,
 .dropdownMenu li button {
+  display: block;
   text-decoration: none;
-  color: inherit;
+  color: var(--color-text);
   background: none;
   border: none;
   width: 100%;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   font-size: 0.95rem;
+  padding: 0.7rem 1.2rem;
+  font-family: inherit;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
 }
 
-.dropdown li button{
+.dropdown li button {
   font-weight: 600;
-  padding: 0.3rem 0;
 }
 
-.dropdownMenu li:hover, 
+.dropdownMenu li a:hover,
 .dropdownMenu li button:hover {
   background-color: var(--color-bg);
   color: var(--color-primary-dark);
 }
 
-
-.dropdown:hover .dropdownMenu {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
+/* Separador visual opcional entre opciones */
+.dropdownMenu li:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 768px) {
@@ -159,9 +193,14 @@ header nav ul li a:hover::after {
   }
 
   .dropdownMenu {
-    left: 0;
+    left: 50%;
     right: auto;
-    min-width: 100%;
+    transform: translateX(-50%) translateY(-10px);
+    min-width: 200px;
+  }
+
+  .dropdown:hover .dropdownMenu {
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -169,5 +208,15 @@ header nav ul li a:hover::after {
   header nav ul li a {
     font-size: 0.9rem;
     padding: 0.4rem;
+  }
+
+  .dropdownToggle {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .dropdownMenu {
+    min-width: 160px;
+    font-size: 0.9rem;
   }
 }
