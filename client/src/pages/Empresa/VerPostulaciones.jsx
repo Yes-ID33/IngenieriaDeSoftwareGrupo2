@@ -323,8 +323,23 @@ const VerPostulaciones = () => {
 
       {/* Modal de Detalle */}
       {mostrarModal && postulacionDetalle && (
-        <div className="modal" onClick={() => setMostrarModal(false)}>
-          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+        <div 
+  className="modal" 
+  onClick={() => setMostrarModal(false)}
+  role="button"
+  tabIndex={0}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setMostrarModal(false);
+    }
+  }}
+>
+  <div 
+    className="modalContent" 
+    onClick={(e) => e.stopPropagation()}
+    onKeyDown={(e) => e.stopPropagation()}
+  >
             <div className="modalHeader">
               <h2>👤 Detalle de Postulación</h2>
               <button className="closeModal" onClick={() => setMostrarModal(false)}>✕</button>

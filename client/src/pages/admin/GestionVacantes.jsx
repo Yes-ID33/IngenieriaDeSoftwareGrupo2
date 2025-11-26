@@ -281,7 +281,11 @@ const GestionVacantes = () => {
       {/* Modal de Detalles */}
       {mostrarModal && vacanteSeleccionada && (
         <div className="modal" onClick={() => setMostrarModal(false)}>
-          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+          <div 
+  className="modalContent" 
+  onClick={(e) => e.stopPropagation()}
+  onKeyDown={(e) => e.stopPropagation()}
+>
             <div className="modalHeader">
               <h2>📋 Detalles de la Vacante</h2>
               <button className="closeModal" onClick={() => setMostrarModal(false)}>✕</button>
