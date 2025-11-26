@@ -469,14 +469,13 @@ const MisVacantes = () => {
 
       {/* Modal - Igual que el código antiguo */}
       {mostrarModal && vacanteSeleccionada && (
-        <div
-  className="modal"
-  onClick={cerrarModal}
-  role="button"
-  tabIndex={0}
-  onKeyDown={(e) => e.key === "Enter" && cerrarModal()}
->
-
+  <div
+    className="modal"
+    onClick={cerrarModal}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => e.key === "Enter" && cerrarModal()}
+  >
           <div className="modalContent" onClick={(e) => e.stopPropagation()} style={{maxWidth: '900px'}}>
             <div className="modalHeader">
               <h2>
