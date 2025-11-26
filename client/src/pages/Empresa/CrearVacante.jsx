@@ -128,7 +128,7 @@ const CrearVacante = () => {
       const data = await res.json();
 
       if (data.success) {
-        alert(`✅ ${data.message}\n\nTu vacante será revisada por un administrador antes de ser publicada.`);
+        alert(`✅ Vacante creada exitosamente!\n\nTítulo: "${formData.titulo}"\n\nTu vacante será revisada por un administrador antes de ser publicada.`);
         navigate('/panel/empresa/mis-vacantes');
       } else {
         alert(`❌ Error: ${data.message}`);
