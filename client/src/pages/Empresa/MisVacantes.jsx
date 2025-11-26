@@ -481,7 +481,12 @@ const MisVacantes = () => {
     }
   }}
 >
-          <div className="modalContent" onClick={(e) => e.stopPropagation()} style={{maxWidth: '900px'}}>
+          <div 
+  className="modalContent" 
+  onClick={(e) => e.stopPropagation()} 
+  onKeyDown={(e) => e.stopPropagation()}
+  style={{maxWidth: '900px'}}
+>
             <div className="modalHeader">
               <h2>
                 {modoEdicion ? '✏️ Editar Vacante' : '👁️ Detalles de la Vacante'}
