@@ -25,6 +25,6 @@ router.delete('/:id', verificarToken, verificarRol('empresa'), eliminarVacante);
 
 // Gestión de postulaciones
 router.get('/:id/postulaciones', verificarToken, verificarRol('empresa'), verPostulacionesVacante);
-router.patch('/postulaciones/:id/responder', verificarToken, verificarRol('empresa'), responderPostulacion);
+router.put('/postulaciones/:id/responder', verificarToken, verificarRol('empresa'), responderPostulacion);
 
 export default router;

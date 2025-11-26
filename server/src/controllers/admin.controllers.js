@@ -1,5 +1,5 @@
 import pool from '../db.js';
-import { enviarEmailAprobacionEmpresa } from '../utils/correo.js';
+import { enviarEmailAprobacionEmpresa, enviarEmailRechazoEmpresa } from '../utils/correo.js';
 
 // Listar empresas pendientes de aprobación
 export const listarEmpresasPendientes = async (req, res) => {
@@ -141,6 +141,7 @@ export const rechazarEmpresa = async (req, res) => {
     const empresa = await client.query(
       `SELECT 
         u.id,
+        u.nombre,
         u.correo,
         u.rol,
         e.razon_social
@@ -173,8 +174,18 @@ export const rechazarEmpresa = async (req, res) => {
 
     await client.query('COMMIT');
 
-    // Aquí podrías enviar un email notificando el rechazo
-    // enviarEmailRechazo(empresaData.correo, empresaData.razon_social, motivo);
+    // ✅ ENVIAR EMAIL DE RECHAZO
+    try {
+      await enviarEmailRechazoEmpresa(
+        empresaData.correo,
+        empresaData.nombre,
+        empresaData.razon_social,
+        motivo
+      );
+    } catch (emailError) {
+      console.error('Error enviando email de rechazo:', emailError);
+      // No fallar el rechazo si no se puede enviar el email
+    }
 
     res.status(200).json({
       success: true,

@@ -1,4 +1,8 @@
 import pool from '../db.js';
+import { 
+  enviarEmailPostulacionAceptada, 
+  enviarEmailPostulacionRechazada 
+} from '../utils/correo.js';
 
 // ==========================================
 // CONTROLADORES PARA EMPRESAS
@@ -369,11 +373,22 @@ export const responderPostulacion = async (req, res) => {
     }
 
     // Verificar que la postulación pertenece a una vacante de la empresa
+    // Y obtener toda la información necesaria para el email
     const solicitud = await client.query(
-      `SELECT s.aplicacion_id, s.estado, v.titulo
+      `SELECT 
+        s.aplicacion_id, 
+        s.estado,
+        v.titulo as vacante_titulo,
+        e.razon_social,
+        e.contacto_correo as empresa_correo,
+        u.nombre as estudiante_nombre,
+        u.apellido as estudiante_apellido,
+        u.correo as estudiante_correo
        FROM solicitudes s
        INNER JOIN vacantes v ON s.vacante_id = v.vacante_id
        INNER JOIN empresas e ON v.empresa_id = e.nit_id
+       INNER JOIN estudiantes est ON s.estudiante_id = est.cedula_id
+       INNER JOIN usuarios u ON est.usuario_id = u.id
        WHERE s.aplicacion_id = $1 AND e.usuario_id = $2`,
       [id, usuarioId]
     );
@@ -385,7 +400,9 @@ export const responderPostulacion = async (req, res) => {
       });
     }
 
-    if (solicitud.rows[0].estado !== 'pendiente') {
+    const datos = solicitud.rows[0];
+
+    if (datos.estado !== 'pendiente') {
       return res.status(400).json({
         success: false,
         message: 'Esta postulación ya fue respondida'
@@ -401,11 +418,36 @@ export const responderPostulacion = async (req, res) => {
       [estado, notas_empresa, id]
     );
 
-    // TODO: Enviar notificación al estudiante por correo
+    // ✅ ENVIAR EMAIL AL ESTUDIANTE
+    try {
+      const nombreCompleto = `${datos.estudiante_nombre} ${datos.estudiante_apellido || ''}`.trim();
+      
+      if (estado === 'aceptado') {
+        await enviarEmailPostulacionAceptada(
+          datos.estudiante_correo,
+          nombreCompleto,
+          datos.vacante_titulo,
+          datos.razon_social,
+          datos.empresa_correo,
+          notas_empresa
+        );
+      } else {
+        await enviarEmailPostulacionRechazada(
+          datos.estudiante_correo,
+          nombreCompleto,
+          datos.vacante_titulo,
+          datos.razon_social,
+          notas_empresa
+        );
+      }
+    } catch (emailError) {
+      // No fallar la operación si el email falla
+      console.error('Error al enviar email al estudiante:', emailError);
+    }
 
     res.status(200).json({
       success: true,
-      message: `Postulación ${estado === 'aceptado' ? 'aceptada' : 'rechazada'} exitosamente`,
+      message: `Postulación ${estado === 'aceptado' ? 'aceptada' : 'rechazada'} exitosamente. Se ha notificado al estudiante por correo electrónico.`,
       data: actualizada.rows[0]
     });
 

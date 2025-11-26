@@ -7,21 +7,21 @@ import styles from '../styles/perfil.module.css';
 const Perfil = () => {
   const { usuario } = useAuth();
   const [perfilCompleto, setPerfilCompleto] = useState(null);
+  const [postulaciones, setPostulaciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingPostulaciones, setLoadingPostulaciones] = useState(false);
   const [error, setError] = useState('');
-
-  // Simulación de solicitudes recientes (después puedes traerlo del backend)
-  const solicitudesRecientes = [
-    { id: 1, vacante: 'Desarrollador Frontend', estado: 'pendiente', fecha: '2025-10-10' },
-    { id: 2, vacante: 'Analista QA', estado: 'aceptado', fecha: '2025-10-08' },
-    { id: 3, vacante: 'Backend Node.js', estado: 'rechazado', fecha: '2025-10-05' },
-    { id: 4, vacante: 'Diseñador UX/UI', estado: 'pendiente', fecha: '2025-10-03' },
-    { id: 5, vacante: 'Ingeniero DevOps', estado: 'pendiente', fecha: '2025-10-01' }
-  ];
 
   useEffect(() => {
     obtenerPerfil();
   }, []);
+
+  useEffect(() => {
+    // Solo obtener postulaciones si el usuario es estudiante
+    if (perfilCompleto && perfilCompleto.rol === 'estudiante') {
+      obtenerPostulaciones();
+    }
+  }, [perfilCompleto]);
 
   const obtenerPerfil = async () => {
     try {
@@ -54,6 +54,48 @@ const Perfil = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const obtenerPostulaciones = async () => {
+    try {
+      setLoadingPostulaciones(true);
+      const token = localStorage.getItem('token');
+
+      const res = await fetch('http://localhost:5000/api/estudiantes/postulaciones/mis-postulaciones', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Tomar solo las últimas 5 postulaciones
+        setPostulaciones(data.data.postulaciones.slice(0, 5));
+      }
+    } catch (err) {
+      console.error('Error al obtener postulaciones:', err);
+    } finally {
+      setLoadingPostulaciones(false);
+    }
+  };
+
+  const getEstadoBadge = (estado) => {
+    const badges = {
+      'pendiente': { emoji: '⏳', text: 'Pendiente', class: 'estado-pendiente' },
+      'aceptado': { emoji: '✅', text: 'Aceptado', class: 'estado-aceptado' },
+      'rechazado': { emoji: '❌', text: 'Rechazado', class: 'estado-rechazado' }
+    };
+    return badges[estado] || badges['pendiente'];
+  };
+
+  const formatearFecha = (fecha) => {
+    return new Date(fecha).toLocaleDateString('es-CO', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   if (loading) {
@@ -99,7 +141,7 @@ const Perfil = () => {
                 <p><strong>Cédula:</strong> {perfilCompleto.cedula_id}</p>
                 <p><strong>Celular:</strong> {perfilCompleto.celular}</p>
                 
-                {/* ✅ MOSTRAR INFORMACIÓN DEL PROGRAMA */}
+                {/* Información del programa */}
                 {perfilCompleto.programa ? (
                   <>
                     <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>📚 Programa Académico</h3>
@@ -159,43 +201,74 @@ const Perfil = () => {
           <p>No hay información de usuario disponible.</p>
         )}
 
+        {/* POSTULACIONES REALES PARA ESTUDIANTES */}
         {perfilCompleto && perfilCompleto.rol === 'estudiante' && (
           <>
-            <h2>Últimas solicitudes</h2>
-            <table className={styles.tablaSolicitudes}>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Vacante</th>
-                  <th>Estado</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                {solicitudesRecientes.map((solicitud, index) => (
-                  <tr key={solicitud.id}>
-                    <td>{index + 1}</td>
-                    <td>{solicitud.vacante}</td>
-                    <td>
-                      <span className={`estado-${solicitud.estado}`}>
-                        {solicitud.estado === 'pendiente' && '⏳ Pendiente'}
-                        {solicitud.estado === 'aceptado' && '✅ Aceptado'}
-                        {solicitud.estado === 'rechazado' && '❌ Rechazado'}
-                      </span>
-                    </td>
-                    <td>{new Date(solicitud.fecha).toLocaleDateString('es-CO')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ marginTop: '15px' }}>
-              <Link to="/historial-estudiante">
-                <button className="authBtn">Ver todas las solicitudes</button>
-              </Link>
-            </div>
+            <h2>Últimas Postulaciones</h2>
+            
+            {loadingPostulaciones ? (
+              <p>Cargando postulaciones...</p>
+            ) : postulaciones.length === 0 ? (
+              <div style={{
+                padding: '20px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                <p>📭 Aún no te has postulado a ninguna vacante</p>
+                <Link to="/vacantes">
+                  <button className="authBtn" style={{ marginTop: '10px' }}>
+                    Ver Vacantes Disponibles
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <table className={styles.tablaSolicitudes}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Vacante</th>
+                      <th>Empresa</th>
+                      <th>Estado</th>
+                      <th>Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {postulaciones.map((postulacion, index) => {
+                      const badge = getEstadoBadge(postulacion.estado);
+                      return (
+                        <tr key={postulacion.aplicacion_id}>
+                          <td>{index + 1}</td>
+                          <td>
+                            <strong>{postulacion.vacante_titulo}</strong>
+                            {postulacion.vacante_sector && (
+                              <div style={{ fontSize: '0.85em', color: '#666' }}>
+                                {postulacion.vacante_sector}
+                              </div>
+                            )}
+                          </td>
+                          <td>{postulacion.razon_social}</td>
+                          <td>
+                            <span className={badge.class}>
+                              {badge.emoji} {badge.text}
+                            </span>
+                          </td>
+                          <td>{formatearFecha(postulacion.fecha_aplicacion)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                
+
+              </>
+            )}
           </>
         )}
 
+        {/* PANEL DE EMPRESA */}
         {perfilCompleto && perfilCompleto.rol === 'empresa' && (
           <>
             <h2>Panel de Gestión</h2>
@@ -207,12 +280,13 @@ const Perfil = () => {
           </>
         )}
 
+        {/* PANEL DE ADMINISTRADOR */}
         {perfilCompleto && perfilCompleto.rol === 'administrador' && (
           <>
             <h2>Panel de administración</h2>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
               <Link to="/panel/admin/">
-                <button className="authBtn">Panel de administracion</button>
+                <button className="authBtn">Panel de administración</button>
               </Link>
             </div>
           </>

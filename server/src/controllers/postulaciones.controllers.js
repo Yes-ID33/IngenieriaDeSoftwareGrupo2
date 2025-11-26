@@ -24,17 +24,36 @@ export const listarVacantesDisponibles = async (req, res) => {
     const cedulaId = estudiante.rows[0].cedula_id;
     const programaEstudiante = estudiante.rows[0].programa;
 
-    // Construir query dinámico
+    // Construir query SIN usar la vista (directamente desde tablas)
     let query = `
       SELECT 
-        v.*,
-        e.razon_social,
-        e.nombre_reclutador,
-        -- Verificar si el estudiante ya se postuló
-        CASE WHEN s.aplicacion_id IS NOT NULL THEN TRUE ELSE FALSE END as ya_postulado,
-        s.estado as estado_postulacion
-      FROM vista_vacantes_completas v
-      LEFT JOIN solicitudes s ON v.vacante_id = s.vacante_id AND s.estudiante_id = $1
+        v.vacante_id,
+        v.titulo,
+        v.descripcion,
+        v.sector,
+        v.sector_id,
+        v.programa_objetivo,
+        v.modalidad,
+        v.salario,
+        v.requisitos,
+        v.fecha_inicio,
+        v.duracion_meses,
+        v.horario,
+        v.beneficios,
+        v.aprobada,
+        v.creada_en,
+        emp.razon_social,
+        emp.nombre_reclutador,
+        emp.contacto_correo,
+        emp.contacto_telefono,
+        sec.nombre as sector_nombre,
+        sec.icono as sector_icono,
+        CASE WHEN sol.aplicacion_id IS NOT NULL THEN TRUE ELSE FALSE END as ya_postulado,
+        sol.estado as estado_postulacion
+      FROM vacantes v
+      INNER JOIN empresas emp ON v.empresa_id = emp.nit_id
+      LEFT JOIN sectores sec ON v.sector_id = sec.id
+      LEFT JOIN solicitudes sol ON v.vacante_id = sol.vacante_id AND sol.estudiante_id = $1
       WHERE v.aprobada = TRUE
     `;
     const params = [cedulaId];
@@ -79,9 +98,11 @@ export const listarVacantesDisponibles = async (req, res) => {
 
   } catch (error) {
     console.error('Error al listar vacantes:', error);
+    console.error('Stack completo:', error.stack); // Esto te dará más detalles
     res.status(500).json({
       success: false,
-      message: 'Error interno del servidor'
+      message: 'Error interno del servidor',
+      error: error.message // Solo para debug, eliminar en producción
     });
   } finally {
     client.release();
@@ -158,12 +179,12 @@ export const postularseVacante = async (req, res) => {
     const usuarioId = req.usuario.id;
     const { vacante_id, hoja_vida_id, mensaje_postulacion } = req.body;
 
-    // Validaciones
-    if (!vacante_id || !hoja_vida_id) {
+    // ✅ CAMBIO: Solo validar vacante_id
+    if (!vacante_id) {
       await client.query('ROLLBACK');
       return res.status(400).json({
         success: false,
-        message: 'Vacante y hoja de vida son obligatorias'
+        message: 'El ID de la vacante es obligatorio'
       });
     }
 
@@ -208,18 +229,20 @@ export const postularseVacante = async (req, res) => {
       });
     }
 
-    // Verificar que la hoja de vida pertenece al estudiante
-    const hojaVida = await client.query(
-      'SELECT id FROM hojas_vida WHERE id = $1 AND estudiante_id = $2',
-      [hoja_vida_id, cedulaId]
-    );
+    // ✅ CAMBIO: Solo verificar hoja de vida si se proporcionó
+    if (hoja_vida_id) {
+      const hojaVida = await client.query(
+        'SELECT id FROM hojas_vida WHERE id = $1 AND estudiante_id = $2',
+        [hoja_vida_id, cedulaId]
+      );
 
-    if (hojaVida.rows.length === 0) {
-      await client.query('ROLLBACK');
-      return res.status(404).json({
-        success: false,
-        message: 'Hoja de vida no encontrada'
-      });
+      if (hojaVida.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({
+          success: false,
+          message: 'Hoja de vida no encontrada'
+        });
+      }
     }
 
     // Verificar que no se haya postulado antes
@@ -236,18 +259,16 @@ export const postularseVacante = async (req, res) => {
       });
     }
 
-    // Crear postulación
+    // ✅ CAMBIO: Crear postulación con hoja_vida_id opcional (puede ser null)
     const nuevaPostulacion = await client.query(
       `INSERT INTO solicitudes (
         estudiante_id, vacante_id, hoja_vida_id, mensaje_postulacion, estado
       ) VALUES ($1, $2, $3, $4, $5)
       RETURNING *`,
-      [cedulaId, vacante_id, hoja_vida_id, mensaje_postulacion, 'pendiente']
+      [cedulaId, vacante_id, hoja_vida_id || null, mensaje_postulacion, 'pendiente']
     );
 
     await client.query('COMMIT');
-
-    // TODO: Enviar notificación a la empresa
 
     res.status(201).json({
       success: true,

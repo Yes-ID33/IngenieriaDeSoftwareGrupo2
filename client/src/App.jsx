@@ -9,7 +9,7 @@ import ActivarCuenta from './pages/activarCuenta';
 import Perfil from './pages/Perfil';
 import Vacantes from './pages/vacantes';
 import Hojas from './pages/Hojas'; // nueva importación
-import Solicitudes from './pages/Solicitudes';
+import Solicitud from './pages/Solicitud';
 
 // Rutas admin
 import PanelAdmin from './pages/admin/PanelAdmin';
@@ -21,6 +21,7 @@ import GestionVacantes from './pages/admin/GestionVacantes';
 import PanelEmpresa from './pages/Empresa/PanelEmpresa';
 import MisVacantes from './pages/Empresa/MisVacantes';
 import CrearVacante from './pages/Empresa/CrearVacante';
+import VerPostulaciones from './pages/Empresa/VerPostulaciones';
 
 import "./styles/index.css";
 import "./styles/auth.css";
@@ -61,7 +62,7 @@ function AppRoutes() {
         <Route path="/activar-cuenta" element={<ActivarCuenta />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/vacantes" element= {<Vacantes />} />
-        <Route path="/solicitudes" element= {<Solicitudes />} />
+        <Route path="/solicitud" element= {<Solicitud />} />
         
         {/* 🛡️ Rutas admin */}
         <Route path="/panel/admin" element={<PanelAdmin />} />
@@ -73,6 +74,7 @@ function AppRoutes() {
         <Route path="/panel/Empresa" element={<PanelEmpresa />} />
         <Route path="/panel/Empresa/mis-vacantes" element={<MisVacantes />} />
         <Route path="/panel/Empresa/crear-vacante" element={<CrearVacante />} />
+        <Route path="/panel/empresa/postulaciones" element={<VerPostulaciones />} />
 
         {/* Ejemplo: si RegisterEmpresa/RegisterEstudiante son páginas bajo /register/... */}
         <Route path="/register/empresa" element={/* tu componente */ null} />

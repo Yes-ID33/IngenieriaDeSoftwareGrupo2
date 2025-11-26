@@ -46,13 +46,15 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // NUEVAS RUTAS ORGANIZADAS POR ROL
-app.use('/api/estudiantes', estudiantesRoutes);
-app.use('/api/empresas', empresasRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/vacantes', vacantesRoutes); // Rutas para empresas Y públicas
+app.use('/api/empresas', empresasRoutes);
+
 app.use('/api/estudiantes/hojas-vida', hojasVidaRoutes);
 app.use('/api/estudiantes/postulaciones', postulacionesRoutes);
+app.use('/api/estudiantes', estudiantesRoutes);
+
+app.use('/api/vacantes', vacantesRoutes); // Rutas para empresas Y públicas
 app.use('/api/catalogos', catalogosRoutes);
 
 
