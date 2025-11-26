@@ -16,13 +16,13 @@ export const registrarEstudiante = async (req, res) => {
       correo, 
       contrasena,
       cedula,
-      programa,
+      programa_id,  // ✅ Cambio: de 'programa' a 'programa_id'
       creditos_aprobados,
       modulo_empleabilidad
     } = req.body;
    
-    // Validaciones básicas
-    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula || !programa) {
+    // ✅ Validación actualizada con programa_id
+    if (!nombre || !apellido || !celular || !correo || !contrasena || !cedula || !programa_id) {
       return res.status(400).json({
         success: false,
         message: 'Todos los campos obligatorios deben ser completados'
@@ -66,12 +66,28 @@ export const registrarEstudiante = async (req, res) => {
     }
 
     // Validar cédula (números)
-    if (Number.isNaN(cedula) || cedula <= 0) {
+    if (isNaN(cedula) || cedula <= 0) {
       return res.status(400).json({
         success: false,
         message: 'La cédula debe ser un número válido'
       });
     }
+
+    // ✅ NUEVO: Validar que el programa_id exista y esté activo
+    const programaValido = await client.query(
+      'SELECT id, nombre, facultad, nivel FROM programas WHERE id = $1 AND activo = TRUE',
+      [programa_id]
+    );
+
+    if (programaValido.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        success: false,
+        message: 'El programa seleccionado no es válido o no está disponible'
+      });
+    }
+
+    const programaData = programaValido.rows[0];
 
     // Verificar si el correo ya existe
     const correoExistente = await client.query(
@@ -128,17 +144,25 @@ export const registrarEstudiante = async (req, res) => {
 
     const usuarioId = nuevoUsuario.rows[0].id;
 
-    // Insertar en tabla estudiantes
+    // ✅ ACTUALIZADO: Insertar en tabla estudiantes con programa_id
+    // Opción: llenar ambos campos (programa y programa_id) para compatibilidad
     await client.query(
-      `INSERT INTO estudiantes (cedula_id, usuario_id, programa, creditos_aprobados, modulo_empleabilidad)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [cedula, usuarioId, programa, creditos_aprobados || 0, modulo_empleabilidad || false]
+      `INSERT INTO estudiantes (cedula_id, usuario_id, programa, programa_id, creditos_aprobados, modulo_empleabilidad)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        cedula, 
+        usuarioId, 
+        programaData.nombre,  // ✅ Llenar campo legacy con el nombre
+        programa_id,          // ✅ Usar el ID del programa
+        creditos_aprobados || 0, 
+        modulo_empleabilidad || false
+      ]
     );
 
     // Enviar email de verificación
     try {
       await enviarEmailVerificacion(correo, nombre, tokenVerificacion);
-    } catch (error) { // SOLUCIÓN: Usar 'error' en lugar de 'emailError' si no lo usas
+    } catch (emailError) {
       await client.query('ROLLBACK');
       return res.status(500).json({
         success: false,
@@ -154,6 +178,12 @@ export const registrarEstudiante = async (req, res) => {
       data: {
         usuario: nuevoUsuario.rows[0],
         cedula: cedula,
+        programa: {
+          id: programa_id,
+          nombre: programaData.nombre,
+          facultad: programaData.facultad,
+          nivel: programaData.nivel
+        },
         mensaje_adicional: 'Se ha enviado un código de verificación a tu correo. El código expira en 15 minutos.'
       }
     });
@@ -235,8 +265,8 @@ export const verificarCuentaEstudiante = async (req, res) => {
     // Enviar email de bienvenida
     try {
       await enviarEmailBienvenida(correo, usuarioData.nombre);
-    } catch (error) { // SOLUCIÓN: Usar 'error' en lugar de 'emailError'
-      console.error('Error enviando email de bienvenida:', error);
+    } catch (emailError) {
+      console.error('Error enviando email de bienvenida:', emailError);
     }
 
     res.status(200).json({
@@ -311,15 +341,7 @@ export const reenviarCodigoEstudiante = async (req, res) => {
     );
 
     // Enviar nuevo email
-    try {
-      await enviarEmailVerificacion(correo, usuarioData.nombre, nuevoToken);
-    } catch (error) { // SOLUCIÓN: Agregar catch para el email en esta función también
-      console.error('Error al reenviar código de verificación:', error);
-      return res.status(500).json({
-        success: false,
-        message: 'Error al enviar el correo de verificación. Intenta nuevamente.'
-      });
-    }
+    await enviarEmailVerificacion(correo, usuarioData.nombre, nuevoToken);
 
     res.status(200).json({
       success: true,

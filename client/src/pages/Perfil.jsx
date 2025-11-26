@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import Header from '../components/header.jsx';
 import styles from '../styles/perfil.module.css';
 
 const Perfil = () => {
+  const { usuario } = useAuth();
   const [perfilCompleto, setPerfilCompleto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -96,6 +98,34 @@ const Perfil = () => {
               <>
                 <p><strong>Cédula:</strong> {perfilCompleto.cedula_id}</p>
                 <p><strong>Celular:</strong> {perfilCompleto.celular}</p>
+                
+                {/* ✅ MOSTRAR INFORMACIÓN DEL PROGRAMA */}
+                {perfilCompleto.programa ? (
+                  <>
+                    <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>📚 Programa Académico</h3>
+                    <div style={{
+                      backgroundColor: '#f8f9fa',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      border: '1px solid #dee2e6',
+                      marginBottom: '15px'
+                    }}>
+                      <p><strong>Programa:</strong> {perfilCompleto.programa.nombre}</p>
+                      <p><strong>Facultad:</strong> {perfilCompleto.programa.facultad}</p>
+                      <p><strong>Nivel:</strong> {perfilCompleto.programa.nivel.charAt(0).toUpperCase() + perfilCompleto.programa.nivel.slice(1)}</p>
+                      {perfilCompleto.programa.sector && (
+                        <p>
+                          <strong>Sector:</strong> {perfilCompleto.programa.sector_icono} {perfilCompleto.programa.sector}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <p style={{ color: '#856404', backgroundColor: '#fff3cd', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                    ⚠️ No se encontró información del programa
+                  </p>
+                )}
+                
                 <p><strong>Créditos aprobados:</strong> {perfilCompleto.creditos_aprobados}</p>
                 <p><strong>Módulo de empleabilidad:</strong> {perfilCompleto.modulo_empleabilidad ? '✅ Completado' : '❌ Pendiente'}</p>
               </>
@@ -129,7 +159,7 @@ const Perfil = () => {
           <p>No hay información de usuario disponible.</p>
         )}
 
-        {perfilCompleto?.rol === 'estudiante' && (
+        {perfilCompleto && perfilCompleto.rol === 'estudiante' && (
           <>
             <h2>Últimas solicitudes</h2>
             <table className={styles.tablaSolicitudes}>
@@ -166,18 +196,18 @@ const Perfil = () => {
           </>
         )}
 
-{perfilCompleto?.rol === 'empresa' && (
-  <>
-    <h2>Panel de Gestión</h2>
-    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-      <Link to="/panel/empresa">
-        <button className="authBtn">🏢 Panel de Empresa</button>
-      </Link>
-    </div>
-  </>
-)}
+        {perfilCompleto && perfilCompleto.rol === 'empresa' && (
+          <>
+            <h2>Panel de Gestión</h2>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+              <Link to="/panel/empresa">
+                <button className="authBtn">🏢 Panel de Empresa</button>
+              </Link>
+            </div>
+          </>
+        )}
 
-        {perfilCompleto?.rol === 'administrador' && (
+        {perfilCompleto && perfilCompleto.rol === 'administrador' && (
           <>
             <h2>Panel de administración</h2>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
